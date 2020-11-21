@@ -48,6 +48,12 @@ func (r orRule) check(param interface{}) (bool, string) {
 			strings.Join(messages, " or "))
 }
 
+func NewOrRule(rules []Rule) Rule {
+	return orRule{
+		rules: rules,
+	}
+}
+
 func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
 	pValue := reflect.ValueOf(param)
 	if filedExpr == "" {
@@ -56,7 +62,7 @@ func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, refle
 	if pValue.Kind() != reflect.Struct {
 		return nil, reflect.Invalid
 	}
-	exprs := strings.Split(filedExpr, ",")
+	exprs := strings.Split(filedExpr, ".")
 	for i := 0; i < len(exprs); i++ {
 		expr := exprs[i]
 		exprValue := pValue.FieldByName(expr)
