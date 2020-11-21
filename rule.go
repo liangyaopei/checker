@@ -40,12 +40,12 @@ func (r orRule) check(param interface{}) (bool, string) {
 		isValid, msg := r.rules[i].check(param)
 		if isValid {
 			return true, ""
-		} else {
-			messages = append(messages, msg)
 		}
+		messages = append(messages, msg)
 	}
 	return false,
-		fmt.Sprintf("%s, at least one ot them should be true", strings.Join(messages, " or "))
+		fmt.Sprintf("%s, at least one ot them should be true",
+			strings.Join(messages, " or "))
 }
 
 func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
