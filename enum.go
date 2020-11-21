@@ -118,3 +118,40 @@ func NewEnumRuleUint(filedExpr string, enum []uint) Rule {
 		enum:      enum,
 	}
 }
+
+type enumRuleFloat struct {
+	fieldExpr string
+	set       map[float64]struct{}
+	enum      []float64
+}
+
+func (r enumRuleFloat) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[enumRuleFloat]:'%s' should be in %v,actual is nil", r.fieldExpr, r.enum)
+	}
+	if kind != reflect.Float64 && kind != reflect.Float32 {
+		return false,
+			fmt.Sprintf("[enumRuleFloat]:'%s' should be kind float32/float64,actual is %v", r.fieldExpr, kind)
+	}
+	exprValueFloat := exprValue.(float64)
+	_, exist := r.set[exprValueFloat]
+	if !exist {
+		return false,
+			fmt.Sprintf("[enumRuleFloat]:'%s' should be in %v,actual is %d", r.fieldExpr, r.enum, exprValueFloat)
+	}
+	return true, ""
+}
+
+func NewEnumRuleFloat(filedExpr string, enum []float64) Rule {
+	set := make(map[float64]struct{}, len(enum))
+	for i := 0; i < len(enum); i++ {
+		set[enum[i]] = struct{}{}
+	}
+	return enumRuleFloat{
+		fieldExpr: filedExpr,
+		set:       set,
+		enum:      enum,
+	}
+}
