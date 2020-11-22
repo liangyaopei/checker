@@ -127,6 +127,134 @@ func NewEqRuleFloat(filedExpr string, equivalent float64) Rule {
 	}
 }
 
+type notEqRuleString struct {
+	fieldExpr    string
+	inequivalent string
+}
+
+func (r notEqRuleString) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[notEqRuleString]:'%s' is nil", r.fieldExpr)
+	}
+	if kind != reflect.String {
+		return false,
+			fmt.Sprintf("[notEqRuleString]:'%s' should be kind string,actual is %v",
+				r.fieldExpr, kind)
+	}
+	exprValueStr := exprValue.(string)
+	if exprValueStr != r.inequivalent {
+		return false,
+			fmt.Sprintf("[notEqRuleString]:'%s' should not be %s,actual is %s",
+				r.fieldExpr, r.inequivalent, exprValueStr)
+	}
+	return true, ""
+}
+
+func NewNotEqRuleString(filedExpr string, inequivalent string) Rule {
+	return notEqRuleString{
+		fieldExpr:    filedExpr,
+		inequivalent: inequivalent,
+	}
+}
+
+type notEqRuleInt struct {
+	fieldExpr    string
+	inequivalent int
+}
+
+func (r notEqRuleInt) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[notEqRuleInt]:'%s' is nil", r.fieldExpr)
+	}
+	if kind != reflect.String {
+		return false,
+			fmt.Sprintf("[notEqRuleInt]:'%s' should be kind string,actual is %v",
+				r.fieldExpr, kind)
+	}
+	exprValueInt := exprValue.(int)
+	if exprValueInt != r.inequivalent {
+		return false,
+			fmt.Sprintf("[notEqRuleInt]:'%s' should not be %d,actual is %d",
+				r.fieldExpr, r.inequivalent, exprValueInt)
+	}
+	return true, ""
+}
+
+func NewNotEqRuleInt(filedExpr string, inequivalent int) Rule {
+	return notEqRuleInt{
+		fieldExpr:    filedExpr,
+		inequivalent: inequivalent,
+	}
+}
+
+type notEqRuleUint struct {
+	fieldExpr    string
+	inequivalent uint
+}
+
+func (r notEqRuleUint) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[notEqRuleUint]:'%s' is nil", r.fieldExpr)
+	}
+	if kind != reflect.String {
+		return false,
+			fmt.Sprintf("[notEqRuleUint]:'%s' should be kind string,actual is %v",
+				r.fieldExpr, kind)
+	}
+	exprValueUint := exprValue.(uint)
+	if exprValueUint != r.inequivalent {
+		return false,
+			fmt.Sprintf("[notEqRuleUint]:'%s' should not be %d,actual is %d",
+				r.fieldExpr, r.inequivalent, exprValueUint)
+	}
+	return true, ""
+}
+
+func NewNotEqRuleUint(filedExpr string, inequivalent uint) Rule {
+	return notEqRuleUint{
+		fieldExpr:    filedExpr,
+		inequivalent: inequivalent,
+	}
+}
+
+type notEqRuleFloat struct {
+	fieldExpr    string
+	inequivalent float64
+}
+
+func (r notEqRuleFloat) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[notEqRuleFloat]:'%s' is nil", r.fieldExpr)
+	}
+	if kind != reflect.String {
+		return false,
+			fmt.Sprintf("[notEqRuleFloat]:'%s' should be kind string,actual is %v",
+				r.fieldExpr, kind)
+	}
+	exprValueFloat := exprValue.(float64)
+	if exprValueFloat != r.inequivalent {
+		return false,
+			fmt.Sprintf("[notEqRuleFloat]:'%s' should not be %f,actual is %f",
+				r.fieldExpr, r.inequivalent, exprValueFloat)
+	}
+	return true, ""
+}
+
+func NewNotEqRuleFloat(filedExpr string, inequivalent float64) Rule {
+	return notEqRuleFloat{
+		fieldExpr:    filedExpr,
+		inequivalent: inequivalent,
+	}
+}
+
 type rangeRuleInt struct {
 	fieldExpr string
 	min       int
