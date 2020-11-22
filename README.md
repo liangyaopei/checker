@@ -34,7 +34,7 @@ tells detailed information about why the value of field in struct fails.
 Below example is taken from `./_checker_test/checker_test.go`.
 
 Consider below `profile` struct. 
-In `basicInfo` struct, `Name` has length limit, `Age` has length limit,`Email` has length limit and format limitation.
+In `basicInfo` struct, `Name` has length limit, `Age` has range limit,`Email` has length limit and format limitation.
 In `company` struct, `Position` can only be `frontend` or `backend`.
 - if `Position` is equal to `frontend`, elem in `Skills` can only be `html,css,javascript`.
 - if `Position` is equal to `backend`, elem in `Skills` can only be `C,Cpp,Java,Golang`.
