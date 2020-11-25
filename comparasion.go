@@ -257,8 +257,8 @@ func NewNotEqRuleFloat(filedExpr string, inequivalent float64) Rule {
 
 type rangeRuleInt struct {
 	fieldExpr string
-	min       int
-	max       int
+	ge        int
+	le        int
 }
 
 func (r rangeRuleInt) check(param interface{}) (bool, string) {
@@ -273,26 +273,26 @@ func (r rangeRuleInt) check(param interface{}) (bool, string) {
 			fmt.Sprintf("[rangeRuleInt]:'%s' should be kind int8/int16/int32/int64/int,actual is %v", r.fieldExpr, kind)
 	}
 	exprValueInt := exprValue.(int)
-	if exprValueInt > r.max || exprValueInt < r.min {
+	if exprValueInt > r.le || exprValueInt < r.ge {
 		return false,
 			fmt.Sprintf("[rangeRuleInt]:'%s' should be between %d and %d,actual is %d",
-				r.fieldExpr, r.min, r.max, exprValueInt)
+				r.fieldExpr, r.ge, r.le, exprValueInt)
 	}
 	return true, ""
 }
 
-func NewRangeRuleInt(filedExpr string, min int, max int) Rule {
+func NewRangeRuleInt(filedExpr string, le int, ge int) Rule {
 	return rangeRuleInt{
 		fieldExpr: filedExpr,
-		min:       min,
-		max:       max,
+		ge:        le,
+		le:        ge,
 	}
 }
 
 type rangeRuleUint struct {
 	fieldExpr string
-	min       uint
-	max       uint
+	ge        uint
+	le        uint
 }
 
 func (r rangeRuleUint) check(param interface{}) (bool, string) {
@@ -308,26 +308,26 @@ func (r rangeRuleUint) check(param interface{}) (bool, string) {
 				r.fieldExpr, kind)
 	}
 	exprValueUint := exprValue.(uint)
-	if exprValueUint > r.max || exprValueUint < r.min {
+	if exprValueUint > r.le || exprValueUint < r.ge {
 		return false,
 			fmt.Sprintf("[rangeRuleUint]:'%s' should be betweeen %d and %d ,actual is %d",
-				r.fieldExpr, r.min, r.max, exprValueUint)
+				r.fieldExpr, r.ge, r.le, exprValueUint)
 	}
 	return true, ""
 }
 
-func NewRangeRuleUint(filedExpr string, min uint, max uint) Rule {
+func NewRangeRuleUint(filedExpr string, le uint, ge uint) Rule {
 	return rangeRuleUint{
 		fieldExpr: filedExpr,
-		min:       min,
-		max:       max,
+		ge:        le,
+		le:        ge,
 	}
 }
 
 type rangeRuleFloat struct {
 	fieldExpr string
-	min       float64
-	max       float64
+	le        float64
+	ge        float64
 }
 
 func (r rangeRuleFloat) check(param interface{}) (bool, string) {
@@ -341,18 +341,18 @@ func (r rangeRuleFloat) check(param interface{}) (bool, string) {
 			fmt.Sprintf("[rangeRuleFloat]:'%s' should be kind float32/float64,actual is %v", r.fieldExpr, kind)
 	}
 	exprValueFloat := exprValue.(float64)
-	if exprValueFloat > r.max || exprValueFloat < r.min {
+	if exprValueFloat > r.ge || exprValueFloat < r.le {
 		return false,
 			fmt.Sprintf("[rangeRuleFloat]:'%s' should be between %f and %f,actual is %f",
-				r.fieldExpr, r.min, r.max, exprValueFloat)
+				r.fieldExpr, r.le, r.ge, exprValueFloat)
 	}
 	return true, ""
 }
 
-func NewRangeRuleFloat(filedExpr string, min float64, max float64) Rule {
+func NewRangeRuleFloat(filedExpr string, le float64, ge float64) Rule {
 	return rangeRuleFloat{
 		fieldExpr: filedExpr,
-		min:       min,
-		max:       max,
+		le:        le,
+		ge:        ge,
 	}
 }
