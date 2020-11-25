@@ -14,7 +14,7 @@ func (r sliceRule) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[sliceRule]:'%s' is nil", exprValue)
+			fmt.Sprintf("[sliceRule]:'%s' is nil", r.fieldExpr)
 	}
 
 	if kind != reflect.Slice && kind != reflect.Array {
@@ -49,7 +49,7 @@ func (r lengthRule) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[lengthRule]:'%s' is nil", exprValue)
+			fmt.Sprintf("[lengthRule]:'%s' is nil", r.fieldExpr)
 	}
 
 	if kind != reflect.Slice && kind != reflect.Array &&
