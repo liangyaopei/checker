@@ -22,7 +22,7 @@ func NewEmailRule(fieldExpr string) Rule {
 		fieldExpr:   fieldExpr,
 		regexExpr:   emailRegexString,
 		regexObject: regexObject,
-		ruleName:    "emailRule",
+		name:        "emailRule",
 	}
 }
 
@@ -32,7 +32,7 @@ func NewAlphaRule(fieldExpr string) Rule {
 		fieldExpr:   fieldExpr,
 		regexExpr:   alphaRegexString,
 		regexObject: regexObject,
-		ruleName:    "alphaRule",
+		name:        "alphaRule",
 	}
 }
 
@@ -42,7 +42,7 @@ func NewAlphaNumericRule(fieldExpr string) Rule {
 		fieldExpr:   fieldExpr,
 		regexExpr:   alphaNumericRegexString,
 		regexObject: regexObject,
-		ruleName:    "alphaNumericRule",
+		name:        "alphaNumericRule",
 	}
 }
 
@@ -52,7 +52,7 @@ func NewNumberRule(fieldExpr string) Rule {
 		fieldExpr:   fieldExpr,
 		regexExpr:   numberRegexString,
 		regexObject: regexObject,
-		ruleName:    "numberRule",
+		name:        "numberRule",
 	}
 }
 
@@ -62,7 +62,7 @@ func NewNumericRule(fieldExpr string) Rule {
 		fieldExpr:   fieldExpr,
 		regexExpr:   numericRegexString,
 		regexObject: regexObject,
-		ruleName:    "numericRule",
+		name:        "numericRule",
 	}
 }
 
@@ -72,7 +72,7 @@ func NewISBN10Rule(fieldExpr string) Rule {
 		fieldExpr:   fieldExpr,
 		regexExpr:   iSBN10RegexString,
 		regexObject: regexObject,
-		ruleName:    "ISBN10Rule",
+		name:        "ISBN10Rule",
 	}
 }
 
@@ -82,7 +82,7 @@ func NewISBN13Rule(fieldExpr string) Rule {
 		fieldExpr:   fieldExpr,
 		regexExpr:   iSBN13RegexString,
 		regexObject: regexObject,
-		ruleName:    "ISBN13Rule",
+		name:        "ISBN13Rule",
 	}
 }
 
@@ -90,20 +90,25 @@ type regexRule struct {
 	fieldExpr   string
 	regexExpr   string
 	regexObject *regexp.Regexp
-	ruleName    string
+	name        string
 }
 
 func (r regexRule) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	ruleName := "regexRule"
-	if r.ruleName != "" {
-		ruleName = r.ruleName
+	if r.name != "" {
+		ruleName = r.name
 	}
 
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[%s]:'%s' is nil", ruleName, r.fieldExpr)
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
 	}
+
 	if kind != reflect.String {
 		return false,
 			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",

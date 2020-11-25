@@ -8,17 +8,20 @@ import (
 type eqRuleString struct {
 	fieldExpr  string
 	equivalent string
+	name       string
 }
 
 func (r eqRuleString) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[eqRuleString]:'%s' is nil", r.fieldExpr)
+			fmt.Sprintf("[%s]:'%s' is nil",
+				r.name, r.fieldExpr)
 	}
 	if kind != reflect.String {
 		return false,
-			fmt.Sprintf("[eqRuleString]:'%s' should be kind string,actual is %v", r.fieldExpr, kind)
+			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
+				r.name, r.fieldExpr, kind)
 	}
 	exprValueStr := exprValue.(string)
 	if exprValueStr != r.equivalent {
@@ -32,29 +35,34 @@ func NewEqRuleString(filedExpr string, equivalent string) Rule {
 	return eqRuleString{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
+		name:       "eqRuleString",
 	}
 }
 
 type eqRuleInt struct {
 	fieldExpr  string
 	equivalent int
+	name       string
 }
 
 func (r eqRuleInt) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[eqRuleInt]:'%s' is nil", r.fieldExpr)
+			fmt.Sprintf("[%s]:'%s' is nil",
+				r.name, r.fieldExpr)
 	}
 	if kind != reflect.Int8 && kind != reflect.Int16 && kind != reflect.Int32 &&
 		kind != reflect.Int64 && kind != reflect.Int {
 		return false,
-			fmt.Sprintf("[eqRuleInt]:'%s' should be kind int8/int16/int32/int64/int,actual is %v", r.fieldExpr, kind)
+			fmt.Sprintf("[%s]:'%s' should be kind int8/int16/int32/int64/int,actual is %v",
+				r.name, r.fieldExpr, kind)
 	}
 	exprValueInt := exprValue.(int)
 	if exprValueInt != r.equivalent {
 		return false,
-			fmt.Sprintf("[eqRuleInt]:'%s' should be %d,actual is %d", r.fieldExpr, r.equivalent, exprValueInt)
+			fmt.Sprintf("[%s]:'%s' should be %d,actual is %d",
+				r.name, r.fieldExpr, r.equivalent, exprValueInt)
 	}
 	return true, ""
 }
@@ -63,29 +71,34 @@ func NewEqRuleInt(filedExpr string, equivalent int) Rule {
 	return eqRuleInt{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
+		name:       "eqRuleInt",
 	}
 }
 
 type eqRuleUint struct {
 	fieldExpr  string
 	equivalent uint
+	name       string
 }
 
 func (r eqRuleUint) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[eqRuleUint]:'%s' is nil", r.fieldExpr)
+			fmt.Sprintf("[%s]:'%s' is nil",
+				r.name, r.fieldExpr)
 	}
 	if kind != reflect.Uint8 && kind != reflect.Uint16 && kind != reflect.Uint32 &&
 		kind != reflect.Uint64 && kind != reflect.Uint {
 		return false,
-			fmt.Sprintf("[eqRuleUint]:'%s' should be kind uint8/uint16/uint32/uint64/uint,actual is %v", r.fieldExpr, kind)
+			fmt.Sprintf("[%s]:'%s' should be kind uint8/uint16/uint32/uint64/uint,actual is %v",
+				r.name, r.fieldExpr, kind)
 	}
 	exprValueUint := exprValue.(uint)
 	if exprValueUint != r.equivalent {
 		return false,
-			fmt.Sprintf("[eqRuleUint]:'%s' should be %d,actual is %d", r.fieldExpr, r.equivalent, exprValueUint)
+			fmt.Sprintf("[%s]:'%s' should be %d,actual is %d",
+				r.name, r.fieldExpr, r.equivalent, exprValueUint)
 	}
 	return true, ""
 }
@@ -94,6 +107,7 @@ func NewEqRuleUint(filedExpr string, equivalent uint) Rule {
 	return eqRuleUint{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
+		name:       "eqRuleUint",
 	}
 }
 
