@@ -42,7 +42,8 @@ func NewSliceRule(fieldExpr string, innerRule Rule) Rule {
 
 type lengthRule struct {
 	fieldExpr string
-	lenLimit  int
+	le        int
+	ge        int
 }
 
 func (r lengthRule) check(param interface{}) (bool, string) {
@@ -59,18 +60,20 @@ func (r lengthRule) check(param interface{}) (bool, string) {
 	}
 
 	lenValue := reflect.ValueOf(exprValue)
-	if lenValue.Len() > r.lenLimit {
+	length := lenValue.Len()
+	if length < r.ge || length > r.le {
 		return false,
-			fmt.Sprintf("[lengthRule]:'%s' length should be less than or equal to %d,actual is %d",
-				r.fieldExpr, r.lenLimit, lenValue.Len())
+			fmt.Sprintf("[lengthRule]:'%s' length should be between %d and %d,actual is %d",
+				r.fieldExpr, r.le, r.ge, length)
 
 	}
 	return true, ""
 }
 
-func NewLengthRule(fieldExpr string, lenLimit int) Rule {
+func NewLengthRule(fieldExpr string, ge int, le int) Rule {
 	return lengthRule{
 		fieldExpr: fieldExpr,
-		lenLimit:  lenLimit,
+		ge:        ge,
+		le:        le,
 	}
 }
