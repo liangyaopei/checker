@@ -1,5 +1,5 @@
 # Overview
-This repo provides flexible, configurable validation method when validating struct in Golang.
+Checker provides flexible, configurable validation method when validating struct in Golang.
 
 # Install
 ```
@@ -8,20 +8,31 @@ go get -u github.com/liangyaopei/checker
 
 # Description
 ## Rule
-Users can customize their various validation rules attached every filed in struct,
- including complex,composite rules.
-Below rules all accepts a `fieldExpr` to locate the field in struct, and:
-- `NewAndRule` accepts an array of rules, it passed when all rules are passed.
-- `NewOrRule` accepts an array of rules, it passed when any rule is passed.
-- `NewSliceRule` accepts slice/array input and a rule, applies the to every element in array/slice.
-- `NewLengthRule` accepts slice/array/string/map, it checks the length of input is less than or equal to limit.
-- `NewEnumRuleXXX` accepts a slice, it checks whether value of related struct filed exist in input enum slice. It has
-  `NewEnumRuleString`,`NewEnumRuleInt`, `NewEnumRuleUint`,`NewEnumRuleFloat`.
-- `NewEqRuleXXX` accepts a value, it checks whether value of related struct filed is equal to value. It 
-    has `NewEnumRuleString`, `NewEnumRuleInt`, `NewEnumRuleUint`,`NewEnumRuleFloat`.
-- `NewNotEqRuleXXX` is similar to `NewEqRuleXXX`. It checks whether value of related struct filed is not equal to value.
-- `NewRangeRuleXXX` accepts min and max value, it checks whether value of related struct filed is `min<=v<=max`. It has
-   `NewRangeRuleInt`, `NewRangeRuleUint`,`NewRangeRuleFloat`.
+`Rule` is an interface, it checks whether the param is valid or not.
+```go
+type Rule interface {
+	check(param interface{}) (bool, string)
+}
+```
+All rules implementation accepts a `fieldExpr` to locate the field in struct.
+`fieldExpr` is a string with format `Field1.Filed2`.
+When filed is a pointer, first will check the field is nil or not; if not, get the pointer's
+underlying value as param to validate.
+All rule implementations include:
+- Composition rule:
+    - `NewAndRule` accepts an array of rules, it passed when all the rules  passed.
+    - `NewOrRule` accepts an array of rules, it passed when one of the rules passed.
+- Slice Rule: 
+    - `NewSliceRule` accepts slice/array input and a rule, applies the to every element in array/slice.
+- Enum Rule:
+    - `NewEnumRule*` accepts a slice, it checks whether value of related struct filed exist in input enum slice. 
+    Implementations include `NewEnumRuleString`,`NewEnumRuleInt`, `NewEnumRuleUint`,`NewEnumRuleFloat`.
+- Comparison Rule:
+    - `NewRqRule*` accepts a value, it checks whether value of related struct filed is equal to value.
+- Regex Rule:
+    - accepts a regex expression to check whether string field satisfies the regex expression.
+    - Implementations include `NewEmailRule`,`NewAlphaNumericRule`,etc.
+    
 
 ## Checker
 `NewChecker` returns a `Checker` interface. `Checker` has two methods:
@@ -31,26 +42,32 @@ Below rules all accepts a `fieldExpr` to locate the field in struct, and:
 tells detailed information about why the value of field in struct fails.
 
 # Example
-Below example is taken from `./_checker_test/checker_test.go`.
+Below example is from `./_checker_test/checker_test.go`.
 
 Consider below `profile` struct. 
-In `basicInfo` struct, `Name` has length limit, `Age` has range limit,`Email` has length limit and format limitation.
-In `company` struct, `Position` can only be `frontend` or `backend`.
-- if `Position` is equal to `frontend`, elem in `Skills` can only be `html,css,javascript`.
-- if `Position` is equal to `backend`, elem in `Skills` can only be `C,Cpp,Java,Golang`.
-- besides, `Skills` has length limit.
+- `Info` field
+    - `Info` is not nil
+    - `Name` has length limit between 1 and 20
+    - `Age` has range limit between 18 and 80
+    - `Email` has length limit between 1 and 64 , is  format of email.
+-  `Companies` field
+    - `Position` can only be `frontend` or `backend`
+        - if `Position` is equal to `frontend`, elem in `Skills` can only be `html,css,javascript`.
+        - if `Position` is equal to `backend`, elem in `Skills` can only be `C,Cpp,Java,Golang`.
+ - besides, `Skills` has length limit between 1 and 3.
 ```go
 type profile struct {
-	Info      basicInfo
+	// Info is pointer filed
+	Info      *basicInfo
 	Companies []company
 }
 
 type basicInfo struct {
-	// len <= 20
+	// 1 <= len <= 20
 	Name string
 	// 18 <= age <= 80
 	Age int
-	// len <= 64
+	// 1<= len <= 64
 	Email string
 }
 
@@ -59,7 +76,7 @@ type company struct {
 	Position string
 	// frontend: html,css,javascript
 	// backend: C,Cpp,Java,Golang
-	// SkillStack has length limit 3
+	// SkillStack 'length is between [1,3]
 	Skills []string
 }
 ```
