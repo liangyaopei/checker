@@ -7,8 +7,8 @@ import (
 )
 
 type profile struct {
-	Info *basicInfo
-	//Info      basicInfo
+	// Info is pointer filed
+	Info      *basicInfo
 	Companies []company
 }
 
@@ -108,7 +108,7 @@ func getProfileChecker() checker.Checker {
 	return profileChecker
 }
 
-func TestChecker(t *testing.T) {
+func TestProfileCheckerPassed(t *testing.T) {
 	profile := getPassedProfile()
 	profileChecker := getProfileChecker()
 	isValid, prompt, errMsg := profileChecker.Check(profile)
@@ -120,7 +120,7 @@ func TestChecker(t *testing.T) {
 	t.Log("pass check")
 }
 
-func TestChecker2(t *testing.T) {
+func TestProfileCheckerFailed(t *testing.T) {
 	profile := getFailedProfile()
 	profileChecker := getProfileChecker()
 	isValid, prompt, errMsg := profileChecker.Check(profile)
@@ -137,17 +137,30 @@ type list struct {
 	Next *list
 }
 
-func TestList(t *testing.T) {
+func TestListEmptyPrtField(t *testing.T) {
 	name := "list"
-	//node1 := list{Name: nil}
-	node2 := list{Name: nil, Next: nil}
-	lists := list{Name: &name, Next: &node2}
+	node1 := list{Name: nil, Next: nil}
+	lists := list{Name: &name, Next: &node1}
 
 	listChecker := checker.NewChecker()
 	nameRule := checker.NewLengthRule("Next.Name", 1, 20)
 	listChecker.Add(nameRule, "invalid info name")
 
 	isValid, prompt, errMsg := listChecker.Check(lists)
+	if !isValid {
+		t.Logf("prompt:%s", prompt)
+		t.Logf("errMsg:%s", errMsg)
+		return
+	}
+	t.Log("pass check")
+}
+
+func TestNilList(t *testing.T) {
+	listChecker := checker.NewChecker()
+	nameRule := checker.NewLengthRule("Next.Name", 1, 20)
+	listChecker.Add(nameRule, "invalid info name")
+
+	isValid, prompt, errMsg := listChecker.Check(nil)
 	if !isValid {
 		t.Logf("prompt:%s", prompt)
 		t.Logf("errMsg:%s", errMsg)
