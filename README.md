@@ -38,7 +38,7 @@ All rule implementations include:
 `NewChecker` returns a `Checker` interface. `Checker` has two methods:
 - `Add(rule Rule, prompt string)` add rules, `prompt` is the prompt when the rule fails.
 - `Check(param interface{}) (bool, string, string)` means checker use all added rules to check/validate struct.
-`bool` tells whether all rules are passed or not, the first `string` is prompt of the rule, the second `string`
+`bool` tells whether all rules passed or not, the first `string` is prompt of the rule, the second `string`
 tells detailed information about why the value of field in struct fails.
 
 # Example
