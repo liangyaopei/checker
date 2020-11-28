@@ -14,10 +14,13 @@ type enumRuleString struct {
 
 func (r enumRuleString) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[%s]:'%s' should be in %v,actual is nil",
-				r.name, r.fieldExpr, r.enum)
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
 	}
 	if kind != reflect.String {
 		return false,
@@ -56,10 +59,13 @@ type enumRuleInt struct {
 
 func (r enumRuleInt) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[%s]:'%s' should be in %v,actual is nil",
-				r.name, r.fieldExpr, r.enum)
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
 	}
 	if kind != reflect.Int8 && kind != reflect.Int16 && kind != reflect.Int32 &&
 		kind != reflect.Int64 && kind != reflect.Int {
@@ -99,10 +105,13 @@ type enumRuleUint struct {
 
 func (r enumRuleUint) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[%s]:'%s' should be in %v,actual is nil",
-				r.name, r.fieldExpr, r.enum)
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
 	}
 	if kind != reflect.Uint8 && kind != reflect.Uint16 && kind != reflect.Uint32 &&
 		kind != reflect.Uint64 && kind != reflect.Uint {
@@ -142,10 +151,13 @@ type enumRuleFloat struct {
 
 func (r enumRuleFloat) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[%s]:'%s' should be in %v,actual is nil",
-				r.name, r.fieldExpr, r.enum)
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
 	}
 	if kind != reflect.Float64 && kind != reflect.Float32 {
 		return false,
