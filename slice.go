@@ -3,6 +3,7 @@ package checker
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 type sliceRule struct {
@@ -34,6 +35,7 @@ func (r sliceRule) check(param interface{}) (bool, string) {
 		idxValue := sliceValue.Index(i)
 		isValid, msg := r.innerRule.check(idxValue.Interface())
 		if !isValid {
+			msg = strings.Replace(msg, "''", "'"+r.fieldExpr+"'", 1)
 			return isValid, msg
 		}
 	}
