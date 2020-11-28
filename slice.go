@@ -3,23 +3,31 @@ package checker
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 type sliceRule struct {
 	fieldExpr string
 	innerRule Rule
+
+	name string
 }
 
 func (r sliceRule) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[sliceRule]:'%s' is nil", exprValue)
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
 	}
 
 	if kind != reflect.Slice && kind != reflect.Array {
 		return false,
-			fmt.Sprintf("[sliceRule]:'%s' should be slice/array,actual is %v", r.fieldExpr, kind)
+			fmt.Sprintf("[%s]:'%s' should be slice/array,actual is %v",
+				r.name, r.fieldExpr, kind)
 	}
 
 	sliceValue := reflect.ValueOf(exprValue)
@@ -27,6 +35,7 @@ func (r sliceRule) check(param interface{}) (bool, string) {
 		idxValue := sliceValue.Index(i)
 		isValid, msg := r.innerRule.check(idxValue.Interface())
 		if !isValid {
+			msg = strings.Replace(msg, "''", "'"+r.fieldExpr+"'", 1)
 			return isValid, msg
 		}
 	}
@@ -37,40 +46,52 @@ func NewSliceRule(fieldExpr string, innerRule Rule) Rule {
 	return sliceRule{
 		fieldExpr: fieldExpr,
 		innerRule: innerRule,
+		name:      "sliceRule",
 	}
 }
 
 type lengthRule struct {
 	fieldExpr string
-	lenLimit  int
+	le        int
+	ge        int
+
+	name string
 }
 
 func (r lengthRule) check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
 	if exprValue == nil {
 		return false,
-			fmt.Sprintf("[lengthRule]:'%s' is nil", exprValue)
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
 	}
 
 	if kind != reflect.Slice && kind != reflect.Array &&
 		kind != reflect.String && kind != reflect.Map {
 		return false,
-			fmt.Sprintf("[lengthRule]:'%s' should be slice/array/string/map,actual is %v", r.fieldExpr, kind)
+			fmt.Sprintf("[%s]:'%s' should be slice/array/string/map,actual is %v",
+				r.name, r.fieldExpr, kind)
 	}
 
 	lenValue := reflect.ValueOf(exprValue)
-	if lenValue.Len() > r.lenLimit {
+	length := lenValue.Len()
+	if length < r.ge || length > r.le {
 		return false,
-			fmt.Sprintf("[lengthRule]:'%s' length should be less than or equal to %d,actual is %d",
-				r.fieldExpr, r.lenLimit, lenValue.Len())
+			fmt.Sprintf("[%s]:'%s' length should be between %d and %d,actual is %d",
+				r.name, r.fieldExpr, r.le, r.ge, length)
 
 	}
 	return true, ""
 }
 
-func NewLengthRule(fieldExpr string, lenLimit int) Rule {
+func NewLengthRule(fieldExpr string, ge int, le int) Rule {
 	return lengthRule{
 		fieldExpr: fieldExpr,
-		lenLimit:  lenLimit,
+		ge:        ge,
+		le:        le,
+		name:      "lengthRule",
 	}
 }
