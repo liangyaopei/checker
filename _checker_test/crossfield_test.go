@@ -21,7 +21,7 @@ type crossStruct struct {
 	Date2 time.Time
 }
 
-func TestCrossField(t *testing.T) {
+func TestCrossFieldSimple(t *testing.T) {
 	layout := "2006-01-02"
 	date1, _ := time.Parse(layout, "2020-12-12")
 	date2, _ := time.Parse(layout, "2021-12-12")
@@ -49,6 +49,55 @@ func TestCrossField(t *testing.T) {
 		Float2: 6.28,
 		Date1:  date1,
 		Date2:  date2,
+	}
+
+	isValid, prompt, errMsg := crossChecker.Check(cross)
+	if !isValid {
+		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
+		return
+	}
+	t.Logf("valid cross struct")
+}
+
+type innerInt struct {
+	Val int
+}
+
+func (i innerInt) EqualTo(other interface{}) bool {
+	otherInt, ok := other.(innerInt)
+	if !ok {
+		return false
+	}
+	return i.Val == otherInt.Val
+}
+
+func (i innerInt) LessThan(other interface{}) bool {
+	otherInt, ok := other.(innerInt)
+	if !ok {
+		return false
+	}
+	return i.Val < otherInt.Val
+}
+
+type crossInner struct {
+	Int1 innerInt
+	Int2 innerInt
+}
+
+func TestCrossFieldCustom(t *testing.T) {
+
+	crossChecker := checker.NewChecker()
+
+	crossRuleInt := checker.NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledEq)
+	crossChecker.Add(crossRuleInt, "invalid int1 and int2")
+
+	cross := crossInner{
+		Int1: innerInt{
+			Val: 1,
+		},
+		Int2: innerInt{
+			Val: 1,
+		},
 	}
 
 	isValid, prompt, errMsg := crossChecker.Check(cross)

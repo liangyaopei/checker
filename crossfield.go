@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+type Comparable interface {
+	EqualTo(other interface{}) bool
+	LessThan(other interface{}) bool
+}
+
 type crossFiledOp int
 
 const (
@@ -80,6 +85,10 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 		timeLeft, _ := exprValueLeft.(time.Time)
 		timeRight, _ := exprValueRight.(time.Time)
 		isValid = compareTime(timeLeft, timeRight, r.op)
+	case Comparable:
+		comparableLeft := exprValueLeft.(Comparable)
+		comparableRight := exprValueRight.(Comparable)
+		isValid = compareComparable(comparableLeft, comparableRight, r.op)
 	default:
 		isValid = false
 	}
@@ -190,6 +199,25 @@ func compareTime(left time.Time, right time.Time, op crossFiledOp) bool {
 		return left.Before(right)
 	case CrossFiledLe:
 		return left.Before(right) || left.Equal(right)
+	default:
+		return false
+	}
+}
+
+func compareComparable(left Comparable, right Comparable, op crossFiledOp) bool {
+	switch op {
+	case CrossFiledEq:
+		return left.EqualTo(right)
+	case CrossFiledNe:
+		return !left.EqualTo(right)
+	case CrossFiledGt:
+		return !left.LessThan(right)
+	case CrossFiledGe:
+		return !left.LessThan(right) || left.EqualTo(right)
+	case CrossFiledLt:
+		return left.LessThan(right)
+	case CrossFiledLe:
+		return left.LessThan(right) || left.EqualTo(right)
 	default:
 		return false
 	}
