@@ -54,6 +54,26 @@ func NewOrRule(rules []Rule) Rule {
 	}
 }
 
+type notRule struct {
+	innerRule Rule
+}
+
+func (r notRule) check(param interface{}) (bool, string) {
+	isInnerValid, errMsg := r.innerRule.check(param)
+	isValid := !isInnerValid
+	if !isValid {
+		return false,
+			fmt.Sprintf("[notRule]:{%s}", errMsg)
+	}
+	return true, ""
+}
+
+func NewNotRule(innerRule Rule) Rule {
+	return notRule{
+		innerRule: innerRule,
+	}
+}
+
 func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
 	pValue := reflect.ValueOf(param)
 	if filedExpr == "" {
