@@ -12,7 +12,7 @@ type eqRuleString struct {
 	name       string
 }
 
-func (r eqRuleString) check(param interface{}) (bool, string) {
+func (r eqRuleString) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -49,7 +49,7 @@ type eqRuleInt struct {
 	name       string
 }
 
-func (r eqRuleInt) check(param interface{}) (bool, string) {
+func (r eqRuleInt) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -88,7 +88,7 @@ type eqRuleUint struct {
 	name       string
 }
 
-func (r eqRuleUint) check(param interface{}) (bool, string) {
+func (r eqRuleUint) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -127,7 +127,7 @@ type eqRuleFloat struct {
 	name       string
 }
 
-func (r eqRuleFloat) check(param interface{}) (bool, string) {
+func (r eqRuleFloat) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -166,7 +166,7 @@ type eqRuleTimestamp struct {
 	name       string
 }
 
-func (r eqRuleTimestamp) check(param interface{}) (bool, string) {
+func (r eqRuleTimestamp) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -205,7 +205,7 @@ type eqRuleTimestampStr struct {
 	name       string
 }
 
-func (r eqRuleTimestampStr) check(param interface{}) (bool, string) {
+func (r eqRuleTimestampStr) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -252,7 +252,7 @@ type notEqRuleString struct {
 	name         string
 }
 
-func (r notEqRuleString) check(param interface{}) (bool, string) {
+func (r notEqRuleString) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -291,7 +291,7 @@ type notEqRuleInt struct {
 	name         string
 }
 
-func (r notEqRuleInt) check(param interface{}) (bool, string) {
+func (r notEqRuleInt) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -330,7 +330,7 @@ type notEqRuleUint struct {
 	name         string
 }
 
-func (r notEqRuleUint) check(param interface{}) (bool, string) {
+func (r notEqRuleUint) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -369,7 +369,7 @@ type notEqRuleFloat struct {
 	name         string
 }
 
-func (r notEqRuleFloat) check(param interface{}) (bool, string) {
+func (r notEqRuleFloat) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -408,7 +408,7 @@ type notEqRuleTimestamp struct {
 	name         string
 }
 
-func (r notEqRuleTimestamp) check(param interface{}) (bool, string) {
+func (r notEqRuleTimestamp) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -447,7 +447,7 @@ type notEqRuleTimestampStr struct {
 	name         string
 }
 
-func (r notEqRuleTimestampStr) check(param interface{}) (bool, string) {
+func (r notEqRuleTimestampStr) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -495,7 +495,7 @@ type rangeRuleInt struct {
 	name      string
 }
 
-func (r rangeRuleInt) check(param interface{}) (bool, string) {
+func (r rangeRuleInt) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -537,7 +537,7 @@ type rangeRuleUint struct {
 	name      string
 }
 
-func (r rangeRuleUint) check(param interface{}) (bool, string) {
+func (r rangeRuleUint) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -579,7 +579,7 @@ type rangeRuleFloat struct {
 	name      string
 }
 
-func (r rangeRuleFloat) check(param interface{}) (bool, string) {
+func (r rangeRuleFloat) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -619,7 +619,7 @@ type rangeRuleTimestamp struct {
 	name      string
 }
 
-func (r rangeRuleTimestamp) check(param interface{}) (bool, string) {
+func (r rangeRuleTimestamp) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -660,7 +660,7 @@ type rangeRuleTimestampStr struct {
 	name      string
 }
 
-func (r rangeRuleTimestampStr) check(param interface{}) (bool, string) {
+func (r rangeRuleTimestampStr) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,

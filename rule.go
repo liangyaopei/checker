@@ -7,16 +7,16 @@ import (
 )
 
 type Rule interface {
-	check(param interface{}) (bool, string)
+	Check(param interface{}) (bool, string)
 }
 
 type andRule struct {
 	rules []Rule
 }
 
-func (r andRule) check(param interface{}) (bool, string) {
+func (r andRule) Check(param interface{}) (bool, string) {
 	for i := 0; i < len(r.rules); i++ {
-		isValid, msg := r.rules[i].check(param)
+		isValid, msg := r.rules[i].Check(param)
 		if !isValid {
 			return isValid, msg
 		}
@@ -34,10 +34,10 @@ type orRule struct {
 	rules []Rule
 }
 
-func (r orRule) check(param interface{}) (bool, string) {
+func (r orRule) Check(param interface{}) (bool, string) {
 	messages := make([]string, 0, len(r.rules))
 	for i := 0; i < len(r.rules); i++ {
-		isValid, msg := r.rules[i].check(param)
+		isValid, msg := r.rules[i].Check(param)
 		if isValid {
 			return true, ""
 		}
@@ -58,8 +58,8 @@ type notRule struct {
 	innerRule Rule
 }
 
-func (r notRule) check(param interface{}) (bool, string) {
-	isInnerValid, errMsg := r.innerRule.check(param)
+func (r notRule) Check(param interface{}) (bool, string) {
+	isInnerValid, errMsg := r.innerRule.Check(param)
 	isValid := !isInnerValid
 	if !isValid {
 		return false,
@@ -104,4 +104,9 @@ func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, refle
 		return nil, reflect.Invalid
 	}
 	return pValue.Interface(), pValue.Kind()
+}
+
+// FetchFieldInStruct can be used outside tht package
+func FetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
+	return fetchFieldInStruct(param, filedExpr)
 }

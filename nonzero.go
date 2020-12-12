@@ -10,7 +10,7 @@ type nonZeroRule struct {
 	name      string
 }
 
-func (r nonZeroRule) check(param interface{}) (bool, string) {
+func (r nonZeroRule) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,

@@ -13,7 +13,7 @@ type timestampStrRule struct {
 	name string
 }
 
-func (r timestampStrRule) check(param interface{}) (bool, string) {
+func (r timestampStrRule) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,

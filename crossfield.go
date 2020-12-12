@@ -36,7 +36,7 @@ type crossFieldCompareRule struct {
 	name string
 }
 
-func (r crossFieldCompareRule) check(param interface{}) (bool, string) {
+func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 	exprValueLeft, kind := fetchFieldInStruct(param, r.fieldExprLeft)
 	if kind == reflect.Invalid {
 		return false,

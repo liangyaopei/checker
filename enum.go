@@ -12,7 +12,7 @@ type enumRuleString struct {
 	name      string
 }
 
-func (r enumRuleString) check(param interface{}) (bool, string) {
+func (r enumRuleString) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -57,7 +57,7 @@ type enumRuleInt struct {
 	name      string
 }
 
-func (r enumRuleInt) check(param interface{}) (bool, string) {
+func (r enumRuleInt) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -103,7 +103,7 @@ type enumRuleUint struct {
 	name      string
 }
 
-func (r enumRuleUint) check(param interface{}) (bool, string) {
+func (r enumRuleUint) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -149,7 +149,7 @@ type enumRuleFloat struct {
 	name      string
 }
 
-func (r enumRuleFloat) check(param interface{}) (bool, string) {
+func (r enumRuleFloat) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,

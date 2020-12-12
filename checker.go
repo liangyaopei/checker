@@ -17,7 +17,7 @@ func (c *ruleChecker) Add(rule Rule, prompt string) {
 
 func (c ruleChecker) Check(param interface{}) (bool, string, string) {
 	for i := 0; i < len(c.rules); i++ {
-		isValid, msg := c.rules[i].check(param)
+		isValid, msg := c.rules[i].Check(param)
 		if !isValid {
 			return false, c.prompts[i], msg
 		}

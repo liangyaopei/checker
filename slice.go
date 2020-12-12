@@ -13,7 +13,7 @@ type sliceRule struct {
 	name string
 }
 
-func (r sliceRule) check(param interface{}) (bool, string) {
+func (r sliceRule) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
@@ -33,7 +33,7 @@ func (r sliceRule) check(param interface{}) (bool, string) {
 	sliceValue := reflect.ValueOf(exprValue)
 	for i := 0; i < sliceValue.Len(); i++ {
 		idxValue := sliceValue.Index(i)
-		isValid, msg := r.innerRule.check(idxValue.Interface())
+		isValid, msg := r.innerRule.Check(idxValue.Interface())
 		if !isValid {
 			msg = strings.Replace(msg, "''", "'"+r.fieldExpr+"'", 1)
 			return isValid, msg
@@ -58,7 +58,7 @@ type lengthRule struct {
 	name string
 }
 
-func (r lengthRule) check(param interface{}) (bool, string) {
+func (r lengthRule) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
