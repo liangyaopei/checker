@@ -3,6 +3,7 @@ package checker
 import (
 	"fmt"
 	"reflect"
+	"time"
 )
 
 type eqRuleString struct {
@@ -156,6 +157,92 @@ func NewEqRuleFloat(filedExpr string, equivalent float64) Rule {
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
 		name:       "eqRuleFloat",
+	}
+}
+
+type eqRuleTimestamp struct {
+	fieldExpr  string
+	equivalent time.Time
+	name       string
+}
+
+func (r eqRuleTimestamp) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
+	}
+	tsVal, ok := exprValue.(time.Time)
+	if !ok {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be time.Time,actual is %v",
+				r.name, r.fieldExpr, reflect.TypeOf(exprValue).String())
+	}
+	if !tsVal.Equal(r.equivalent) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be %v,actual is %v",
+				r.name, r.fieldExpr, r.equivalent, tsVal)
+	}
+	return true, ""
+}
+
+func NewEqRuleTimestamp(filedExpr string, equivalent time.Time) Rule {
+	return eqRuleTimestamp{
+		fieldExpr:  filedExpr,
+		equivalent: equivalent,
+		name:       "eqRuleTimestamp",
+	}
+}
+
+type eqRuleTimestampStr struct {
+	fieldExpr  string
+	layout     string
+	equivalent time.Time
+	name       string
+}
+
+func (r eqRuleTimestampStr) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
+	}
+
+	if kind != reflect.String {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
+				r.name, r.fieldExpr, kind)
+	}
+	exprValueStr := exprValue.(string)
+	exprValTime, err := time.Parse(r.layout, exprValueStr)
+	if err != nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be format %s,actual is %s",
+				r.name, r.fieldExpr, r.layout, exprValueStr)
+	}
+
+	if !exprValTime.Equal(r.equivalent) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be %v,actual is %v",
+				r.name, r.fieldExpr, r.equivalent.Format(r.layout), exprValueStr)
+	}
+	return true, ""
+}
+
+func NewEqRuleTimestampStr(filedExpr string, layout string, equivalent time.Time) Rule {
+	return eqRuleTimestampStr{
+		fieldExpr:  filedExpr,
+		layout:     layout,
+		equivalent: equivalent,
+		name:       "eqRuleTimestampStr",
 	}
 }
 
@@ -315,6 +402,92 @@ func NewNotEqRuleFloat(filedExpr string, inequivalent float64) Rule {
 	}
 }
 
+type notEqRuleTimestamp struct {
+	fieldExpr    string
+	inequivalent time.Time
+	name         string
+}
+
+func (r notEqRuleTimestamp) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
+	}
+	tsVal, ok := exprValue.(time.Time)
+	if !ok {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be time.Time,actual is %v",
+				r.name, r.fieldExpr, reflect.TypeOf(exprValue).String())
+	}
+	if tsVal.Equal(r.inequivalent) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should not be %v,actual is %v",
+				r.name, r.fieldExpr, r.inequivalent, tsVal)
+	}
+	return true, ""
+}
+
+func NewNotEqRuleTimestamp(filedExpr string, inequivalent time.Time) Rule {
+	return notEqRuleTimestamp{
+		fieldExpr:    filedExpr,
+		inequivalent: inequivalent,
+		name:         "notEqRuleTimestamp",
+	}
+}
+
+type notEqRuleTimestampStr struct {
+	fieldExpr    string
+	layout       string
+	inequivalent time.Time
+	name         string
+}
+
+func (r notEqRuleTimestampStr) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
+	}
+
+	if kind != reflect.String {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
+				r.name, r.fieldExpr, kind)
+	}
+	exprValueStr := exprValue.(string)
+	exprValTime, err := time.Parse(r.layout, exprValueStr)
+	if err != nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be format %s,actual is %s",
+				r.name, r.fieldExpr, r.layout, exprValueStr)
+	}
+
+	if exprValTime.Equal(r.inequivalent) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should not be %v,actual is %v",
+				r.name, r.fieldExpr, r.inequivalent.Format(r.layout), exprValueStr)
+	}
+	return true, ""
+}
+
+func NewNotEqRuleTimestampStr(filedExpr string, layout string, inequivalent time.Time) Rule {
+	return notEqRuleTimestampStr{
+		fieldExpr:    filedExpr,
+		layout:       layout,
+		inequivalent: inequivalent,
+		name:         "eqRuleTimestampStr",
+	}
+}
+
 type rangeRuleInt struct {
 	fieldExpr string
 	ge        int
@@ -348,11 +521,11 @@ func (r rangeRuleInt) check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-func NewRangeRuleInt(filedExpr string, le int, ge int) Rule {
+func NewRangeRuleInt(filedExpr string, ge int, le int) Rule {
 	return rangeRuleInt{
 		fieldExpr: filedExpr,
-		ge:        le,
-		le:        ge,
+		ge:        ge,
+		le:        le,
 		name:      "rangeRuleInt",
 	}
 }
@@ -390,11 +563,11 @@ func (r rangeRuleUint) check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-func NewRangeRuleUint(filedExpr string, le uint, ge uint) Rule {
+func NewRangeRuleUint(filedExpr string, ge uint, le uint) Rule {
 	return rangeRuleUint{
 		fieldExpr: filedExpr,
-		ge:        le,
-		le:        ge,
+		ge:        ge,
+		le:        le,
 		name:      "rangeRuleUint",
 	}
 }
@@ -430,11 +603,101 @@ func (r rangeRuleFloat) check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-func NewRangeRuleFloat(filedExpr string, le float64, ge float64) Rule {
+func NewRangeRuleFloat(filedExpr string, ge float64, le float64) Rule {
 	return rangeRuleFloat{
+		fieldExpr: filedExpr,
+		le:        ge,
+		ge:        le,
+		name:      "rangeRuleFloat",
+	}
+}
+
+type rangeRuleTimestamp struct {
+	fieldExpr string
+	le        time.Time
+	ge        time.Time
+	name      string
+}
+
+func (r rangeRuleTimestamp) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
+	}
+	tsVal, ok := exprValue.(time.Time)
+	if !ok {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be time.Time,actual is %v",
+				r.name, r.fieldExpr, reflect.TypeOf(exprValue).String())
+	}
+	if tsVal.Before(r.ge) || tsVal.After(r.le) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be between %v and %v,actual is %v",
+				r.name, r.fieldExpr, r.le, r.ge, tsVal)
+	}
+	return true, ""
+}
+
+func NewRangeRuleTimestamp(filedExpr string, ge time.Time, le time.Time) Rule {
+	return rangeRuleTimestamp{
 		fieldExpr: filedExpr,
 		le:        le,
 		ge:        ge,
-		name:      "rangeRuleFloat",
+		name:      "rangeRuleTimestamp",
+	}
+}
+
+type rangeRuleTimestampStr struct {
+	fieldExpr string
+	layout    string
+	le        time.Time
+	ge        time.Time
+	name      string
+}
+
+func (r rangeRuleTimestampStr) check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
+	}
+
+	if kind != reflect.String {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
+				r.name, r.fieldExpr, kind)
+	}
+	exprValueStr := exprValue.(string)
+	exprValTime, err := time.Parse(r.layout, exprValueStr)
+	if err != nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be format %s,actual is %s",
+				r.name, r.fieldExpr, r.layout, exprValueStr)
+	}
+
+	if exprValTime.Before(r.ge) || exprValTime.After(r.le) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be between %v and %v,actual is %v",
+				r.name, r.fieldExpr, r.le.Format(r.layout), r.ge.Format(r.layout), exprValueStr)
+	}
+	return true, ""
+}
+
+func NewRangeRuleTimestampStr(filedExpr string, layout string, ge time.Time, le time.Time) Rule {
+	return rangeRuleTimestampStr{
+		fieldExpr: filedExpr,
+		layout:    layout,
+		le:        le,
+		ge:        ge,
+		name:      "rangeRuleTimestampStr",
 	}
 }
