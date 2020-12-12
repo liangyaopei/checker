@@ -79,6 +79,7 @@ func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, refle
 	if filedExpr == "" {
 		return param, pValue.Kind()
 	}
+
 	exprs := strings.Split(filedExpr, ".")
 	for i := 0; i < len(exprs); i++ {
 		expr := exprs[i]
@@ -90,12 +91,17 @@ func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, refle
 		}
 		pValue = pValue.FieldByName(expr)
 	}
+
 	// last field is pointer
 	if pValue.Kind() == reflect.Ptr {
 		if pValue.IsNil() {
 			return nil, reflect.Ptr
 		}
 		pValue = pValue.Elem()
+	}
+
+	if !pValue.IsValid() {
+		return nil, reflect.Invalid
 	}
 	return pValue.Interface(), pValue.Kind()
 }
