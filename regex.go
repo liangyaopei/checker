@@ -93,7 +93,7 @@ type regexRule struct {
 	name        string
 }
 
-func (r regexRule) check(param interface{}) (bool, string) {
+func (r regexRule) Check(param interface{}) (bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	ruleName := "regexRule"
 	if r.name != "" {

@@ -1,28 +1,20 @@
 # Checker
-[中文版本](README_zh.md)
+[English Version](README.md)
 
-`Checker` is a parameter validation package, it can replace [gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10). `Checker` can be use in struct/non-struct validation, including cross field validation in struct, elements validation in Slice/Array/Map, and provides customized validation rule.
 
-## Installation
+`Checker`是Golang的参数校验的包，它可以完全替代[gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10)。`Checker`用于结构体或者非结构的参数校验，包括结构体中不同字段比较的校验，Slice/Array/Map中的元素校验，还提供自定义的校验规则。
 
+## 安装
 ```
 go get -u github.com/liangyaopei/checker
 ```
 
+## 使用
+使用的例子都在[_checker_test](_checker_test)。
+主要思想是，每个校验规则都是一个`Rule`，`Rule`对参数进行校验，返回是否合法以及错误日志。
+`Checker`是校验器，在结构体的字段上添加`Rule`和错误提示。
 
-
-## Usage
-
-Examples are in [_checker_test](_checker_test).
-
-The main principle is, every validation rule is a `Rule` interface, `Rule` validates parameter, returns `isValid` and error log.
-
-`Checker` is a validatior, it adds `Rule` and error prompt on related fileld in sturtc.
-
-
-
-For example, [non-struct parameter validation](_checker_test/nonstruct_test.go), `fieldExpr` is empty string.
-
+例如，[非结构体的参数校验](_checker_test/nonstruct_test.go)，`fieldExpr`传空字符串。
 ```go
 email := "abc@examplecom"
 
@@ -34,10 +26,7 @@ nonStructChecker.Add(emailRule, "invalid email")
 isValid, prompt, errMsg := nonStructChecker.Check(email)
 ```
 
-
-
-[struct parameter validation](_checker_test/timestamp_test.go)
-
+[结构体的参数校验](_checker_test/timestamp_test.go)。
 ```go
 type timestamp struct {
 	StartDateStr string
@@ -56,13 +45,12 @@ ts := timestamp{
 isValid, prompt, errMsg := tsChecker.Check(ts)
 ```
 
-[customized validation rule](_checker_test/customized_rule_test.go), only implements `Rule` interface.
+[自定义校验规则](_checker_test/customized_rule_test.go),只要实现`Rule`接口即可。
 
 
+## 与validator.v10的tag对应的Rule
 
-## Rule realted to corresponding tag in validator.v10
-
-### Cross filed comparasion
+### 跨字段的比较
 
 | tag           | Rule                                                         |
 | ------------- | ------------------------------------------------------------ |
@@ -85,11 +73,13 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 | isbn10   | `NewISBN10Rule("Field")`       |
 | isbn10   | `NewISBN13Rule("Field")`       |
 
-etc, regrex expression for string rule, can use `NewRegexRule(fieldExpr string, regexExpr string)`
+等等，字符串自定义的正则表达式，可以使用`NewRegexRule(fieldExpr string, regexExpr string)`
 
 
 
-### Comparasion
+### 比较
+
+
 
 | Tag            | Rule                                                      |
 | -------------- | --------------------------------------------------------- |
@@ -99,20 +89,20 @@ etc, regrex expression for string rule, can use `NewRegexRule(fieldExpr string, 
 
 
 
-### Others
+### 其他
 
 | Tag                             | Rule                                                         |
 | ------------------------------- | ------------------------------------------------------------ |
 | len                             | `NewLengthRule(fieldExpr string, ge int, le int)`            |
-| required_if, required_without,etc | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
+| required_if, required_without等 | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
 
 
 
-### easy for checker, hard for validatior
+## checker容易做，validator难做
 
-The main drawback of `validator` is,  validation rule is attached to fields in struct via tag, which is intrusive, and hard to read the validation logic.
+`validator`主要的缺点是，把校验规则以标签的形式写在结构体字段上，这用很强的侵入性，并且不易于阅读校验逻辑。
 
-1.  validation sturct of third party
+1. 校验第三方包下的结构体
 
 ```go
 package thrid_party
@@ -122,7 +112,7 @@ type Param struct{
 }
 ```
 
-In user's package, try to change min to 20, `validator` can not change the validation rule, as we cannot change the struct layout outside our packages.
+在自己的代码包下,将min改为20，这个时候`validator`将无法添加校验规则。
 
 ```go
 package main
@@ -133,19 +123,18 @@ func validate(p thrid_party.Param)(isValid bool){
 
 ```
 
-If use `checker`, the rule is simpler:
+而使用`checker`，只需要改为：
 
 ```go
 rule := checker.NewRangeRuleInt("Age", 20, 80)
 checker.Add(rule, "invlaid age")
 ```
 
+因为`checker`的校验规则与结构体解耦，因此，修改校验规则非常简单。
 
-Because validation rule of `checker` is decoupled from struct, which makes changes validation rule easy.
+2. 校验链表长度
 
-2. validate the length of linkedlist
-
-The example is [here](_checker_test/linkedlist_test.go).
+这个例子在[这里](_checker_test/linkedlist_test.go)
 
 ```go
 type list struct {
@@ -154,9 +143,9 @@ type list struct {
 }
 ```
 
-To validate the length of linkedlist, requiring the first node's `Next` cannot be nil. `validator` cannot do this, for the same tag is attached to the same field.
+要校验链表的长度，要求前几个节点的`Next`不为空，`validator`不能做到，因为自引用的结构体，同样的标签适用于相同的字段。
 
-If use `checker`，
+如果使用`checker`，
 
 ```go
 	name := "list"
@@ -168,4 +157,4 @@ If use `checker`，
 	listChecker.Add(nameRule, "invalid info name")
 ```
 
-Length can be defined by `Next.Name`
+通过`Next.Name`可以指定链表的长度。
