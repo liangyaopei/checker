@@ -4,12 +4,12 @@
 
 `Checker`是Golang的参数校验的包，它可以完全替代[gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10)。`Checker`用于结构体或者非结构的参数校验，包括结构体中不同字段比较的校验，Slice/Array/Map中的元素校验，还提供自定义的校验规则。
 
-# 安装
+## 安装
 ```
 go get -u github.com/liangyaopei/checker
 ```
 
-# 使用
+## 使用
 使用的例子都在[_checker_test](_checker_test)。
 主要思想是，每个校验规则都是一个`Rule`，`Rule`对参数进行校验，返回是否合法以及错误日志。
 `Checker`是校验器，在结构体的字段上添加`Rule`和错误提示。
@@ -48,9 +48,9 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 [自定义校验规则](_checker_test/customized_rule_test.go),只要实现`Rule`接口即可。
 
 
-# 与validator.v10的tag对应的Rule
+## 与validator.v10的tag对应的Rule
 
-## 跨字段的比较
+### 跨字段的比较
 
 | tag           | Rule                                                         |
 | ------------- | ------------------------------------------------------------ |
@@ -63,7 +63,7 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 
 
-## Strings
+### Strings
 
 | tag      | Rule                           |
 | -------- | ------------------------------ |
@@ -77,7 +77,7 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 
 
-## 比较
+### 比较
 
 
 
@@ -89,14 +89,16 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 
 
-## 其他
+### 其他
 
 | Tag                             | Rule                                                         |
 | ------------------------------- | ------------------------------------------------------------ |
 | len                             | `NewLengthRule(fieldExpr string, ge int, le int)`            |
 | required_if, required_without等 | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
 
-# checker容易做，validator难做
+
+
+## checker容易做，validator难做
 
 `validator`主要的缺点是，把校验规则以标签的形式写在结构体字段上，这用很强的侵入性，并且不易于阅读校验逻辑。
 
@@ -132,7 +134,7 @@ checker.Add(rule, "invlaid age")
 
 2. 校验链表长度
 
-这个例子在
+这个例子在[这里](_checker_test/linkedlist_test.go)
 
 ```go
 type list struct {
