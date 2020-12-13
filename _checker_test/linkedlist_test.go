@@ -13,7 +13,7 @@ type list struct {
 
 func TestListEmptyPrtField(t *testing.T) {
 	name := "list"
-	node1 := list{Name: nil, Next: nil}
+	node1 := list{Name: &name, Next: nil}
 	lists := list{Name: &name, Next: &node1}
 
 	listChecker := checker.NewChecker()

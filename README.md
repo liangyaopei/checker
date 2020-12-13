@@ -1,4 +1,6 @@
-# Overview
+# Checker
+[中文版本](README_zh.md)
+
 Checker is a validation package written in Golang, serves as an alternative to 
 [gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10),
 which provides flexible, configurable validation when validating struct or non-struct in Golang.

@@ -1,17 +1,156 @@
-`Checker`是一个Golang中参数校验的包，它可以替代
-[gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10)。
-`Checker`用于结构体或者非结构的参数校验，包括结构体中不同字段比较的校验，还提供自定义的校验规则。
+# Checker
+[English Version](README.md)
+`Checker`是Golang的参数校验的包，它可以完全替代[gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10)。`Checker`用于结构体或者非结构的参数校验，包括结构体中不同字段比较的校验，Slice/Array/Map中的元素校验，还提供自定义的校验规则。
 
 # 安装
 ```
 go get -u github.com/liangyaopei/checker
 ```
 
-# 描述&例子
+# 使用
+使用的例子都在[_checker_test](_checker_test)。
+主要思想是，每个校验规则都是一个`Rule`，`Rule`对参数进行校验，返回是否合法以及错误日志。
+`Checker`是校验器，在结构体的字段上添加`Rule`和错误提示。
+
+例如，[非结构体的参数校验](_checker_test/nonstruct_test.go)，`fieldExpr`传空字符串。
+```go
+email := "abc@examplecom"
+
+nonStructChecker := checker.NewChecker()
+
+emailRule := checker.NewEmailRule("")
+nonStructChecker.Add(emailRule, "invalid email")
+
+isValid, prompt, errMsg := nonStructChecker.Check(email)
+```
+
+[结构体的参数校验](_checker_test/timestamp_test.go)。
+```go
+type timestamp struct {
+	StartDateStr string
+}
+
+layout := "2006-01-02"
+startDate, _ := time.Parse(layout, "2020-12-12")
+
+tsChecker := checker.NewChecker()
+tsStrRule := checker.NewEqRuleTimestampStr("StartDateStr", layout, startDate)
+tsChecker.Add(tsStrRule, "invalid StartDateStr")
+
+ts := timestamp{
+	StartDateStr: "2020-12-12",
+}
+isValid, prompt, errMsg := tsChecker.Check(ts)
+```
+
+[自定义校验规则](_checker_test/customized_rule_test.go),只要实现`Rule`接口即可。
 
 
-# 与validator.v10的比较
-不同包下的结构体，校验标签不能定制
-链表的例子，内嵌结构体，validator不使用
-适用于非结构体的例子
-标签与rule的比较,标签难以理解和记忆
+# 与validator.v10的tag对应的Rule
+
+## 跨字段的比较
+
+| tag           | Rule                                                         |
+| ------------- | ------------------------------------------------------------ |
+| eqfield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledEq)` |
+| fieldcontains | `NewEnumRuleInt("Value", []int{8, 9, 10})`                   |
+| fieldexcludes | `Not(checker.NewEnumRuleInt("Value", []int{8, 9, 10}))`      |
+| gtfield       | `NewCrossFieldCompareRule("Int1", "Int2", CrossFiledGt)`     |
+| gtefield      | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledGe)` |
+| nefield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledNe)` |
+
+
+
+## Strings
+
+| tag      | Rule                           |
+| -------- | ------------------------------ |
+| alpha    | `NewAlphaRule("Field")`        |
+| alphanum | `NewAlphaNumericRule("Field")` |
+| email    | `NewEmailRule("Email")`        |
+| isbn10   | `NewISBN10Rule("Field")`       |
+| isbn10   | `NewISBN13Rule("Field")`       |
+
+等等，字符串自定义的正则表达式，可以使用`NewRegexRule(fieldExpr string, regexExpr string)`
+
+
+
+## 比较
+
+
+
+| Tag            | Rule                                                      |
+| -------------- | --------------------------------------------------------- |
+| eq             | `NewEqRuleInt(filedExpr string, equivalent int)` ...      |
+| gt, gte,lt,lte | `NewRangeRuleInt(filedExpr string, ge int, le int)` ...   |
+| ne             | `NewNotEqRuleInt(filedExpr string, inequivalent int)` ... |
+
+
+
+## 其他
+
+| Tag                             | Rule                                                         |
+| ------------------------------- | ------------------------------------------------------------ |
+| len                             | `NewLengthRule(fieldExpr string, ge int, le int)`            |
+| required_if, required_without等 | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
+
+# checker容易做，validator难做
+
+`validator`主要的缺点是，把校验规则以标签的形式写在结构体字段上，这用很强的侵入性，并且不易于阅读校验逻辑。
+
+1. 校验第三方包下的结构体
+
+```go
+package thrid_party
+
+type Param struct{
+  Age `validate:"min=18,max=80"`
+}
+```
+
+在自己的代码包下,将min改为20，这个时候`validator`将无法添加校验规则。
+
+```go
+package main
+
+func validate(p thrid_party.Param)(isValid bool){
+  ....
+}
+
+```
+
+而使用`checker`，只需要改为：
+
+```go
+rule := checker.NewRangeRuleInt("Age", 20, 80)
+checker.Add(rule, "invlaid age")
+```
+
+因为`checker`的校验规则与结构体解耦，因此，修改校验规则非常简单。
+
+2. 校验链表长度
+
+这个例子在
+
+```go
+type list struct {
+	Name *string
+  Next *list `validate:"nonzero"`
+}
+```
+
+要校验链表的长度，要求前几个节点的`Next`不为空，`validator`不能做到，因为自引用的结构体，同样的标签适用于相同的字段。
+
+如果使用`checker`，
+
+```go
+	name := "list"
+	node1 := list{Name: &name, Next: nil}
+	lists := list{Name: &name, Next: &node1}
+
+	listChecker := checker.NewChecker()
+	nameRule := checker.NewLengthRule("Next.Name", 1, 20)
+	listChecker.Add(nameRule, "invalid info name")
+```
+
+通过`Next.Name`可以指定链表的长度。
