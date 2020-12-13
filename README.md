@@ -104,7 +104,7 @@ etc, regrex expression for string rule, can use `NewRegexRule(fieldExpr string, 
 | Tag                             | Rule                                                         |
 | ------------------------------- | ------------------------------------------------------------ |
 | len                             | `NewLengthRule(fieldExpr string, ge int, le int)`            |
-| required_if, required_without等 | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
+| required_if, required_without,etc | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
 
 
 
@@ -140,7 +140,6 @@ rule := checker.NewRangeRuleInt("Age", 20, 80)
 checker.Add(rule, "invlaid age")
 ```
 
-因为`checker`的校验规则与结构体解耦，因此，修改校验规则非常简单。
 
 Because validation rule of `checker` is decoupled from struct, which makes changes validation rule easy.
 
