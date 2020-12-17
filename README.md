@@ -8,6 +8,10 @@
 
 `Checker` is a parameter validation package, it can replace [gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10). `Checker` can be use in struct/non-struct validation, including cross field validation in struct, elements validation in Slice/Array/Map, and provides customized validation rule.
 
+## Requirements
+
+Go 1.13 or above.
+
 ## Installation
 
 ```
@@ -71,12 +75,12 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 | tag           | Rule                                                         |
 | ------------- | ------------------------------------------------------------ |
-| eqfield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledEq)` |
+| eqfield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldEq)` |
 | fieldcontains | `NewEnumRuleInt("Value", []int{8, 9, 10})`                   |
 | fieldexcludes | `Not(checker.NewEnumRuleInt("Value", []int{8, 9, 10}))`      |
-| gtfield       | `NewCrossFieldCompareRule("Int1", "Int2", CrossFiledGt)`     |
-| gtefield      | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledGe)` |
-| nefield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledNe)` |
+| gtfield       | `NewCrossFieldCompareRule("Int1", "Int2", CrossFieldGt)`     |
+| gtefield      | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldGe)` |
+| nefield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldNe)` |
 
 
 

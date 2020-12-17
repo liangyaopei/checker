@@ -9,6 +9,11 @@
 
 `Checker`是Golang的参数校验的包，它可以完全替代[gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10)。`Checker`用于结构体或者非结构的参数校验，包括结构体中不同字段比较的校验，Slice/Array/Map中的元素校验，还提供自定义的校验规则。
 
+## Go版本
+
+Go 1.13 或以上.
+
+
 ## 安装
 ```
 go get -u github.com/liangyaopei/checker
@@ -59,12 +64,12 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 | tag           | Rule                                                         |
 | ------------- | ------------------------------------------------------------ |
-| eqfield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledEq)` |
+| eqfield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldEq)` |
 | fieldcontains | `NewEnumRuleInt("Value", []int{8, 9, 10})`                   |
 | fieldexcludes | `Not(checker.NewEnumRuleInt("Value", []int{8, 9, 10}))`      |
-| gtfield       | `NewCrossFieldCompareRule("Int1", "Int2", CrossFiledGt)`     |
-| gtefield      | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledGe)` |
-| nefield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledNe)` |
+| gtfield       | `NewCrossFieldCompareRule("Int1", "Int2", CrossFieldGt)`     |
+| gtefield      | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldGe)` |
+| nefield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldNe)` |
 
 
 
