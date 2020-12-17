@@ -11,32 +11,59 @@ type Comparable interface {
 	LessThan(other interface{}) bool
 }
 
-type crossFiledOp int
+type operand interface {
+	String() string
+}
 
-const (
-	CrossFiledEq = iota + 1
-	CrossFiledNe
-	CrossFiledGt
-	CrossFiledGe
-	CrossFiledLt
-	CrossFiledLe
-)
+type eqOperand struct{}
+
+func (op eqOperand) String() string {
+	return "="
+}
+
+type neOperand struct{}
+
+func (op neOperand) String() string {
+	return "!="
+}
+
+type gtOperand struct{}
+
+func (op gtOperand) String() string {
+	return ">"
+}
+
+type geOperand struct{}
+
+func (op geOperand) String() string {
+	return ">="
+}
+
+type ltOperand struct{}
+
+func (op ltOperand) String() string {
+	return "<"
+}
+
+type leOperand struct{}
+
+func (op leOperand) String() string {
+	return "<="
+}
 
 var (
-	opStrMap = map[crossFiledOp]string{
-		CrossFiledEq: "=",
-		CrossFiledNe: "!=",
-		CrossFiledGt: ">",
-		CrossFiledGe: ">=",
-		CrossFiledLt: "<",
-		CrossFiledLe: "<=",
-	}
+	CrossFieldEq = eqOperand{}
+	CrossFieldNe = neOperand{}
+	CrossFieldGt = gtOperand{}
+	CrossFieldGe = geOperand{}
+	CrossFieldLt = ltOperand{}
+	CrossFieldLe = leOperand{}
 )
 
 type crossFieldCompareRule struct {
 	fieldExprLeft  string
 	fieldExprRight string
-	op             crossFiledOp
+	op             operand
 
 	name string
 }
@@ -95,12 +122,12 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 	if !isValid {
 		return false,
 			fmt.Sprintf("[%s]:'%s' does not %s '%s'",
-				r.name, r.fieldExprLeft, opStrMap[r.op], r.fieldExprRight)
+				r.name, r.fieldExprLeft, r.op.String(), r.fieldExprRight)
 	}
 	return true, ""
 }
 
-func NewCrossFieldCompareRule(fieldExprLeft string, fieldExprRight string, op crossFiledOp) Rule {
+func NewCrossFieldCompareRule(fieldExprLeft string, fieldExprRight string, op operand) Rule {
 	return crossFieldCompareRule{
 		fieldExprLeft:  fieldExprLeft,
 		fieldExprRight: fieldExprRight,
@@ -109,114 +136,114 @@ func NewCrossFieldCompareRule(fieldExprLeft string, fieldExprRight string, op cr
 	}
 }
 
-func compareInt(left int64, right int64, op crossFiledOp) bool {
-	switch op {
-	case CrossFiledEq:
+func compareInt(left int64, right int64, op operand) bool {
+	switch op.(type) {
+	case eqOperand:
 		return left == right
-	case CrossFiledNe:
+	case neOperand:
 		return left != right
-	case CrossFiledGt:
+	case gtOperand:
 		return left > right
-	case CrossFiledGe:
+	case geOperand:
 		return left >= right
-	case CrossFiledLt:
+	case ltOperand:
 		return left < right
-	case CrossFiledLe:
+	case leOperand:
 		return left <= right
 	default:
 		return false
 	}
 }
 
-func compareUInt(left uint64, right uint64, op crossFiledOp) bool {
-	switch op {
-	case CrossFiledEq:
+func compareUInt(left uint64, right uint64, op operand) bool {
+	switch op.(type) {
+	case eqOperand:
 		return left == right
-	case CrossFiledNe:
+	case neOperand:
 		return left != right
-	case CrossFiledGt:
+	case gtOperand:
 		return left > right
-	case CrossFiledGe:
+	case geOperand:
 		return left >= right
-	case CrossFiledLt:
+	case ltOperand:
 		return left < right
-	case CrossFiledLe:
+	case leOperand:
 		return left <= right
 	default:
 		return false
 	}
 }
 
-func compareFloat64(left float64, right float64, op crossFiledOp) bool {
-	switch op {
-	case CrossFiledEq:
+func compareFloat64(left float64, right float64, op operand) bool {
+	switch op.(type) {
+	case eqOperand:
 		return left == right
-	case CrossFiledNe:
+	case neOperand:
 		return left != right
-	case CrossFiledGt:
+	case gtOperand:
 		return left > right
-	case CrossFiledGe:
+	case geOperand:
 		return left >= right
-	case CrossFiledLt:
+	case ltOperand:
 		return left < right
-	case CrossFiledLe:
+	case leOperand:
 		return left <= right
 	default:
 		return false
 	}
 }
 
-func compareString(left string, right string, op crossFiledOp) bool {
-	switch op {
-	case CrossFiledEq:
+func compareString(left string, right string, op operand) bool {
+	switch op.(type) {
+	case eqOperand:
 		return left == right
-	case CrossFiledNe:
+	case neOperand:
 		return left != right
-	case CrossFiledGt:
+	case gtOperand:
 		return left > right
-	case CrossFiledGe:
+	case geOperand:
 		return left >= right
-	case CrossFiledLt:
+	case ltOperand:
 		return left < right
-	case CrossFiledLe:
+	case leOperand:
 		return left <= right
 	default:
 		return false
 	}
 }
 
-func compareTime(left time.Time, right time.Time, op crossFiledOp) bool {
-	switch op {
-	case CrossFiledEq:
+func compareTime(left time.Time, right time.Time, op operand) bool {
+	switch op.(type) {
+	case eqOperand:
 		return left.Equal(right)
-	case CrossFiledNe:
+	case neOperand:
 		return !left.Equal(right)
-	case CrossFiledGt:
+	case gtOperand:
 		return left.After(right)
-	case CrossFiledGe:
+	case geOperand:
 		return left.After(right) || left.Equal(right)
-	case CrossFiledLt:
+	case ltOperand:
 		return left.Before(right)
-	case CrossFiledLe:
+	case leOperand:
 		return left.Before(right) || left.Equal(right)
 	default:
 		return false
 	}
 }
 
-func compareComparable(left Comparable, right Comparable, op crossFiledOp) bool {
-	switch op {
-	case CrossFiledEq:
+func compareComparable(left Comparable, right Comparable, op operand) bool {
+	switch op.(type) {
+	case eqOperand:
 		return left.EqualTo(right)
-	case CrossFiledNe:
+	case neOperand:
 		return !left.EqualTo(right)
-	case CrossFiledGt:
+	case gtOperand:
 		return !left.LessThan(right)
-	case CrossFiledGe:
+	case geOperand:
 		return !left.LessThan(right) || left.EqualTo(right)
-	case CrossFiledLt:
+	case ltOperand:
 		return left.LessThan(right)
-	case CrossFiledLe:
+	case leOperand:
 		return left.LessThan(right) || left.EqualTo(right)
 	default:
 		return false
