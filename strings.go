@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/url"
+	"os"
 	"reflect"
 	"strings"
 )
@@ -266,6 +267,34 @@ func NewIsJSONRule(fieldExpr string) Rule {
 	return isJSONRule{
 		fieldExpr: fieldExpr,
 		name:      "isJSONRule",
+	}
+}
+
+type isDirRule struct {
+	fieldExpr string
+
+	name string
+}
+
+func (r isDirRule) Check(param interface{}) (bool, string) {
+	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	fileInfo, err := os.Stat(exprValStr)
+	if err != nil || !fileInfo.IsDir() {
+		return false,
+			fmt.Sprintf("[%s]:'%s' does not satisfy dir fromat",
+				r.name, r.fieldExpr)
+	}
+	return true, ""
+}
+
+// NewIsDirRule is the validation function for validating if the current field's value is a valid directory.
+func NewIsDirRule(fieldExpr string) Rule {
+	return isDirRule{
+		fieldExpr: fieldExpr,
+		name:      "isDirRule",
 	}
 }
 
