@@ -8,6 +8,10 @@
 
 `Checker` is a parameter validation package, it can replace [gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10). `Checker` can be use in struct/non-struct validation, including cross field validation in struct, elements validation in Slice/Array/Map, and provides customized validation rule.
 
+## Requirements
+
+Go 1.13 or above.
+
 ## Installation
 
 ```
