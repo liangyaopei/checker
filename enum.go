@@ -168,7 +168,7 @@ func (r enumRuleFloat) Check(param interface{}) (bool, string) {
 	_, exist := r.set[exprValueFloat]
 	if !exist {
 		return false,
-			fmt.Sprintf("[%s]:'%s' should be in %v,actual is %d",
+			fmt.Sprintf("[%s]:'%s' should be in %v,actual is %f",
 				r.name, r.fieldExpr, r.enum, exprValueFloat)
 	}
 	return true, ""
