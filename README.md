@@ -71,12 +71,12 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 | tag           | Rule                                                         |
 | ------------- | ------------------------------------------------------------ |
-| eqfield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledEq)` |
+| eqfield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldEq)` |
 | fieldcontains | `NewEnumRuleInt("Value", []int{8, 9, 10})`                   |
 | fieldexcludes | `Not(checker.NewEnumRuleInt("Value", []int{8, 9, 10}))`      |
-| gtfield       | `NewCrossFieldCompareRule("Int1", "Int2", CrossFiledGt)`     |
-| gtefield      | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledGe)` |
-| nefield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFiledNe)` |
+| gtfield       | `NewCrossFieldCompareRule("Int1", "Int2", CrossFieldGt)`     |
+| gtefield      | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldGe)` |
+| nefield       | `NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldNe)` |
 
 
 
