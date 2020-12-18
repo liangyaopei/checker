@@ -1,6 +1,7 @@
 # Checker
 [![Go Report Card](https://goreportcard.com/badge/github.com/liangyaopei/checker)](https://goreportcard.com/report/github.com/liangyaopei/checker)
-[![GoDoc](https://godoc.org/github.com/liangyaopei/checker?status.svg)](http://godoc.org/github.com/liangyaopei/checker)
+[![Go Reference](https://pkg.go.dev/badge/github.com/liangyaopei/checker.svg)](https://pkg.go.dev/github.com/liangyaopei/checker)
+[![Build Status](https://travis-ci.com/liangyaopei/checker.svg?branch=master)](https://travis-ci.com/liangyaopei/checker)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
 
@@ -86,13 +87,27 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 ### Strings
 
-| tag      | Rule                           |
-| -------- | ------------------------------ |
-| alpha    | `NewAlphaRule("Field")`        |
-| alphanum | `NewAlphaNumericRule("Field")` |
-| email    | `NewEmailRule("Email")`        |
-| isbn10   | `NewISBN10Rule("Field")`       |
-| isbn10   | `NewISBN13Rule("Field")`       |
+| tag              | Rule                                  |      |
+| ---------------- | ------------------------------------- | ---- |
+| alpha            | `NewAlphaRule("Field")`               |      |
+| alphanum         | `NewAlphaNumericRule("Field")`        |      |
+| email            | `NewEmailRule("Email")`               |      |
+| isbn10           | `NewISBN10Rule("Field")`              |      |
+| isbn10           | `NewISBN13Rule("Field")`              |      |
+| isbn             | `NewISBNRuke("Field")`                |      |
+| ip               | `NewIPRule(FieldExpr)`                |      |
+| ipv4             | `NewIPv4Rule("IPv4")`                 |      |
+| ipv6             | `NewIPv6Rule("IPv6")`                 |      |
+| uri              | `NewURIRule("URL")`                   |      |
+| url              | `NewURLRule("URL")`                   |      |
+| url_encoded      | `NewURLEncodedRule("Field")`          |      |
+| html             | `NewHTMLRule("Field")`                |      |
+| html_encoded     | `NewHTMLEncodedRule("Field")`         |      |
+| hostname         | `NewHostNameRule("Field")`            |      |
+| hostname_rfc1123 | `NewHostNameRFC1123Rule("Field")`     |      |
+| json             | `NewIsJSONRule("Field")`              |      |
+| dir              | `NewIsDirRule("Field")`               |      |
+| datetime         | `NewIsDatetimeRule("Field","layout")` |      |
 
 etc, regrex expression for string rule, can use `NewRegexRule(fieldExpr string, regexExpr string)`
 
