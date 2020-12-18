@@ -28,6 +28,8 @@ func (r nonZeroRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
+// NewNonZeroRule checks if the field
+// is non-zero
 func NewNonZeroRule(fieldExpr string) Rule {
 	return nonZeroRule{
 		fieldExpr: fieldExpr,

@@ -1,5 +1,7 @@
 package checker
 
+// Checker is the representation of
+// validation object
 type Checker interface {
 	Add(rule Rule, prompt string)
 	Check(param interface{}) (bool, string, string)
@@ -25,6 +27,8 @@ func (c ruleChecker) Check(param interface{}) (bool, string, string) {
 	return true, "", ""
 }
 
+// NewChecker returns the
+// Checker implementation
 func NewChecker() Checker {
 	return &ruleChecker{}
 }
