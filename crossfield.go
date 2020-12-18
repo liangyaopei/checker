@@ -51,6 +51,7 @@ func (op leOperand) String() string {
 	return "<="
 }
 
+// cross field comparison operand variables
 var (
 	CrossFieldEq = eqOperand{}
 	CrossFieldNe = neOperand{}
