@@ -23,7 +23,7 @@ func TestRuleTimeStampStr(t *testing.T) {
 
 	tsChecker := checker.NewChecker()
 
-	tsRule := checker.NewTimestampStrRule("Date", layout)
+	tsRule := checker.NewIsDatetimeRule("Date", layout)
 	tsChecker.Add(tsRule, "invalid Date")
 
 	tsEqRule := checker.NewEqRuleTimestamp("StartDate", startDate)

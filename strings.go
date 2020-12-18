@@ -7,7 +7,19 @@ import (
 	"net/url"
 	"os"
 	"reflect"
+	"regexp"
 	"strings"
+	"time"
+)
+
+const (
+	iSBN10RegexString = "^(?:[0-9]{9}X|[0-9]{10})$"
+	iSBN13RegexString = "^(?:(?:97(?:8|9))[0-9]{10})$"
+)
+
+var (
+	iSBN10Regex = regexp.MustCompile(iSBN10RegexString)
+	iSBN13Regex = regexp.MustCompile(iSBN13RegexString)
 )
 
 type urlRule struct {
@@ -109,7 +121,8 @@ func (r ipv4Rule) Check(param interface{}) (bool, string) {
 	}
 
 	ip := net.ParseIP(exprValStr)
-	if ip == nil || ip.To4() == nil {
+	isValidIPv4 := ip != nil && ip.To4() != nil
+	if !isValidIPv4 {
 		return false,
 			fmt.Sprintf("[%s]:'%s' does not satisfy ipv4 format,actual value is %s",
 				r.name, r.fieldExpr, exprValStr)
@@ -138,7 +151,8 @@ func (r ipv6Rule) Check(param interface{}) (bool, string) {
 	}
 	ip := net.ParseIP(exprValStr)
 
-	if ip == nil || ip.To4() == nil {
+	isValidIPv6 := ip != nil && ip.To4() == nil
+	if !isValidIPv6 {
 		return false,
 			fmt.Sprintf("[%s]:'%s' does not satisfy ipv6 format,actual value is %s",
 				r.name, r.fieldExpr, exprValStr)
@@ -195,7 +209,6 @@ func (r startsWithRule) Check(param interface{}) (bool, string) {
 	if !isValid {
 		return false, errMsg
 	}
-
 	if !strings.HasPrefix(exprValStr, r.prefix) {
 		return false,
 			fmt.Sprintf("[%s]:'%s' does not has prefix %s",
@@ -298,6 +311,114 @@ func NewIsDirRule(fieldExpr string) Rule {
 	}
 }
 
+type isDatetimeRule struct {
+	fieldExpr string
+	name      string
+
+	layout string
+}
+
+func (r isDatetimeRule) Check(param interface{}) (bool, string) {
+	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	_, err := time.Parse(r.layout, exprValueStr)
+	if err != nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be format %s,actual is %s",
+				r.name, r.fieldExpr, r.layout, exprValueStr)
+	}
+	return true, ""
+}
+
+// NewIsDatetimeRule is the validation function for validating if the current field's value is a valid datetime string.
+func NewIsDatetimeRule(fieldExpr string, layout string) Rule {
+	return isDatetimeRule{
+		fieldExpr: fieldExpr,
+		name:      "isDatetimeRule",
+		layout:    layout,
+	}
+}
+
+type iSBN10Rule struct {
+	fieldExpr string
+	name      string
+}
+
+func (r iSBN10Rule) Check(param interface{}) (bool, string) {
+	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	if !isISBN10(exprValueStr) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' does not satisfy ISBN10 fromat",
+				r.name, r.fieldExpr)
+	}
+	return true, ""
+}
+
+// NewIsISBN10Rule is the validation function for validating if the field's value is a valid v10 ISBN.
+func NewIsISBN10Rule(fieldExpr string) Rule {
+	return iSBN10Rule{
+		fieldExpr: fieldExpr,
+		name:      "IsISBN10Rule",
+	}
+}
+
+type iSBN13Rule struct {
+	fieldExpr string
+	name      string
+}
+
+func (r iSBN13Rule) Check(param interface{}) (bool, string) {
+	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	if !isISBN13(exprValueStr) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' does not satisfy ISBN13 fromat",
+				r.name, r.fieldExpr)
+	}
+	return true, ""
+}
+
+// NewIsISBN13Rule is the validation function for validating if the field's value is a valid v13 ISBN.
+func NewIsISBN13Rule(fieldExpr string) Rule {
+	return iSBN13Rule{
+		fieldExpr: fieldExpr,
+		name:      "IsISBN13Rule",
+	}
+}
+
+type iSBNRule struct {
+	fieldExpr string
+	name      string
+}
+
+func (r iSBNRule) Check(param interface{}) (bool, string) {
+	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	if !isISBN10(exprValueStr) && !isISBN13(exprValueStr) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' does not satisfy ISBN fromat",
+				r.name, r.fieldExpr)
+	}
+	return true, ""
+}
+
+// NewIsISBNRule is the validation function for validating if the field's value is a valid v10 or v13 ISBN.
+func NewIsISBNRule(fieldExpr string) Rule {
+	return iSBNRule{
+		fieldExpr: fieldExpr,
+		name:      "IsISBNRule",
+	}
+}
+
 func getStrField(param interface{}, fieldExpr string, name string) (string, bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
 	if kind == reflect.Invalid {
@@ -314,4 +435,48 @@ func getStrField(param interface{}, fieldExpr string, name string) (string, bool
 				name, fieldExpr, kind)
 	}
 	return exprValue.(string), true, ""
+}
+
+func isISBN10(exprValueStr string) bool {
+
+	s := strings.Replace(strings.Replace(exprValueStr, "-", "", 3), " ", "", 3)
+
+	if !iSBN10Regex.MatchString(s) {
+		return false
+	}
+
+	var checksum int32
+	var i int32
+
+	for i = 0; i < 9; i++ {
+		checksum += (i + 1) * int32(s[i]-'0')
+	}
+
+	if s[9] == 'X' {
+		checksum += 10 * 10
+	} else {
+		checksum += 10 * int32(s[9]-'0')
+	}
+
+	return checksum%11 == 0
+}
+
+func isISBN13(exprValueStr string) bool {
+
+	s := strings.Replace(strings.Replace(exprValueStr, "-", "", 4), " ", "", 4)
+
+	if !iSBN13Regex.MatchString(s) {
+		return false
+	}
+
+	var checksum int32
+	var i int32
+
+	factor := []int32{1, 3}
+
+	for i = 0; i < 12; i++ {
+		checksum += factor[i%2] * int32(s[i]-'0')
+	}
+
+	return (int32(s[12]-'0'))-((10-(checksum%10))%10) == 0
 }
