@@ -87,13 +87,27 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 ### Strings
 
-| tag      | Rule                           |
-| -------- | ------------------------------ |
-| alpha    | `NewAlphaRule("Field")`        |
-| alphanum | `NewAlphaNumericRule("Field")` |
-| email    | `NewEmailRule("Email")`        |
-| isbn10   | `NewISBN10Rule("Field")`       |
-| isbn10   | `NewISBN13Rule("Field")`       |
+| tag              | Rule                                  |      |
+| ---------------- | ------------------------------------- | ---- |
+| alpha            | `NewAlphaRule("Field")`               |      |
+| alphanum         | `NewAlphaNumericRule("Field")`        |      |
+| email            | `NewEmailRule("Email")`               |      |
+| isbn10           | `NewISBN10Rule("Field")`              |      |
+| isbn10           | `NewISBN13Rule("Field")`              |      |
+| isbn             | `NewISBNRuke("Field")`                |      |
+| ip               | `NewIPRule(FieldExpr)`                |      |
+| ipv4             | `NewIPv4Rule("IPv4")`                 |      |
+| ipv6             | `NewIPv6Rule("IPv6")`                 |      |
+| uri              | `NewURIRule("URL")`                   |      |
+| url              | `NewURLRule("URL")`                   |      |
+| url_encoded      | `NewURLEncodedRule("Field")`          |      |
+| html             | `NewHTMLRule("Field")`                |      |
+| html_encoded     | `NewHTMLEncodedRule("Field")`         |      |
+| hostname         | `NewHostNameRule("Field")`            |      |
+| hostname_rfc1123 | `NewHostNameRFC1123Rule("Field")`     |      |
+| json             | `NewIsJSONRule("Field")`              |      |
+| dir              | `NewIsDirRule("Field")`               |      |
+| datetime         | `NewIsDatetimeRule("Field","layout")` |      |
 
 etc, regrex expression for string rule, can use `NewRegexRule(fieldExpr string, regexExpr string)`
 
