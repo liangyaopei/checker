@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// Comparable is the interface
+// for sturcts to be compared in
+// NewCrossFieldCompareRule
 type Comparable interface {
 	EqualTo(other interface{}) bool
 	LessThan(other interface{}) bool
@@ -128,6 +131,8 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
+// NewCrossFieldCompareRule checks if left and right fields
+// are same types and satisfy the comparison operand
 func NewCrossFieldCompareRule(fieldExprLeft string, fieldExprRight string, op operand) Rule {
 	return crossFieldCompareRule{
 		fieldExprLeft:  fieldExprLeft,

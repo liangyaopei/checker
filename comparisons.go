@@ -136,7 +136,7 @@ func (r eqRuleTimestamp) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleFloat is the validation function for validating if the field's value is equal to given timestamp.
+// NewEqRuleTimestamp is the validation function for validating if the field's value is equal to given timestamp.
 func NewEqRuleTimestamp(filedExpr string, equivalent time.Time) Rule {
 	return eqRuleTimestamp{
 		fieldExpr:  filedExpr,
