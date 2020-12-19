@@ -1,9 +1,7 @@
-package _checker_test
+package checker
 
 import (
 	"testing"
-
-	"github.com/liangyaopei/checker"
 )
 
 type profile struct {
@@ -66,40 +64,40 @@ func getFailedProfile() profile {
 	}
 }
 
-func getProfileChecker() checker.Checker {
-	profileChecker := checker.NewChecker()
+func getProfileChecker() Checker {
+	profileChecker := NewChecker()
 
-	infoNameRule := checker.NewLengthRule("Info.Name", 1, 20)
+	infoNameRule := NewLengthRule("Info.Name", 1, 20)
 	profileChecker.Add(infoNameRule, "invalid info name")
 
-	infoAgeRule := checker.NewRangeRuleInt("Info.Age", 18, 80)
+	infoAgeRule := NewRangeRuleInt("Info.Age", 18, 80)
 	profileChecker.Add(infoAgeRule, "invalid info age")
 
-	infoEmailRule := checker.NewAndRule(
-		checker.NewLengthRule("Info.Email", 1, 64),
-		checker.NewEmailRule("Info.Email"),
+	infoEmailRule := NewAndRule(
+		NewLengthRule("Info.Email", 1, 64),
+		NewEmailRule("Info.Email"),
 	)
 	profileChecker.Add(infoEmailRule, "invalid info email")
 
-	companyLenRule := checker.NewLengthRule("Companies", 1, 3)
+	companyLenRule := NewLengthRule("Companies", 1, 3)
 	profileChecker.Add(companyLenRule, "invalid companies len")
 
-	frontendRule := checker.NewAndRule(
-		checker.NewEqRuleString("Position", "frontend"),
-		checker.NewSliceRule("Skills",
-			checker.NewEnumRuleString("", "html", "css", "javascript"),
+	frontendRule := NewAndRule(
+		NewEqRuleString("Position", "frontend"),
+		NewSliceRule("Skills",
+			NewEnumRuleString("", "html", "css", "javascript"),
 		),
 	)
-	backendRule := checker.NewAndRule(
-		checker.NewEqRuleString("Position", "backend"),
-		checker.NewSliceRule("Skills",
-			checker.NewEnumRuleString("", "C", "CPP", "Java", "Golang"),
+	backendRule := NewAndRule(
+		NewEqRuleString("Position", "backend"),
+		NewSliceRule("Skills",
+			NewEnumRuleString("", "C", "CPP", "Java", "Golang"),
 		),
 	)
-	companiesSliceRule := checker.NewSliceRule("Companies",
-		checker.NewAndRule(
-			checker.NewLengthRule("Skills", 1, 3),
-			checker.NewOrRule(frontendRule, backendRule),
+	companiesSliceRule := NewSliceRule("Companies",
+		NewAndRule(
+			NewLengthRule("Skills", 1, 3),
+			NewOrRule(frontendRule, backendRule),
 		))
 	profileChecker.Add(companiesSliceRule, "invalid skill item")
 

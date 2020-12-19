@@ -1,9 +1,7 @@
-package _checker
+package checker
 
 import (
 	"testing"
-
-	"github.com/liangyaopei/checker"
 )
 
 type param struct {
@@ -15,44 +13,40 @@ type param struct {
 	EndsWith   string
 	ISBN10     string
 	ISBN13     string
-	Directory  string
 	Datetime   string
 }
 
 func TestStringsRule(t *testing.T) {
-	rChecker := checker.NewChecker()
+	rChecker := NewChecker()
 
-	urlRule := checker.NewURLRule("URL")
+	urlRule := NewURLRule("URL")
 	rChecker.Add(urlRule, "invalid url")
 
-	ipv4Rule := checker.NewIPv4Rule("IPv4")
+	ipv4Rule := NewIPv4Rule("IPv4")
 	rChecker.Add(ipv4Rule, "invalid ipv4")
 
-	ipv6Rule := checker.NewIPv6Rule("IPv6")
+	ipv6Rule := NewIPv6Rule("IPv6")
 	rChecker.Add(ipv6Rule, "invalid ipv6")
 
-	hostnameRule := checker.NewHostNameRule("HostName")
+	hostnameRule := NewHostNameRule("HostName")
 	rChecker.Add(hostnameRule, "invalid hostname")
 
-	startsWithRule := checker.NewStartsWithRule("StartsWith", "Github")
+	startsWithRule := NewStartsWithRule("StartsWith", "Github")
 	rChecker.Add(startsWithRule, "invalid startswith")
 
-	ensWithRule := checker.NewEndsWithRule("EndsWith", "lang")
+	ensWithRule := NewEndsWithRule("EndsWith", "lang")
 	rChecker.Add(ensWithRule, "invalid endswith")
 
-	iSBN10Rule := checker.NewIsISBN10Rule("ISBN10")
+	iSBN10Rule := NewIsISBN10Rule("ISBN10")
 	rChecker.Add(iSBN10Rule, "invalid isbn10")
 
-	iSBN13Rule := checker.NewIsISBN13Rule("ISBN13")
+	iSBN13Rule := NewIsISBN13Rule("ISBN13")
 	rChecker.Add(iSBN13Rule, "invalid isbn13")
 
-	iSBNRule := checker.NewIsISBNRule("ISBN13")
+	iSBNRule := NewIsISBNRule("ISBN13")
 	rChecker.Add(iSBNRule, "invalid isbn")
 
-	isDirRule := checker.NewIsDirRule("Directory")
-	rChecker.Add(isDirRule, "invalid directory")
-
-	datetimeRule := checker.NewIsDatetimeRule("Datetime", "2006-01-02")
+	datetimeRule := NewIsDatetimeRule("Datetime", "2006-01-02")
 	rChecker.Add(datetimeRule, "invalid datetime")
 
 	p := param{
@@ -64,7 +58,6 @@ func TestStringsRule(t *testing.T) {
 		EndsWith:   "Golang",
 		ISBN10:     "1-61729-085-8",
 		ISBN13:     "978-3-16-148410-0",
-		Directory:  "/Users/liangyaopei",
 		Datetime:   "2020-12-20",
 	}
 	isValid, prompt, errMsg := rChecker.Check(p)

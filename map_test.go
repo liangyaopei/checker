@@ -1,18 +1,16 @@
-package _checker
+package checker
 
 import (
 	"testing"
-
-	"github.com/liangyaopei/checker"
 )
 
 func TestMapRuleSimple(t *testing.T) {
-	mChecker := checker.NewChecker()
+	mChecker := NewChecker()
 
-	keyRangeRule := checker.NewRangeRuleInt("", 1, 10)
-	valueEnumRule := checker.NewEnumRuleInt("", 8, 9, 10)
+	keyRangeRule := NewRangeRuleInt("", 1, 10)
+	valueEnumRule := NewEnumRuleInt("", 8, 9, 10)
 
-	mapRule := checker.NewMapRule("", keyRangeRule, valueEnumRule)
+	mapRule := NewMapRule("", keyRangeRule, valueEnumRule)
 	mChecker.Add(mapRule, "invalid map")
 
 	m := map[int]int{
@@ -42,12 +40,12 @@ type mapStruct struct {
 }
 
 func TestMapRuleStruct(t *testing.T) {
-	mChecker := checker.NewChecker()
+	mChecker := NewChecker()
 
-	keyRangeRule := checker.NewRangeRuleInt("Key", 1, 10)
-	valueEnumRule := checker.NewEnumRuleInt("Value", 8, 9, 10)
+	keyRangeRule := NewRangeRuleInt("Key", 1, 10)
+	valueEnumRule := NewEnumRuleInt("Value", 8, 9, 10)
 
-	mapRule := checker.NewMapRule("Map", keyRangeRule, valueEnumRule)
+	mapRule := NewMapRule("Map", keyRangeRule, valueEnumRule)
 	mChecker.Add(mapRule, "invalid map")
 
 	kvMap := make(map[keyStruct]valueStruct)

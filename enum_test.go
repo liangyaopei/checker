@@ -1,9 +1,7 @@
-package _checker
+package checker
 
 import (
 	"testing"
-
-	"github.com/liangyaopei/checker"
 )
 
 type enum struct {
@@ -14,18 +12,18 @@ type enum struct {
 }
 
 func TestEnumTest(t *testing.T) {
-	eChecker := checker.NewChecker()
+	eChecker := NewChecker()
 
-	intRule := checker.NewEnumRuleInt("Int", 1, 2, 3)
+	intRule := NewEnumRuleInt("Int", 1, 2, 3)
 	eChecker.Add(intRule, "invalid Int")
 
-	uintRule := checker.NewEnumRuleUint("Uint", 4, 5, 6)
+	uintRule := NewEnumRuleUint("Uint", 4, 5, 6)
 	eChecker.Add(uintRule, "invalid Uint")
 
-	floatRule := checker.NewEnumRuleFloat("Float", 3.14, 6.28, 9.42, 18.0)
+	floatRule := NewEnumRuleFloat("Float", 3.14, 6.28, 9.42, 18.0)
 	eChecker.Add(floatRule, "invalid Float")
 
-	strRule := checker.NewEnumRuleString("String", "github", "str")
+	strRule := NewEnumRuleString("String", "github", "str")
 	eChecker.Add(strRule, "invalid String")
 
 	e := enum{

@@ -1,10 +1,8 @@
-package _checker
+package checker
 
 import (
 	"testing"
 	"time"
-
-	"github.com/liangyaopei/checker"
 )
 
 type timestamp struct {
@@ -21,21 +19,21 @@ func TestRuleTimeStampStr(t *testing.T) {
 	endDate, _ := time.Parse(layout, "2020-12-31")
 	rangeDate, _ := time.Parse(layout, "2020-12-20")
 
-	tsChecker := checker.NewChecker()
+	tsChecker := NewChecker()
 
-	tsRule := checker.NewIsDatetimeRule("Date", layout)
+	tsRule := NewIsDatetimeRule("Date", layout)
 	tsChecker.Add(tsRule, "invalid Date")
 
-	tsEqRule := checker.NewEqRuleTimestamp("StartDate", startDate)
+	tsEqRule := NewEqRuleTimestamp("StartDate", startDate)
 	tsChecker.Add(tsEqRule, "invalid StartDate")
 
-	tsStrRule := checker.NewEqRuleTimestampStr("StartDateStr", layout, startDate)
+	tsStrRule := NewEqRuleTimestampStr("StartDateStr", layout, startDate)
 	tsChecker.Add(tsStrRule, "invalid StartDateStr")
 
-	rangeTsRule := checker.NewRangeRuleTimestamp("RangeDate", startDate, endDate)
+	rangeTsRule := NewRangeRuleTimestamp("RangeDate", startDate, endDate)
 	tsChecker.Add(rangeTsRule, "invalid RangeDate")
 
-	rangeTsStrRule := checker.NewRangeRuleTimestampStr("RangeDateStr",
+	rangeTsStrRule := NewRangeRuleTimestampStr("RangeDateStr",
 		layout, startDate, endDate)
 	tsChecker.Add(rangeTsStrRule, "invalid RangeDateStr")
 
