@@ -13,7 +13,6 @@ type param struct {
 	EndsWith   string
 	ISBN10     string
 	ISBN13     string
-	Directory  string
 	Datetime   string
 }
 
@@ -47,9 +46,6 @@ func TestStringsRule(t *testing.T) {
 	iSBNRule := NewIsISBNRule("ISBN13")
 	rChecker.Add(iSBNRule, "invalid isbn")
 
-	isDirRule := NewIsDirRule("Directory")
-	rChecker.Add(isDirRule, "invalid directory")
-
 	datetimeRule := NewIsDatetimeRule("Datetime", "2006-01-02")
 	rChecker.Add(datetimeRule, "invalid datetime")
 
@@ -62,7 +58,6 @@ func TestStringsRule(t *testing.T) {
 		EndsWith:   "Golang",
 		ISBN10:     "1-61729-085-8",
 		ISBN13:     "978-3-16-148410-0",
-		Directory:  "/Users/liangyaopei",
 		Datetime:   "2020-12-20",
 	}
 	isValid, prompt, errMsg := rChecker.Check(p)
