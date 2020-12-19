@@ -1,10 +1,8 @@
-package _checker
+package checker
 
 import (
 	"testing"
 	"time"
-
-	"github.com/liangyaopei/checker"
 )
 
 type comparison struct {
@@ -17,64 +15,64 @@ type comparison struct {
 }
 
 func TestComparison(t *testing.T) {
-	cChecker := checker.NewChecker()
+	cChecker := NewChecker()
 
 	layout := "2006-01-02"
 	startDate, _ := time.Parse(layout, "2020-12-12")
 	endDate, _ := time.Parse(layout, "2020-12-13")
 
 	// equal rules
-	intEqRule := checker.NewEqRuleInt("Int", 10)
+	intEqRule := NewEqRuleInt("Int", 10)
 	cChecker.Add(intEqRule, "invalid Int")
 
-	uintEqRule := checker.NewEqRuleUint("Uint", 58)
+	uintEqRule := NewEqRuleUint("Uint", 58)
 	cChecker.Add(uintEqRule, "invalid Uint")
 
-	floatRule := checker.NewEqRuleFloat("Float", 3.14)
+	floatRule := NewEqRuleFloat("Float", 3.14)
 	cChecker.Add(floatRule, "invalid Float")
 
-	strRule := checker.NewEqRuleString("String", "string")
+	strRule := NewEqRuleString("String", "string")
 	cChecker.Add(strRule, "invalid String")
 
-	timeStrRule := checker.NewEqRuleTimestampStr("TimeStr", layout, startDate)
+	timeStrRule := NewEqRuleTimestampStr("TimeStr", layout, startDate)
 	cChecker.Add(timeStrRule, "invalid TimeStr")
 
-	timeRule := checker.NewEqRuleTimestamp("Time", startDate)
+	timeRule := NewEqRuleTimestamp("Time", startDate)
 	cChecker.Add(timeRule, "invalid Time")
 
 	// not equal rules
-	intNeRule := checker.NewNeRuleInt("Int", 20)
+	intNeRule := NewNeRuleInt("Int", 20)
 	cChecker.Add(intNeRule, "invalid Int")
 
-	uintNeRule := checker.NewNeRuleUint("Uint", 158)
+	uintNeRule := NewNeRuleUint("Uint", 158)
 	cChecker.Add(uintNeRule, "invalid Uint")
 
-	floatNeRule := checker.NewNeRuleFloat("Float", 6.28)
+	floatNeRule := NewNeRuleFloat("Float", 6.28)
 	cChecker.Add(floatNeRule, "invalid Float")
 
-	strNeRule := checker.NewNeRuleString("String", "string12")
+	strNeRule := NewNeRuleString("String", "string12")
 	cChecker.Add(strNeRule, "invalid String")
 
-	timeNeStrRule := checker.NewNeRuleTimestampStr("TimeStr", layout, endDate)
+	timeNeStrRule := NewNeRuleTimestampStr("TimeStr", layout, endDate)
 	cChecker.Add(timeNeStrRule, "invalid TimeStr")
 
-	timeNeRule := checker.NewNeRuleTimestamp("Time", endDate)
+	timeNeRule := NewNeRuleTimestamp("Time", endDate)
 	cChecker.Add(timeNeRule, "invalid Time")
 
 	// range rules
-	intRangeRule := checker.NewRangeRuleInt("Int", 1, 20)
+	intRangeRule := NewRangeRuleInt("Int", 1, 20)
 	cChecker.Add(intRangeRule, "invalid Int")
 
-	uintRangeRule := checker.NewRangeRuleUint("Uint", 10, 258)
+	uintRangeRule := NewRangeRuleUint("Uint", 10, 258)
 	cChecker.Add(uintRangeRule, "invalid Uint")
 
-	floatRangeRule := checker.NewRangeRuleFloat("Float", 3.14, 6.28)
+	floatRangeRule := NewRangeRuleFloat("Float", 3.14, 6.28)
 	cChecker.Add(floatRangeRule, "invalid Float")
 
-	timeRangeStrRule := checker.NewRangeRuleTimestampStr("TimeStr", layout, startDate, endDate)
+	timeRangeStrRule := NewRangeRuleTimestampStr("TimeStr", layout, startDate, endDate)
 	cChecker.Add(timeRangeStrRule, "invalid TimeStr")
 
-	timeRangeRule := checker.NewRangeRuleTimestamp("Time", startDate, endDate)
+	timeRangeRule := NewRangeRuleTimestamp("Time", startDate, endDate)
 	cChecker.Add(timeRangeRule, "invalid Time")
 
 	comp := comparison{
@@ -99,7 +97,7 @@ type comp2 struct {
 }
 
 func TestComparisonComparable(t *testing.T) {
-	cChecker := checker.NewChecker()
+	cChecker := NewChecker()
 
 	equivalent := innerInt{
 		Val: 100,
@@ -116,13 +114,13 @@ func TestComparisonComparable(t *testing.T) {
 		Val: 180,
 	}
 
-	eqRule := checker.NewEqRuleComp("InnerInt", equivalent)
+	eqRule := NewEqRuleComp("InnerInt", equivalent)
 	cChecker.Add(eqRule, "invalid InnerInt[eq]")
 
-	neRule := checker.NewNeRuleComp("InnerInt", inequivalent)
+	neRule := NewNeRuleComp("InnerInt", inequivalent)
 	cChecker.Add(neRule, "invalid InnerInt[ne]")
 
-	rangeRule := checker.NewRangeRuleComp("InnerInt", ge, le)
+	rangeRule := NewRangeRuleComp("InnerInt", ge, le)
 	cChecker.Add(rangeRule, "invalid InnerInt[range]")
 
 	param := comp2{

@@ -2,3 +2,8 @@ language: go
 
 go:
   - 1.13.x
+
+script:
+  - test -z "`gofmt -l -d .`"
+  - test -z "`golint ./...`"
+  - go test -v -covermode=count -coverprofile=coverage.out

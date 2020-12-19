@@ -1,10 +1,8 @@
-package _checker
+package checker
 
 import (
 	"testing"
 	"time"
-
-	"github.com/liangyaopei/checker"
 )
 
 type crossStruct struct {
@@ -26,18 +24,18 @@ func TestCrossFieldSimple(t *testing.T) {
 	date1, _ := time.Parse(layout, "2020-12-12")
 	date2, _ := time.Parse(layout, "2021-12-12")
 
-	crossChecker := checker.NewChecker()
+	crossChecker := NewChecker()
 
-	crossRuleInt := checker.NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldNe)
+	crossRuleInt := NewCrossFieldCompareRule("Int1", "Int2", CrossFieldNe)
 	crossChecker.Add(crossRuleInt, "invalid int1 and int2")
 
-	crossRuleUInt := checker.NewCrossFieldCompareRule("Uint1", "Uint2", checker.CrossFieldGt)
+	crossRuleUInt := NewCrossFieldCompareRule("Uint1", "Uint2", CrossFieldGt)
 	crossChecker.Add(crossRuleUInt, "invalid uint1 and uint2")
 
-	crossRuleFloat := checker.NewCrossFieldCompareRule("Float1", "Float2", checker.CrossFieldLt)
+	crossRuleFloat := NewCrossFieldCompareRule("Float1", "Float2", CrossFieldLt)
 	crossChecker.Add(crossRuleFloat, "invalid Float1 and Float2")
 
-	crossRuleTime := checker.NewCrossFieldCompareRule("Date1", "Date2", checker.CrossFieldLe)
+	crossRuleTime := NewCrossFieldCompareRule("Date1", "Date2", CrossFieldLe)
 	crossChecker.Add(crossRuleTime, "invalid Date1 and Date2")
 
 	cross := crossStruct{
@@ -86,9 +84,9 @@ type crossInner struct {
 
 func TestCrossFieldCustom(t *testing.T) {
 
-	crossChecker := checker.NewChecker()
+	crossChecker := NewChecker()
 
-	crossRuleInt := checker.NewCrossFieldCompareRule("Int1", "Int2", checker.CrossFieldGe)
+	crossRuleInt := NewCrossFieldCompareRule("Int1", "Int2", CrossFieldGe)
 	crossChecker.Add(crossRuleInt, "invalid int1 and int2")
 
 	cross := crossInner{
