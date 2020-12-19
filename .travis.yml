@@ -3,6 +3,11 @@ language: go
 go:
   - 1.13.x
 
+install:
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
+  - go get golang.org/x/lint/golint
+
 script:
   - test -z "`gofmt -l -d .`"
   - test -z "`golint ./...`"
