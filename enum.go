@@ -26,7 +26,7 @@ func (r enumRuleString) Check(param interface{}) (bool, string) {
 }
 
 // NewEnumRuleString checks if the filed is string and is in enum
-func NewEnumRuleString(filedExpr string, enum []string) Rule {
+func NewEnumRuleString(filedExpr string, enum ...string) Rule {
 	set := make(map[string]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
@@ -61,7 +61,7 @@ func (r enumRuleInt) Check(param interface{}) (bool, string) {
 }
 
 // NewEnumRuleInt checks if the filed is int and is in enum
-func NewEnumRuleInt(filedExpr string, enum []int) Rule {
+func NewEnumRuleInt(filedExpr string, enum ...int) Rule {
 	set := make(map[int]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
@@ -96,7 +96,7 @@ func (r enumRuleUint) Check(param interface{}) (bool, string) {
 }
 
 // NewEnumRuleUint checks if the filed is uint and is in enum
-func NewEnumRuleUint(filedExpr string, enum []uint) Rule {
+func NewEnumRuleUint(filedExpr string, enum ...uint) Rule {
 	set := make(map[uint]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
@@ -131,7 +131,7 @@ func (r enumRuleFloat) Check(param interface{}) (bool, string) {
 }
 
 // NewEnumRuleFloat checks if the filed is float and is in enum
-func NewEnumRuleFloat(filedExpr string, enum []float64) Rule {
+func NewEnumRuleFloat(filedExpr string, enum ...float64) Rule {
 	set := make(map[float64]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
