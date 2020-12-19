@@ -1,11 +1,9 @@
-package _checker
+package checker
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
-
-	"github.com/liangyaopei/checker"
 )
 
 type customizedRule struct {
@@ -15,7 +13,7 @@ type customizedRule struct {
 }
 
 func (r customizedRule) Check(param interface{}) (bool, string) {
-	exprValue, kind := checker.FetchFieldInStruct(param, r.fieldExpr)
+	exprValue, kind := FetchFieldInStruct(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
@@ -32,7 +30,7 @@ type customizedStruct struct {
 }
 
 func TestCustomizedRule(t *testing.T) {
-	ch := checker.NewChecker()
+	ch := NewChecker()
 
 	fieldExpr := "NilPtr"
 	customRule := customizedRule{

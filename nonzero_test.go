@@ -1,10 +1,8 @@
-package _checker
+package checker
 
 import (
 	"testing"
 	"time"
-
-	"github.com/liangyaopei/checker"
 )
 
 type zero struct {
@@ -15,18 +13,18 @@ type zero struct {
 }
 
 func TestNonZeroRule(t *testing.T) {
-	nonZeroChecker := checker.NewChecker()
+	nonZeroChecker := NewChecker()
 
-	iRule := checker.NewNonZeroRule("Int")
+	iRule := NewNonZeroRule("Int")
 	nonZeroChecker.Add(iRule, "invalid Int")
 
-	fRule := checker.NewNonZeroRule("Float")
+	fRule := NewNonZeroRule("Float")
 	nonZeroChecker.Add(fRule, "invalid Float")
 
-	sRule := checker.NewNonZeroRule("Str")
+	sRule := NewNonZeroRule("Str")
 	nonZeroChecker.Add(sRule, "invalid Str")
 
-	dRule := checker.NewNonZeroRule("Date")
+	dRule := NewNonZeroRule("Date")
 	nonZeroChecker.Add(dRule, "invalid Date")
 
 	date, _ := time.Parse("2006-01-01", "2020-12-01")

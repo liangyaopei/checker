@@ -1,9 +1,7 @@
-package _checker
+package checker
 
 import (
 	"testing"
-
-	"github.com/liangyaopei/checker"
 )
 
 type list struct {
@@ -16,8 +14,8 @@ func TestListEmptyPrtField(t *testing.T) {
 	node1 := list{Name: &name, Next: nil}
 	lists := list{Name: &name, Next: &node1}
 
-	listChecker := checker.NewChecker()
-	nameRule := checker.NewLengthRule("Next.Name", 1, 20)
+	listChecker := NewChecker()
+	nameRule := NewLengthRule("Next.Name", 1, 20)
 	listChecker.Add(nameRule, "invalid info name")
 
 	isValid, prompt, errMsg := listChecker.Check(lists)
@@ -30,8 +28,8 @@ func TestListEmptyPrtField(t *testing.T) {
 }
 
 func TestNilList(t *testing.T) {
-	listChecker := checker.NewChecker()
-	nameRule := checker.NewLengthRule("Next.Name", 1, 20)
+	listChecker := NewChecker()
+	nameRule := NewLengthRule("Next.Name", 1, 20)
 	listChecker.Add(nameRule, "invalid info name")
 
 	isValid, prompt, errMsg := listChecker.Check(nil)
