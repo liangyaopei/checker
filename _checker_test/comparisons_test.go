@@ -93,3 +93,47 @@ func TestComparison(t *testing.T) {
 	}
 	t.Logf("valid comparsion")
 }
+
+type comp2 struct {
+	InnerInt *innerInt
+}
+
+func TestComparisonComparable(t *testing.T) {
+	cChecker := checker.NewChecker()
+
+	equivalent := innerInt{
+		Val: 100,
+	}
+
+	inequivalent := innerInt{
+		Val: 120,
+	}
+
+	ge := innerInt{
+		Val: 80,
+	}
+	le := innerInt{
+		Val: 180,
+	}
+
+	eqRule := checker.NewEqRuleComp("InnerInt", equivalent)
+	cChecker.Add(eqRule, "invalid InnerInt[eq]")
+
+	neRule := checker.NewNeRuleComp("InnerInt", inequivalent)
+	cChecker.Add(neRule, "invalid InnerInt[ne]")
+
+	rangeRule := checker.NewRangeRuleComp("InnerInt", ge, le)
+	cChecker.Add(rangeRule, "invalid InnerInt[range]")
+
+	param := comp2{
+		InnerInt: &innerInt{Val: 100},
+		//InnerInt: nil,
+	}
+
+	isValid, prompt, errMsg := cChecker.Check(param)
+	if !isValid {
+		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
+		return
+	}
+	t.Logf("valid comparable comparsion")
+}
