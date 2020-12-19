@@ -28,7 +28,7 @@ func (r andRule) Check(param interface{}) (bool, string) {
 
 // NewAndRule accepts slice of rules
 // is passed when all rules passed
-func NewAndRule(rules []Rule) Rule {
+func NewAndRule(rules ...Rule) Rule {
 	return andRule{
 		rules: rules,
 	}
@@ -54,7 +54,7 @@ func (r orRule) Check(param interface{}) (bool, string) {
 
 // NewOrRule accepts slice of rules
 // is failed when all rules failed
-func NewOrRule(rules []Rule) Rule {
+func NewOrRule(rules ...Rule) Rule {
 	return orRule{
 		rules: rules,
 	}

@@ -75,34 +75,32 @@ func getProfileChecker() checker.Checker {
 	infoAgeRule := checker.NewRangeRuleInt("Info.Age", 18, 80)
 	profileChecker.Add(infoAgeRule, "invalid info age")
 
-	infoEmailRule := checker.NewAndRule([]checker.Rule{
+	infoEmailRule := checker.NewAndRule(
 		checker.NewLengthRule("Info.Email", 1, 64),
 		checker.NewEmailRule("Info.Email"),
-	})
+	)
 	profileChecker.Add(infoEmailRule, "invalid info email")
 
 	companyLenRule := checker.NewLengthRule("Companies", 1, 3)
 	profileChecker.Add(companyLenRule, "invalid companies len")
 
-	frontendRule := checker.NewAndRule([]checker.Rule{
+	frontendRule := checker.NewAndRule(
 		checker.NewEqRuleString("Position", "frontend"),
 		checker.NewSliceRule("Skills",
-			checker.NewEnumRuleString("", []string{"html", "css", "javascript"}),
+			checker.NewEnumRuleString("", "html", "css", "javascript"),
 		),
-	})
-	backendRule := checker.NewAndRule([]checker.Rule{
+	)
+	backendRule := checker.NewAndRule(
 		checker.NewEqRuleString("Position", "backend"),
 		checker.NewSliceRule("Skills",
-			checker.NewEnumRuleString("", []string{"C", "CPP", "Java", "Golang"}),
+			checker.NewEnumRuleString("", "C", "CPP", "Java", "Golang"),
 		),
-	})
+	)
 	companiesSliceRule := checker.NewSliceRule("Companies",
-		checker.NewAndRule([]checker.Rule{
+		checker.NewAndRule(
 			checker.NewLengthRule("Skills", 1, 3),
-			checker.NewOrRule([]checker.Rule{
-				frontendRule, backendRule,
-			}),
-		}))
+			checker.NewOrRule(frontendRule, backendRule),
+		))
 	profileChecker.Add(companiesSliceRule, "invalid skill item")
 
 	return profileChecker

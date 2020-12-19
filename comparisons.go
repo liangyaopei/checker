@@ -518,6 +518,96 @@ func NewRangeRuleTimestampStr(filedExpr string, layout string, ge time.Time, le 
 	}
 }
 
+type eqRuleComp struct {
+	fieldExpr  string
+	equivalent Comparable
+	name       string
+}
+
+func (r eqRuleComp) Check(param interface{}) (bool, string) {
+	exprValueComp, isValid, errMsg := getComparableFiled(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	if !exprValueComp.EqualTo(r.equivalent) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should be %v,actual is %v",
+				r.name, r.fieldExpr, r.equivalent, exprValueComp)
+
+	}
+	return true, ""
+}
+
+// NewEqRuleComp checks if the field is Comparable
+// and is equal to given Comparable variable
+func NewEqRuleComp(filedExpr string, equivalent Comparable) Rule {
+	return eqRuleComp{
+		fieldExpr:  filedExpr,
+		equivalent: equivalent,
+		name:       "eqRuleComp",
+	}
+}
+
+type neRuleComp struct {
+	fieldExpr    string
+	inequivalent Comparable
+	name         string
+}
+
+func (r neRuleComp) Check(param interface{}) (bool, string) {
+	exprValueComp, isValid, errMsg := getComparableFiled(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	if exprValueComp.EqualTo(r.inequivalent) {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should not be equal to %v,actual is %v",
+				r.name, r.fieldExpr, r.inequivalent, exprValueComp)
+
+	}
+	return true, ""
+}
+
+// NewNeRuleComp checks if the field is Comparable
+// and is not equal to given Comparable variable
+func NewNeRuleComp(filedExpr string, inequivalent Comparable) Rule {
+	return neRuleComp{
+		fieldExpr:    filedExpr,
+		inequivalent: inequivalent,
+		name:         "neRuleComp",
+	}
+}
+
+type rangeRuleComp struct {
+	fieldExpr string
+	le        Comparable
+	ge        Comparable
+	name      string
+}
+
+func (r rangeRuleComp) Check(param interface{}) (bool, string) {
+	exprValueComp, isValid, errMsg := getComparableFiled(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
+	}
+	if exprValueComp.LessThan(r.ge) || !exprValueComp.LessThan(r.le) {
+		return false, fmt.Sprintf("[%s]:'%s' should be between %v and %v,actual is %v",
+			r.name, r.fieldExpr, r.ge, r.le, exprValueComp)
+	}
+	return true, ""
+}
+
+// NewRangeRuleComp checks if the value
+// is between [ge,le]
+func NewRangeRuleComp(filedExpr string, ge Comparable, le Comparable) Rule {
+	return rangeRuleComp{
+		fieldExpr: filedExpr,
+		ge:        ge,
+		le:        le,
+		name:      "rangeRuleComp",
+	}
+}
+
 func getIntField(param interface{}, fieldExpr string, name string) (int, bool, string) {
 	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
 	if kind == reflect.Invalid {
@@ -592,4 +682,23 @@ func getTimeField(param interface{}, fieldExpr string, name string) (time.Time, 
 				name, fieldExpr, reflect.TypeOf(exprValue).String())
 	}
 	return tsVal, true, ""
+}
+
+func getComparableFiled(param interface{}, fieldExpr string, name string) (Comparable, bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
+	if kind == reflect.Invalid {
+		return nil, false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
+	}
+	if exprValue == nil {
+		return nil, false,
+			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
+	}
+	comp, ok := exprValue.(Comparable)
+	if !ok {
+		return nil, false,
+			fmt.Sprintf("[%s]:'%s' should be type of checker.Comparable,actual is %v",
+				name, fieldExpr, reflect.TypeOf(exprValue).String())
+	}
+	return comp, true, ""
 }

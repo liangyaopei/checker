@@ -15,42 +15,42 @@ type Comparable interface {
 }
 
 type operand interface {
-	String() string
+	Symbol() string
 }
 
 type eqOperand struct{}
 
-func (op eqOperand) String() string {
+func (op eqOperand) Symbol() string {
 	return "="
 }
 
 type neOperand struct{}
 
-func (op neOperand) String() string {
+func (op neOperand) Symbol() string {
 	return "!="
 }
 
 type gtOperand struct{}
 
-func (op gtOperand) String() string {
+func (op gtOperand) Symbol() string {
 	return ">"
 }
 
 type geOperand struct{}
 
-func (op geOperand) String() string {
+func (op geOperand) Symbol() string {
 	return ">="
 }
 
 type ltOperand struct{}
 
-func (op ltOperand) String() string {
+func (op ltOperand) Symbol() string {
 	return "<"
 }
 
 type leOperand struct{}
 
-func (op leOperand) String() string {
+func (op leOperand) Symbol() string {
 	return "<="
 }
 
@@ -126,7 +126,7 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 	if !isValid {
 		return false,
 			fmt.Sprintf("[%s]:'%s' does not %s '%s'",
-				r.name, r.fieldExprLeft, r.op.String(), r.fieldExprRight)
+				r.name, r.fieldExprLeft, r.op.Symbol(), r.fieldExprRight)
 	}
 	return true, ""
 }

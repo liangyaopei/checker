@@ -10,7 +10,7 @@ func TestMapRuleSimple(t *testing.T) {
 	mChecker := checker.NewChecker()
 
 	keyRangeRule := checker.NewRangeRuleInt("", 1, 10)
-	valueEnumRule := checker.NewEnumRuleInt("", []int{8, 9, 10})
+	valueEnumRule := checker.NewEnumRuleInt("", 8, 9, 10)
 
 	mapRule := checker.NewMapRule("", keyRangeRule, valueEnumRule)
 	mChecker.Add(mapRule, "invalid map")
@@ -45,7 +45,7 @@ func TestMapRuleStruct(t *testing.T) {
 	mChecker := checker.NewChecker()
 
 	keyRangeRule := checker.NewRangeRuleInt("Key", 1, 10)
-	valueEnumRule := checker.NewEnumRuleInt("Value", []int{8, 9, 10})
+	valueEnumRule := checker.NewEnumRuleInt("Value", 8, 9, 10)
 
 	mapRule := checker.NewMapRule("Map", keyRangeRule, valueEnumRule)
 	mChecker.Add(mapRule, "invalid map")
