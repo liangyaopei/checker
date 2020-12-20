@@ -24,15 +24,15 @@ go get -u github.com/liangyaopei/checker
 
 ## Usage
 
-Examples are in [_checker_test](_checker_test).
+Examples are in test files which have suffix `test`.
 
 The main principle is, every validation rule is a `Rule` interface, `Rule` validates parameter, returns `isValid` and error log.
 
-`Checker` is a validatior, it adds `Rule` and error prompt on related fileld in sturtc.
+`Checker` is a validatior, it adds `Rule` and error prompt on related fileld in struct.
 
 
 
-For example, [non-struct parameter validation](_checker_test/nonstruct_test.go), `fieldExpr` is empty string.
+For example, [non-struct parameter validation](nonstruct_test.go), `fieldExpr` is empty string.
 
 ```go
 email := "abc@examplecom"
@@ -47,7 +47,7 @@ isValid, prompt, errMsg := nonStructChecker.Check(email)
 
 
 
-[struct parameter validation](_checker_test/timestamp_test.go)
+[struct parameter validation](timestamp_test.go)
 
 ```go
 type timestamp struct {
@@ -67,7 +67,7 @@ ts := timestamp{
 isValid, prompt, errMsg := tsChecker.Check(ts)
 ```
 
-[customized validation rule](_checker_test/customized_rule_test.go), only implements `Rule` interface.
+[customized validation rule](customized_rule_test.go), only implements `Rule` interface.
 
 
 
@@ -124,12 +124,21 @@ etc, regrex expression for string rule, can use `NewRegexRule(fieldExpr string, 
 
 
 
+### Slice/Array/Map
+
+| Rule                                                         | Usage                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `NewSliceRule(fieldExpr string, innerRule Rule) `            | apply `innerRule` to every elements in slice/array           |
+| `NewMapRule(fieldExpr string, keyRule Rule, valueRule Rule)` | apply `keyRule` to keys in map, and `ValueRule` to valuse in map. `keyRule` or `ValueRule` can be nil. |
+
+
+
 ### Others
 
 | Tag                             | Rule                                                         |
 | ------------------------------- | ------------------------------------------------------------ |
 | len                             | `NewLengthRule(fieldExpr string, ge int, le int)`            |
-| required_if, required_without,etc | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
+| required_if, required_without,etc | implemented by compositions of `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)` |
 
 
 

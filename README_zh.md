@@ -22,11 +22,11 @@ go get -u github.com/liangyaopei/checker
 ```
 
 ## 使用
-使用的例子都在[_checker_test](_checker_test)。
+使用的例子都在`test`为后缀的测试文件。
 主要思想是，每个校验规则都是一个`Rule`，`Rule`对参数进行校验，返回是否合法以及错误日志。
 `Checker`是校验器，在结构体的字段上添加`Rule`和错误提示。
 
-例如，[非结构体的参数校验](_checker_test/nonstruct_test.go)，`fieldExpr`传空字符串。
+例如，[非结构体的参数校验](nonstruct_test.go)，`fieldExpr`传空字符串。
 ```go
 email := "abc@examplecom"
 
@@ -38,7 +38,7 @@ nonStructChecker.Add(emailRule, "invalid email")
 isValid, prompt, errMsg := nonStructChecker.Check(email)
 ```
 
-[结构体的参数校验](_checker_test/timestamp_test.go)。
+[结构体的参数校验](timestamp_test.go)。
 ```go
 type timestamp struct {
 	StartDateStr string
@@ -57,7 +57,7 @@ ts := timestamp{
 isValid, prompt, errMsg := tsChecker.Check(ts)
 ```
 
-[自定义校验规则](_checker_test/customized_rule_test.go),只要实现`Rule`接口即可。
+[自定义校验规则](customized_rule_test.go),只要实现`Rule`接口即可。
 
 
 ## 与validator.v10的tag对应的Rule
@@ -75,7 +75,7 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 
 
-### Strings
+### 字符串
 
 | tag              | Rule                                  |      |
 | ---------------- | ------------------------------------- | ---- |
@@ -112,6 +112,15 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 | eq             | `NewEqRuleInt(filedExpr string, equivalent int)` ...      |
 | gt, gte,lt,lte | `NewRangeRuleInt(filedExpr string, ge int, le int)` ...   |
 | ne             | `NewNotEqRuleInt(filedExpr string, inequivalent int)` ... |
+
+
+
+### Slice/Array/Map
+
+| Rule                                                         | Usage                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `NewSliceRule(fieldExpr string, innerRule Rule) `            | 对切片/数组里面的元素使用`innerRule`                         |
+| `NewMapRule(fieldExpr string, keyRule Rule, valueRule Rule)` | 对map的key使用`keyRule`, value使用`valueRule`. `keyRule` 或者`valueRule`可以为空 |
 
 
 
