@@ -24,7 +24,7 @@ go get -u github.com/liangyaopei/checker
 
 ## Usage
 
-Examples are in test files which have suffix `_test``.
+Examples are in test files which have suffix `test`.
 
 The main principle is, every validation rule is a `Rule` interface, `Rule` validates parameter, returns `isValid` and error log.
 
