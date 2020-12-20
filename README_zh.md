@@ -75,7 +75,7 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 
 
 
-### Strings
+### 字符串
 
 | tag              | Rule                                  |      |
 | ---------------- | ------------------------------------- | ---- |
@@ -112,6 +112,15 @@ isValid, prompt, errMsg := tsChecker.Check(ts)
 | eq             | `NewEqRuleInt(filedExpr string, equivalent int)` ...      |
 | gt, gte,lt,lte | `NewRangeRuleInt(filedExpr string, ge int, le int)` ...   |
 | ne             | `NewNotEqRuleInt(filedExpr string, inequivalent int)` ... |
+
+
+
+### Slice/Array/Map
+
+| Rule                                                         | Usage                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `NewSliceRule(fieldExpr string, innerRule Rule) `            | 对切片/数组里面的元素使用`innerRule`                         |
+| `NewMapRule(fieldExpr string, keyRule Rule, valueRule Rule)` | 对map的key使用`keyRule`, value使用`valueRule`. `keyRule` 或者`valueRule`可以为空 |
 
 
 

@@ -124,12 +124,21 @@ etc, regrex expression for string rule, can use `NewRegexRule(fieldExpr string, 
 
 
 
+### Slice/Array/Map
+
+| Rule                                                         | Usage                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `NewSliceRule(fieldExpr string, innerRule Rule) `            | apply `innerRule` to every elements in slice/array           |
+| `NewMapRule(fieldExpr string, keyRule Rule, valueRule Rule)` | apply `keyRule` to keys in map, and `ValueRule` to valuse in map. `keyRule` or `ValueRule` can be nil. |
+
+
+
 ### Others
 
 | Tag                             | Rule                                                         |
 | ------------------------------- | ------------------------------------------------------------ |
 | len                             | `NewLengthRule(fieldExpr string, ge int, le int)`            |
-| required_if, required_without,etc | 通过 `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)`的组合实现 |
+| required_if, required_without,etc | implemented by compositions of `NewAndRule(rules []Rule) Rule`, `NewOrRule(rules []Rule)`, `NewNotRule(innerRule Rule)` |
 
 
 
