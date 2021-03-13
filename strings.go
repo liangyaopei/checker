@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/url"
 	"os"
-	"reflect"
 	"regexp"
 	"strings"
 	"time"
@@ -29,7 +28,7 @@ type urlRule struct {
 }
 
 func (r urlRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -57,8 +56,8 @@ func (r urlRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewURLRule is the validation function for validating if the current field's value is a valid URL.
-func NewURLRule(fieldExpr string) Rule {
+// URL is the validation function for validating if the current field's value is a valid URL.
+func URL(fieldExpr string) Rule {
 	return urlRule{
 		fieldExpr: fieldExpr,
 		name:      "urlRule",
@@ -72,7 +71,7 @@ type uriRule struct {
 }
 
 func (r uriRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -100,8 +99,8 @@ func (r uriRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewURIRule is the validation function for validating if the current field's value is a valid URI.
-func NewURIRule(fieldExpr string) Rule {
+// URI is the validation function for validating if the current field's value is a valid URI.
+func URI(fieldExpr string) Rule {
 	return uriRule{
 		fieldExpr: fieldExpr,
 		name:      "uriRule",
@@ -115,7 +114,7 @@ type ipv4Rule struct {
 }
 
 func (r ipv4Rule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -130,8 +129,8 @@ func (r ipv4Rule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIPv4Rule is the validation function for validating if a value is a valid v4 IP address.
-func NewIPv4Rule(fieldExpr string) Rule {
+// IPv4 is the validation function for validating if a value is a valid v4 IP address.
+func IPv4(fieldExpr string) Rule {
 	return ipv4Rule{
 		fieldExpr: fieldExpr,
 		name:      "ipv4Rule",
@@ -145,7 +144,7 @@ type ipv6Rule struct {
 }
 
 func (r ipv6Rule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -160,8 +159,8 @@ func (r ipv6Rule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIPv6Rule is the validation function for validating if the field's value is a valid v6 IP address.
-func NewIPv6Rule(fieldExpr string) Rule {
+// IPv6 is the validation function for validating if the field's value is a valid v6 IP address.
+func IPv6(fieldExpr string) Rule {
 	return ipv6Rule{
 		fieldExpr: fieldExpr,
 		name:      "ipv6Rule",
@@ -175,7 +174,7 @@ type ipRule struct {
 }
 
 func (r ipRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -189,8 +188,8 @@ func (r ipRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIPRule is the validation function for validating if the field's value is a valid v4 or v6 IP address.
-func NewIPRule(fieldExpr string) Rule {
+// Ip is the validation function for validating if the field's value is a valid v4 or v6 IP address.
+func Ip(fieldExpr string) Rule {
 	return ipRule{
 		fieldExpr: fieldExpr,
 		name:      "ipRule",
@@ -205,7 +204,7 @@ type startsWithRule struct {
 }
 
 func (r startsWithRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -217,8 +216,8 @@ func (r startsWithRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewStartsWithRule is the validation function for validating that the field's value starts with the text specified within the param.
-func NewStartsWithRule(fieldExpr string, prefix string) Rule {
+// StartsWith is the validation function for validating that the field's value starts with the text specified within the param.
+func StartsWith(fieldExpr string, prefix string) Rule {
 	return startsWithRule{
 		fieldExpr: fieldExpr,
 		prefix:    prefix,
@@ -234,7 +233,7 @@ type endsWithRule struct {
 }
 
 func (r endsWithRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -247,8 +246,8 @@ func (r endsWithRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEndsWithRule is the validation function for validating that the field's value ends with the text specified within the param.
-func NewEndsWithRule(fieldExpr string, suffix string) Rule {
+// EndsWith is the validation function for validating that the field's value ends with the text specified within the param.
+func EndsWith(fieldExpr string, suffix string) Rule {
 	return endsWithRule{
 		fieldExpr: fieldExpr,
 		suffix:    suffix,
@@ -263,7 +262,7 @@ type isJSONRule struct {
 }
 
 func (r isJSONRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -275,8 +274,8 @@ func (r isJSONRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIsJSONRule is the validation function for validating if the current field's value is a valid json string.
-func NewIsJSONRule(fieldExpr string) Rule {
+// isJSON is the validation function for validating if the current field's value is a valid json string.
+func isJSON(fieldExpr string) Rule {
 	return isJSONRule{
 		fieldExpr: fieldExpr,
 		name:      "isJSONRule",
@@ -290,7 +289,7 @@ type isDirRule struct {
 }
 
 func (r isDirRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -303,8 +302,8 @@ func (r isDirRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIsDirRule is the validation function for validating if the current field's value is a valid directory.
-func NewIsDirRule(fieldExpr string) Rule {
+// IsDir is the validation function for validating if the current field's value is a valid directory.
+func IsDir(fieldExpr string) Rule {
 	return isDirRule{
 		fieldExpr: fieldExpr,
 		name:      "isDirRule",
@@ -319,7 +318,7 @@ type isDatetimeRule struct {
 }
 
 func (r isDatetimeRule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -332,8 +331,8 @@ func (r isDatetimeRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIsDatetimeRule is the validation function for validating if the current field's value is a valid datetime string.
-func NewIsDatetimeRule(fieldExpr string, layout string) Rule {
+// isDatetime is the validation function for validating if the current field's value is a valid datetime string.
+func isDatetime(fieldExpr string, layout string) Rule {
 	return isDatetimeRule{
 		fieldExpr: fieldExpr,
 		name:      "isDatetimeRule",
@@ -347,7 +346,7 @@ type iSBN10Rule struct {
 }
 
 func (r iSBN10Rule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -359,8 +358,8 @@ func (r iSBN10Rule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIsISBN10Rule is the validation function for validating if the field's value is a valid v10 ISBN.
-func NewIsISBN10Rule(fieldExpr string) Rule {
+// ISBN10 is the validation function for validating if the field's value is a valid v10 ISBN.
+func ISBN10(fieldExpr string) Rule {
 	return iSBN10Rule{
 		fieldExpr: fieldExpr,
 		name:      "IsISBN10Rule",
@@ -373,7 +372,7 @@ type iSBN13Rule struct {
 }
 
 func (r iSBN13Rule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -385,8 +384,8 @@ func (r iSBN13Rule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIsISBN13Rule is the validation function for validating if the field's value is a valid v13 ISBN.
-func NewIsISBN13Rule(fieldExpr string) Rule {
+// ISBN13 is the validation function for validating if the field's value is a valid v13 ISBN.
+func ISBN13(fieldExpr string) Rule {
 	return iSBN13Rule{
 		fieldExpr: fieldExpr,
 		name:      "IsISBN13Rule",
@@ -399,7 +398,7 @@ type iSBNRule struct {
 }
 
 func (r iSBNRule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -411,30 +410,12 @@ func (r iSBNRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewIsISBNRule is the validation function for validating if the field's value is a valid v10 or v13 ISBN.
-func NewIsISBNRule(fieldExpr string) Rule {
+// ISBN is the validation function for validating if the field's value is a valid v10 or v13 ISBN.
+func ISBN(fieldExpr string) Rule {
 	return iSBNRule{
 		fieldExpr: fieldExpr,
 		name:      "IsISBNRule",
 	}
-}
-
-func getStrField(param interface{}, fieldExpr string, name string) (string, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
-	if kind == reflect.Invalid {
-		return "", false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
-	}
-	if exprValue == nil {
-		return "", false,
-			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
-	}
-	if kind != reflect.String {
-		return "", false,
-			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
-				name, fieldExpr, kind)
-	}
-	return exprValue.(string), true, ""
 }
 
 func isISBN10(exprValueStr string) bool {

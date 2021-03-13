@@ -2,6 +2,8 @@ package checker
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type profile struct {
@@ -67,39 +69,29 @@ func getFailedProfile() profile {
 func getProfileChecker() Checker {
 	profileChecker := NewChecker()
 
-	infoNameRule := NewLengthRule("Info.Name", 1, 20)
-	profileChecker.Add(infoNameRule, "invalid info name")
-
-	infoAgeRule := NewRangeRuleInt("Info.Age", 18, 80)
-	profileChecker.Add(infoAgeRule, "invalid info age")
-
-	infoEmailRule := NewAndRule(
-		NewLengthRule("Info.Email", 1, 64),
-		NewEmailRule("Info.Email"),
-	)
-	profileChecker.Add(infoEmailRule, "invalid info email")
-
-	companyLenRule := NewLengthRule("Companies", 1, 3)
-	profileChecker.Add(companyLenRule, "invalid companies len")
-
-	frontendRule := NewAndRule(
-		NewEqRuleString("Position", "frontend"),
-		NewSliceRule("Skills",
-			NewEnumRuleString("", "html", "css", "javascript"),
-		),
-	)
-	backendRule := NewAndRule(
-		NewEqRuleString("Position", "backend"),
-		NewSliceRule("Skills",
-			NewEnumRuleString("", "C", "CPP", "Java", "Golang"),
-		),
-	)
-	companiesSliceRule := NewSliceRule("Companies",
-		NewAndRule(
-			NewLengthRule("Skills", 1, 3),
-			NewOrRule(frontendRule, backendRule),
-		))
-	profileChecker.Add(companiesSliceRule, "invalid skill item")
+	rule :=
+		And(
+			Length("Info.Name", 1, 20),
+			RangeInt("Info.Age", 18, 80),
+			Array("Companies",
+				And(
+					Length("Skills", 1, 3),
+					Or(
+						And(
+							EqStr("Position", "frontend"),
+							Array("Skills",
+								InStr("", "html", "css", "javascript"),
+							),
+						),
+						And(
+							EqStr("Position", "backend"),
+							Array("Skills",
+								InStr("", "C", "CPP", "Java", "Golang"),
+							),
+						)),
+				)),
+		)
+	profileChecker.Add(rule, "invalid companies")
 
 	return profileChecker
 }
@@ -119,11 +111,57 @@ func TestProfileCheckerPassed(t *testing.T) {
 func TestProfileCheckerFailed(t *testing.T) {
 	profile := getFailedProfile()
 	profileChecker := getProfileChecker()
-	isValid, prompt, errMsg := profileChecker.Check(profile)
-	if !isValid {
-		t.Logf("prompt:%s", prompt)
-		t.Logf("errMsg:%s", errMsg)
-		return
+	isValid, _, _ := profileChecker.Check(profile)
+	assert.Equal(t, false, isValid, "error failed checker")
+}
+
+type Item struct {
+	Info typeInfo
+}
+
+type typeInfo struct {
+	Type        string
+	Range       []string
+	Unit        string
+	Granularity string
+}
+
+func TestField(t *testing.T) {
+	items := []Item{
+		{
+			Info: typeInfo{
+				Type:  "range",
+				Range: []string{"2020-01-01", "2021-01-01"},
+			},
+		},
+		{
+			Info: typeInfo{
+				Type:        "last",
+				Granularity: "day",
+				Unit:        "7",
+			},
+		},
 	}
-	t.Log("pass check")
+
+	rule := Field("Info",
+		Or(
+			And(
+				EqStr("Type", "range"),
+				Length("Range", 2, 2),
+				Array("Range", isDatetime("", "2006-01-02")),
+			),
+			And(
+				EqStr("Type", "last"),
+				InStr("Granularity", "day", "week", "month"),
+				Number("Unit"),
+			),
+		),
+	)
+	itemChecker := NewChecker()
+	itemChecker.Add(rule, "wrong item")
+
+	for _, item := range items {
+		isValid, _, errMsg := itemChecker.Check(item)
+		assert.Equal(t, true, isValid, errMsg)
+	}
 }

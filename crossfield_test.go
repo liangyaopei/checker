@@ -26,16 +26,16 @@ func TestCrossFieldSimple(t *testing.T) {
 
 	crossChecker := NewChecker()
 
-	crossRuleInt := NewCrossFieldCompareRule("Int1", "Int2", CrossFieldNe)
+	crossRuleInt := CrossComparable("Int1", "Int2", CrossFieldNe)
 	crossChecker.Add(crossRuleInt, "invalid int1 and int2")
 
-	crossRuleUInt := NewCrossFieldCompareRule("Uint1", "Uint2", CrossFieldGt)
+	crossRuleUInt := CrossComparable("Uint1", "Uint2", CrossFieldGt)
 	crossChecker.Add(crossRuleUInt, "invalid uint1 and uint2")
 
-	crossRuleFloat := NewCrossFieldCompareRule("Float1", "Float2", CrossFieldLt)
+	crossRuleFloat := CrossComparable("Float1", "Float2", CrossFieldLt)
 	crossChecker.Add(crossRuleFloat, "invalid Float1 and Float2")
 
-	crossRuleTime := NewCrossFieldCompareRule("Date1", "Date2", CrossFieldLe)
+	crossRuleTime := CrossComparable("Date1", "Date2", CrossFieldLe)
 	crossChecker.Add(crossRuleTime, "invalid Date1 and Date2")
 
 	cross := crossStruct{
@@ -86,7 +86,7 @@ func TestCrossFieldCustom(t *testing.T) {
 
 	crossChecker := NewChecker()
 
-	crossRuleInt := NewCrossFieldCompareRule("Int1", "Int2", CrossFieldGe)
+	crossRuleInt := CrossComparable("Int1", "Int2", CrossFieldGe)
 	crossChecker.Add(crossRuleInt, "invalid int1 and int2")
 
 	cross := crossInner{

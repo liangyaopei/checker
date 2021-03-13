@@ -21,19 +21,19 @@ func TestRuleTimeStampStr(t *testing.T) {
 
 	tsChecker := NewChecker()
 
-	tsRule := NewIsDatetimeRule("Date", layout)
+	tsRule := isDatetime("Date", layout)
 	tsChecker.Add(tsRule, "invalid Date")
 
-	tsEqRule := NewEqRuleTimestamp("StartDate", startDate)
+	tsEqRule := EqTs("StartDate", startDate)
 	tsChecker.Add(tsEqRule, "invalid StartDate")
 
-	tsStrRule := NewEqRuleTimestampStr("StartDateStr", layout, startDate)
+	tsStrRule := EqTsStr("StartDateStr", layout, startDate)
 	tsChecker.Add(tsStrRule, "invalid StartDateStr")
 
-	rangeTsRule := NewRangeRuleTimestamp("RangeDate", startDate, endDate)
+	rangeTsRule := RangeTs("RangeDate", startDate, endDate)
 	tsChecker.Add(rangeTsRule, "invalid RangeDate")
 
-	rangeTsStrRule := NewRangeRuleTimestampStr("RangeDateStr",
+	rangeTsStrRule := RangeTsStr("RangeDateStr",
 		layout, startDate, endDate)
 	tsChecker.Add(rangeTsStrRule, "invalid RangeDateStr")
 

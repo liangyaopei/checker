@@ -12,6 +12,35 @@ type Rule interface {
 	Check(param interface{}) (bool, string)
 }
 
+type fieldRule struct {
+	fieldExpr string
+	rule      Rule
+
+	ruleName string
+}
+
+func (r fieldRule) Check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.ruleName, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.ruleName, r.fieldExpr)
+	}
+	return r.rule.Check(exprValue)
+}
+
+// Field applies rule to fieldExpr
+func Field(fieldExpr string, rule Rule) Rule {
+	return fieldRule{
+		fieldExpr: fieldExpr,
+		rule:      rule,
+		ruleName:  "fieldRule",
+	}
+}
+
 type andRule struct {
 	rules []Rule
 }
@@ -26,9 +55,9 @@ func (r andRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewAndRule accepts slice of rules
+// And accepts slice of rules
 // is passed when all rules passed
-func NewAndRule(rules ...Rule) Rule {
+func And(rules ...Rule) Rule {
 	return andRule{
 		rules: rules,
 	}
@@ -52,9 +81,9 @@ func (r orRule) Check(param interface{}) (bool, string) {
 			strings.Join(messages, " or "))
 }
 
-// NewOrRule accepts slice of rules
+// Or accepts slice of rules
 // is failed when all rules failed
-func NewOrRule(rules ...Rule) Rule {
+func Or(rules ...Rule) Rule {
 	return orRule{
 		rules: rules,
 	}
@@ -74,46 +103,9 @@ func (r notRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNotRule returns the opposite if innerRule
-func NewNotRule(innerRule Rule) Rule {
+// Not returns the opposite if innerRule
+func Not(innerRule Rule) Rule {
 	return notRule{
 		innerRule: innerRule,
 	}
-}
-
-func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
-	pValue := reflect.ValueOf(param)
-	if filedExpr == "" {
-		return param, pValue.Kind()
-	}
-
-	exprs := strings.Split(filedExpr, ".")
-	for i := 0; i < len(exprs); i++ {
-		expr := exprs[i]
-		if pValue.Kind() == reflect.Ptr {
-			pValue = pValue.Elem()
-		}
-		if !pValue.IsValid() || pValue.Kind() != reflect.Struct {
-			return nil, reflect.Invalid
-		}
-		pValue = pValue.FieldByName(expr)
-	}
-
-	// last field is pointer
-	if pValue.Kind() == reflect.Ptr {
-		if pValue.IsNil() {
-			return nil, reflect.Ptr
-		}
-		pValue = pValue.Elem()
-	}
-
-	if !pValue.IsValid() {
-		return nil, reflect.Invalid
-	}
-	return pValue.Interface(), pValue.Kind()
-}
-
-// FetchFieldInStruct can be used outside tht package
-func FetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
-	return fetchFieldInStruct(param, filedExpr)
 }

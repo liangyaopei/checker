@@ -14,16 +14,16 @@ type enum struct {
 func TestEnumTest(t *testing.T) {
 	eChecker := NewChecker()
 
-	intRule := NewEnumRuleInt("Int", 1, 2, 3)
+	intRule := InInt("Int", 1, 2, 3)
 	eChecker.Add(intRule, "invalid Int")
 
-	uintRule := NewEnumRuleUint("Uint", 4, 5, 6)
+	uintRule := InUint("Uint", 4, 5, 6)
 	eChecker.Add(uintRule, "invalid Uint")
 
-	floatRule := NewEnumRuleFloat("Float", 3.14, 6.28, 9.42, 18.0)
+	floatRule := InFloat("Float", 3.14, 6.28, 9.42, 18.0)
 	eChecker.Add(floatRule, "invalid Float")
 
-	strRule := NewEnumRuleString("String", "github", "str")
+	strRule := InStr("String", "github", "str")
 	eChecker.Add(strRule, "invalid String")
 
 	e := enum{

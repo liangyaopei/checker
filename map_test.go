@@ -7,10 +7,10 @@ import (
 func TestMapRuleSimple(t *testing.T) {
 	mChecker := NewChecker()
 
-	keyRangeRule := NewRangeRuleInt("", 1, 10)
-	valueEnumRule := NewEnumRuleInt("", 8, 9, 10)
+	keyRangeRule := RangeInt("", 1, 10)
+	valueEnumRule := InInt("", 8, 9, 10)
 
-	mapRule := NewMapRule("", keyRangeRule, valueEnumRule)
+	mapRule := Map("", keyRangeRule, valueEnumRule)
 	mChecker.Add(mapRule, "invalid map")
 
 	m := map[int]int{
@@ -42,10 +42,10 @@ type mapStruct struct {
 func TestMapRuleStruct(t *testing.T) {
 	mChecker := NewChecker()
 
-	keyRangeRule := NewRangeRuleInt("Key", 1, 10)
-	valueEnumRule := NewEnumRuleInt("Value", 8, 9, 10)
+	keyRangeRule := RangeInt("Key", 1, 10)
+	valueEnumRule := InInt("Value", 8, 9, 10)
 
-	mapRule := NewMapRule("Map", keyRangeRule, valueEnumRule)
+	mapRule := Map("Map", keyRangeRule, valueEnumRule)
 	mChecker.Add(mapRule, "invalid map")
 
 	kvMap := make(map[keyStruct]valueStruct)

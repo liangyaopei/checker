@@ -21,8 +21,8 @@ const (
 	hostnameRegexStringRFC1123 = `^([a-zA-Z0-9]{1}[a-zA-Z0-9_-]{0,62}){1}(\.[a-zA-Z0-9_]{1}[a-zA-Z0-9_-]{0,62})*?$` // accepts hostname starting with a digit https://tools.ietf.org/html/rfc1123
 )
 
-// NewEmailRule is the validation function for validating if the current field's value is a valid email address.
-func NewEmailRule(fieldExpr string) Rule {
+// Email is the validation function for validating if the current field's value is a valid email address.
+func Email(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(emailRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -32,8 +32,8 @@ func NewEmailRule(fieldExpr string) Rule {
 	}
 }
 
-// NewAlphaRule is the validation function for validating if the current field's value is a valid alpha value.
-func NewAlphaRule(fieldExpr string) Rule {
+// Alpha is the validation function for validating if the current field's value is a valid alpha value.
+func Alpha(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(alphaRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -43,8 +43,8 @@ func NewAlphaRule(fieldExpr string) Rule {
 	}
 }
 
-// NewAlphaNumericRule is the validation function for validating if the current field's value is a valid alphanumeric value.
-func NewAlphaNumericRule(fieldExpr string) Rule {
+// AlphaNumeric is the validation function for validating if the current field's value is a valid alphanumeric value.
+func AlphaNumeric(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(alphaNumericRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -54,8 +54,8 @@ func NewAlphaNumericRule(fieldExpr string) Rule {
 	}
 }
 
-// NewNumberRule is the validation function for validating if the current field's value is a valid number.
-func NewNumberRule(fieldExpr string) Rule {
+// Number is the validation function for validating if the current field's value is a valid number.
+func Number(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(numberRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -65,8 +65,8 @@ func NewNumberRule(fieldExpr string) Rule {
 	}
 }
 
-// NewNumericRule is the validation function for validating if the current field's value is a valid numeric value.
-func NewNumericRule(fieldExpr string) Rule {
+// Numeric is the validation function for validating if the current field's value is a valid numeric value.
+func Numeric(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(numericRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -76,8 +76,8 @@ func NewNumericRule(fieldExpr string) Rule {
 	}
 }
 
-// NewURLEncodedRule is the validation function for validating if the current field's value is a valid encoded URL.
-func NewURLEncodedRule(fieldExpr string) Rule {
+// URLEncoded is the validation function for validating if the current field's value is a valid encoded URL.
+func URLEncoded(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(uRLEncodedRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -87,8 +87,8 @@ func NewURLEncodedRule(fieldExpr string) Rule {
 	}
 }
 
-// NewHTMLEncodedRule is the validation function for validating if the current field's value is a valid encoded HTML.
-func NewHTMLEncodedRule(fieldExpr string) Rule {
+// HTMLEncoded is the validation function for validating if the current field's value is a valid encoded HTML.
+func HTMLEncoded(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(hTMLEncodedRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -98,8 +98,8 @@ func NewHTMLEncodedRule(fieldExpr string) Rule {
 	}
 }
 
-// NewHTMLRule is the validation function for validating if the current field's value is a valid HTML.
-func NewHTMLRule(fieldExpr string) Rule {
+// HTML is the validation function for validating if the current field's value is a valid HTML.
+func HTML(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(hTMLRegexString)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -109,8 +109,8 @@ func NewHTMLRule(fieldExpr string) Rule {
 	}
 }
 
-// NewHostNameRule is the validation function for validating if the current field's value is a valid RFC953 hostname.
-func NewHostNameRule(fieldExpr string) Rule {
+// HostName is the validation function for validating if the current field's value is a valid RFC953 hostname.
+func HostName(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(hostnameRegexStringRFC952)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -120,8 +120,8 @@ func NewHostNameRule(fieldExpr string) Rule {
 	}
 }
 
-// NewHostNameRFC1123Rule is the validation function for validating if the current field's value is a valid RFC1123 hostname.
-func NewHostNameRFC1123Rule(fieldExpr string) Rule {
+// HostNameRFC1123 is the validation function for validating if the current field's value is a valid RFC1123 hostname.
+func HostNameRFC1123(fieldExpr string) Rule {
 	regexObject := regexp.MustCompile(hostnameRegexStringRFC1123)
 	return regexRule{
 		fieldExpr:   fieldExpr,
@@ -169,8 +169,8 @@ func (r regexRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewRegexRule is the validation function for validating if the current field's value satisfies regex pattern.
-func NewRegexRule(fieldExpr string, regexExpr string) Rule {
+// Regex is the validation function for validating if the current field's value satisfies regex pattern.
+func Regex(fieldExpr string, regexExpr string) Rule {
 	regexObject := regexp.MustCompile(regexExpr)
 	return regexRule{
 		fieldExpr:   fieldExpr,

@@ -19,34 +19,34 @@ type param struct {
 func TestStringsRule(t *testing.T) {
 	rChecker := NewChecker()
 
-	urlRule := NewURLRule("URL")
+	urlRule := URL("URL")
 	rChecker.Add(urlRule, "invalid url")
 
-	ipv4Rule := NewIPv4Rule("IPv4")
+	ipv4Rule := IPv4("IPv4")
 	rChecker.Add(ipv4Rule, "invalid ipv4")
 
-	ipv6Rule := NewIPv6Rule("IPv6")
+	ipv6Rule := IPv6("IPv6")
 	rChecker.Add(ipv6Rule, "invalid ipv6")
 
-	hostnameRule := NewHostNameRule("HostName")
+	hostnameRule := HostName("HostName")
 	rChecker.Add(hostnameRule, "invalid hostname")
 
-	startsWithRule := NewStartsWithRule("StartsWith", "Github")
+	startsWithRule := StartsWith("StartsWith", "Github")
 	rChecker.Add(startsWithRule, "invalid startswith")
 
-	ensWithRule := NewEndsWithRule("EndsWith", "lang")
+	ensWithRule := EndsWith("EndsWith", "lang")
 	rChecker.Add(ensWithRule, "invalid endswith")
 
-	iSBN10Rule := NewIsISBN10Rule("ISBN10")
+	iSBN10Rule := ISBN10("ISBN10")
 	rChecker.Add(iSBN10Rule, "invalid isbn10")
 
-	iSBN13Rule := NewIsISBN13Rule("ISBN13")
+	iSBN13Rule := ISBN13("ISBN13")
 	rChecker.Add(iSBN13Rule, "invalid isbn13")
 
-	iSBNRule := NewIsISBNRule("ISBN13")
+	iSBNRule := ISBN("ISBN13")
 	rChecker.Add(iSBNRule, "invalid isbn")
 
-	datetimeRule := NewIsDatetimeRule("Datetime", "2006-01-02")
+	datetimeRule := isDatetime("Datetime", "2006-01-02")
 	rChecker.Add(datetimeRule, "invalid datetime")
 
 	p := param{

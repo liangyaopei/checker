@@ -12,7 +12,7 @@ type enumRuleString struct {
 }
 
 func (r enumRuleString) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -25,8 +25,8 @@ func (r enumRuleString) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEnumRuleString checks if the filed is string and is in enum
-func NewEnumRuleString(filedExpr string, enum ...string) Rule {
+// InStr checks if the filed is string and is in enum
+func InStr(filedExpr string, enum ...string) Rule {
 	set := make(map[string]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
@@ -47,7 +47,7 @@ type enumRuleInt struct {
 }
 
 func (r enumRuleInt) Check(param interface{}) (bool, string) {
-	exprValueInt, isValid, errMsg := getIntField(param, r.fieldExpr, r.name)
+	exprValueInt, isValid, errMsg := fetchFieldInt(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -60,8 +60,8 @@ func (r enumRuleInt) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEnumRuleInt checks if the filed is int and is in enum
-func NewEnumRuleInt(filedExpr string, enum ...int) Rule {
+// InInt checks if the filed is int and is in enum
+func InInt(filedExpr string, enum ...int) Rule {
 	set := make(map[int]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
@@ -82,7 +82,7 @@ type enumRuleUint struct {
 }
 
 func (r enumRuleUint) Check(param interface{}) (bool, string) {
-	exprValueUint, isValid, errMsg := getUintField(param, r.fieldExpr, r.name)
+	exprValueUint, isValid, errMsg := fetchFieldUint(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -95,8 +95,8 @@ func (r enumRuleUint) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEnumRuleUint checks if the filed is uint and is in enum
-func NewEnumRuleUint(filedExpr string, enum ...uint) Rule {
+// InUint checks if the filed is uint and is in enum
+func InUint(filedExpr string, enum ...uint) Rule {
 	set := make(map[uint]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
@@ -117,7 +117,7 @@ type enumRuleFloat struct {
 }
 
 func (r enumRuleFloat) Check(param interface{}) (bool, string) {
-	exprValueFloat, isValid, errMsg := getFloatField(param, r.fieldExpr, r.name)
+	exprValueFloat, isValid, errMsg := fetchFieldFloat(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -130,8 +130,8 @@ func (r enumRuleFloat) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEnumRuleFloat checks if the filed is float and is in enum
-func NewEnumRuleFloat(filedExpr string, enum ...float64) Rule {
+// InFloat checks if the filed is float and is in enum
+func InFloat(filedExpr string, enum ...float64) Rule {
 	set := make(map[float64]struct{}, len(enum))
 	for i := 0; i < len(enum); i++ {
 		set[enum[i]] = struct{}{}
