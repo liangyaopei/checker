@@ -15,7 +15,7 @@ func TestListEmptyPrtField(t *testing.T) {
 	lists := list{Name: &name, Next: &node1}
 
 	listChecker := NewChecker()
-	nameRule := NewLengthRule("Next.Name", 1, 20)
+	nameRule := Length("Next.Name", 1, 20)
 	listChecker.Add(nameRule, "invalid info name")
 
 	isValid, prompt, errMsg := listChecker.Check(lists)
@@ -29,7 +29,7 @@ func TestListEmptyPrtField(t *testing.T) {
 
 func TestNilList(t *testing.T) {
 	listChecker := NewChecker()
-	nameRule := NewLengthRule("Next.Name", 1, 20)
+	nameRule := Length("Next.Name", 1, 20)
 	listChecker.Add(nameRule, "invalid info name")
 
 	isValid, prompt, errMsg := listChecker.Check(nil)

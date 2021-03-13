@@ -34,7 +34,6 @@ func (r mapRule) Check(param interface{}) (bool, string) {
 	refVal := reflect.ValueOf(exprValue)
 	if r.keyRule != nil {
 		for _, key := range refVal.MapKeys() {
-			//fmt.Printf("key:%v", key)
 			isValid, errMsg := r.keyRule.Check(key.Interface())
 			if !isValid {
 				return false,
@@ -58,10 +57,10 @@ func (r mapRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewMapRule returns mapRule
+// Map returns mapRule
 // keyRule or valueRule can be nil
 // if no need to check key/value
-func NewMapRule(fieldExpr string, keyRule Rule, valueRule Rule) Rule {
+func Map(fieldExpr string, keyRule Rule, valueRule Rule) Rule {
 	return mapRule{
 		fieldExpr: fieldExpr,
 		keyRule:   keyRule,

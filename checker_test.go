@@ -67,37 +67,37 @@ func getFailedProfile() profile {
 func getProfileChecker() Checker {
 	profileChecker := NewChecker()
 
-	infoNameRule := NewLengthRule("Info.Name", 1, 20)
+	infoNameRule := Length("Info.Name", 1, 20)
 	profileChecker.Add(infoNameRule, "invalid info name")
 
-	infoAgeRule := NewRangeRuleInt("Info.Age", 18, 80)
+	infoAgeRule := RangeInt("Info.Age", 18, 80)
 	profileChecker.Add(infoAgeRule, "invalid info age")
 
-	infoEmailRule := NewAndRule(
-		NewLengthRule("Info.Email", 1, 64),
-		NewEmailRule("Info.Email"),
+	infoEmailRule := And(
+		Length("Info.Email", 1, 64),
+		Email("Info.Email"),
 	)
 	profileChecker.Add(infoEmailRule, "invalid info email")
 
-	companyLenRule := NewLengthRule("Companies", 1, 3)
+	companyLenRule := Length("Companies", 1, 3)
 	profileChecker.Add(companyLenRule, "invalid companies len")
 
-	frontendRule := NewAndRule(
-		NewEqRuleString("Position", "frontend"),
-		NewSliceRule("Skills",
-			NewEnumRuleString("", "html", "css", "javascript"),
+	frontendRule := And(
+		EqStr("Position", "frontend"),
+		Array("Skills",
+			InStr("", "html", "css", "javascript"),
 		),
 	)
-	backendRule := NewAndRule(
-		NewEqRuleString("Position", "backend"),
-		NewSliceRule("Skills",
-			NewEnumRuleString("", "C", "CPP", "Java", "Golang"),
+	backendRule := And(
+		EqStr("Position", "backend"),
+		Array("Skills",
+			InStr("", "C", "CPP", "Java", "Golang"),
 		),
 	)
-	companiesSliceRule := NewSliceRule("Companies",
-		NewAndRule(
-			NewLengthRule("Skills", 1, 3),
-			NewOrRule(frontendRule, backendRule),
+	companiesSliceRule := Array("Companies",
+		And(
+			Length("Skills", 1, 3),
+			Or(frontendRule, backendRule),
 		))
 	profileChecker.Add(companiesSliceRule, "invalid skill item")
 

@@ -42,9 +42,9 @@ func (r sliceRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewSliceRule checks if the filed is slice/array
+// Array checks if the filed is slice/array
 // and its elements satisfy the innerRule
-func NewSliceRule(fieldExpr string, innerRule Rule) Rule {
+func Array(fieldExpr string, innerRule Rule) Rule {
 	return sliceRule{
 		fieldExpr: fieldExpr,
 		innerRule: innerRule,
@@ -89,9 +89,9 @@ func (r lengthRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewLengthRule checks if the filed is slice/array/string/map
+// Length checks if the filed is slice/array/string/map
 // and its length is between [ge,le]
-func NewLengthRule(fieldExpr string, ge int, le int) Rule {
+func Length(fieldExpr string, ge int, le int) Rule {
 	return lengthRule{
 		fieldExpr: fieldExpr,
 		ge:        ge,

@@ -22,57 +22,57 @@ func TestComparison(t *testing.T) {
 	endDate, _ := time.Parse(layout, "2020-12-13")
 
 	// equal rules
-	intEqRule := NewEqRuleInt("Int", 10)
+	intEqRule := EqInt("Int", 10)
 	cChecker.Add(intEqRule, "invalid Int")
 
-	uintEqRule := NewEqRuleUint("Uint", 58)
+	uintEqRule := EqUint("Uint", 58)
 	cChecker.Add(uintEqRule, "invalid Uint")
 
-	floatRule := NewEqRuleFloat("Float", 3.14)
+	floatRule := EqFloat("Float", 3.14)
 	cChecker.Add(floatRule, "invalid Float")
 
-	strRule := NewEqRuleString("String", "string")
+	strRule := EqStr("String", "string")
 	cChecker.Add(strRule, "invalid String")
 
-	timeStrRule := NewEqRuleTimestampStr("TimeStr", layout, startDate)
+	timeStrRule := EqTsStr("TimeStr", layout, startDate)
 	cChecker.Add(timeStrRule, "invalid TimeStr")
 
-	timeRule := NewEqRuleTimestamp("Time", startDate)
+	timeRule := EqTs("Time", startDate)
 	cChecker.Add(timeRule, "invalid Time")
 
 	// not equal rules
-	intNeRule := NewNeRuleInt("Int", 20)
+	intNeRule := NeInt("Int", 20)
 	cChecker.Add(intNeRule, "invalid Int")
 
-	uintNeRule := NewNeRuleUint("Uint", 158)
+	uintNeRule := NeUint("Uint", 158)
 	cChecker.Add(uintNeRule, "invalid Uint")
 
-	floatNeRule := NewNeRuleFloat("Float", 6.28)
+	floatNeRule := NeFloat("Float", 6.28)
 	cChecker.Add(floatNeRule, "invalid Float")
 
-	strNeRule := NewNeRuleString("String", "string12")
+	strNeRule := NeStr("String", "string12")
 	cChecker.Add(strNeRule, "invalid String")
 
-	timeNeStrRule := NewNeRuleTimestampStr("TimeStr", layout, endDate)
+	timeNeStrRule := NeTsStr("TimeStr", layout, endDate)
 	cChecker.Add(timeNeStrRule, "invalid TimeStr")
 
-	timeNeRule := NewNeRuleTimestamp("Time", endDate)
+	timeNeRule := NeTs("Time", endDate)
 	cChecker.Add(timeNeRule, "invalid Time")
 
 	// range rules
-	intRangeRule := NewRangeRuleInt("Int", 1, 20)
+	intRangeRule := RangeInt("Int", 1, 20)
 	cChecker.Add(intRangeRule, "invalid Int")
 
-	uintRangeRule := NewRangeRuleUint("Uint", 10, 258)
+	uintRangeRule := RangeUint("Uint", 10, 258)
 	cChecker.Add(uintRangeRule, "invalid Uint")
 
-	floatRangeRule := NewRangeRuleFloat("Float", 3.14, 6.28)
+	floatRangeRule := RangeFloat("Float", 3.14, 6.28)
 	cChecker.Add(floatRangeRule, "invalid Float")
 
-	timeRangeStrRule := NewRangeRuleTimestampStr("TimeStr", layout, startDate, endDate)
+	timeRangeStrRule := RangeTsStr("TimeStr", layout, startDate, endDate)
 	cChecker.Add(timeRangeStrRule, "invalid TimeStr")
 
-	timeRangeRule := NewRangeRuleTimestamp("Time", startDate, endDate)
+	timeRangeRule := RangeTs("Time", startDate, endDate)
 	cChecker.Add(timeRangeRule, "invalid Time")
 
 	comp := comparison{
@@ -114,13 +114,13 @@ func TestComparisonComparable(t *testing.T) {
 		Val: 180,
 	}
 
-	eqRule := NewEqRuleComp("InnerInt", equivalent)
+	eqRule := EqComp("InnerInt", equivalent)
 	cChecker.Add(eqRule, "invalid InnerInt[eq]")
 
-	neRule := NewNeRuleComp("InnerInt", inequivalent)
+	neRule := NeComp("InnerInt", inequivalent)
 	cChecker.Add(neRule, "invalid InnerInt[ne]")
 
-	rangeRule := NewRangeRuleComp("InnerInt", ge, le)
+	rangeRule := RangeComp("InnerInt", ge, le)
 	cChecker.Add(rangeRule, "invalid InnerInt[range]")
 
 	param := comp2{

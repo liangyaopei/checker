@@ -23,8 +23,8 @@ func (r eqRuleString) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleString is the validation function for validating if the field's value is equal to given string.
-func NewEqRuleString(filedExpr string, equivalent string) Rule {
+// EqStr is the validation function for validating if the field's value is equal to given string.
+func EqStr(filedExpr string, equivalent string) Rule {
 	return eqRuleString{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
@@ -51,8 +51,8 @@ func (r eqRuleInt) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleInt is the validation function for validating if the field's value is equal to given int.
-func NewEqRuleInt(filedExpr string, equivalent int) Rule {
+// EqInt is the validation function for validating if the field's value is equal to given int.
+func EqInt(filedExpr string, equivalent int) Rule {
 	return eqRuleInt{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
@@ -79,8 +79,8 @@ func (r eqRuleUint) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleUint is the validation function for validating if the field's value is equal to given uint.
-func NewEqRuleUint(filedExpr string, equivalent uint) Rule {
+// EqUint is the validation function for validating if the field's value is equal to given uint.
+func EqUint(filedExpr string, equivalent uint) Rule {
 	return eqRuleUint{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
@@ -107,8 +107,8 @@ func (r eqRuleFloat) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleFloat is the validation function for validating if the field's value is equal to given float.
-func NewEqRuleFloat(filedExpr string, equivalent float64) Rule {
+// EqFloat is the validation function for validating if the field's value is equal to given float.
+func EqFloat(filedExpr string, equivalent float64) Rule {
 	return eqRuleFloat{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
@@ -135,8 +135,8 @@ func (r eqRuleTimestamp) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleTimestamp is the validation function for validating if the field's value is equal to given timestamp.
-func NewEqRuleTimestamp(filedExpr string, equivalent time.Time) Rule {
+// EqTs is the validation function for validating if the field's value is equal to given timestamp.
+func EqTs(filedExpr string, equivalent time.Time) Rule {
 	return eqRuleTimestamp{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
@@ -171,8 +171,8 @@ func (r eqRuleTimestampStr) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleTimestampStr is the validation function for validating if the field's value string and is equal to given timestamp.
-func NewEqRuleTimestampStr(filedExpr string, layout string, equivalent time.Time) Rule {
+// EqTsStr is the validation function for validating if the field's value string and is equal to given timestamp.
+func EqTsStr(filedExpr string, layout string, equivalent time.Time) Rule {
 	return eqRuleTimestampStr{
 		fieldExpr:  filedExpr,
 		layout:     layout,
@@ -200,8 +200,8 @@ func (r neRuleString) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNeRuleString is the validation function for validating if the field's value is not equal to given string.
-func NewNeRuleString(filedExpr string, inequivalent string) Rule {
+// NeStr is the validation function for validating if the field's value is not equal to given string.
+func NeStr(filedExpr string, inequivalent string) Rule {
 	return neRuleString{
 		fieldExpr:    filedExpr,
 		inequivalent: inequivalent,
@@ -228,8 +228,8 @@ func (r neRuleInt) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNeRuleInt is the validation function for validating if the field's value is not equal to given int.
-func NewNeRuleInt(filedExpr string, inequivalent int) Rule {
+// NeInt is the validation function for validating if the field's value is not equal to given int.
+func NeInt(filedExpr string, inequivalent int) Rule {
 	return neRuleInt{
 		fieldExpr:    filedExpr,
 		inequivalent: inequivalent,
@@ -256,8 +256,8 @@ func (r neRuleUint) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNeRuleUint is the validation function for validating if the field's value is not equal to given uint.
-func NewNeRuleUint(filedExpr string, inequivalent uint) Rule {
+// NeUint is the validation function for validating if the field's value is not equal to given uint.
+func NeUint(filedExpr string, inequivalent uint) Rule {
 	return neRuleUint{
 		fieldExpr:    filedExpr,
 		inequivalent: inequivalent,
@@ -284,8 +284,8 @@ func (r neRuleFloat) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNeRuleFloat is the validation function for validating if the field's value is not equal to given float.
-func NewNeRuleFloat(filedExpr string, inequivalent float64) Rule {
+// NeFloat is the validation function for validating if the field's value is not equal to given float.
+func NeFloat(filedExpr string, inequivalent float64) Rule {
 	return neRuleFloat{
 		fieldExpr:    filedExpr,
 		inequivalent: inequivalent,
@@ -312,8 +312,8 @@ func (r neTimestamp) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNeRuleTimestamp is the validation function for validating if the field's value is not equal to given timestamp.
-func NewNeRuleTimestamp(filedExpr string, inequivalent time.Time) Rule {
+// NeTs is the validation function for validating if the field's value is not equal to given timestamp.
+func NeTs(filedExpr string, inequivalent time.Time) Rule {
 	return neTimestamp{
 		fieldExpr:    filedExpr,
 		inequivalent: inequivalent,
@@ -348,8 +348,8 @@ func (r neRuleTimestampStr) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNeRuleTimestampStr is the validation function for validating if the field's value string and is not equal to given timestamp.
-func NewNeRuleTimestampStr(filedExpr string, layout string, inequivalent time.Time) Rule {
+// NeTsStr is the validation function for validating if the field's value string and is not equal to given timestamp.
+func NeTsStr(filedExpr string, layout string, inequivalent time.Time) Rule {
 	return neRuleTimestampStr{
 		fieldExpr:    filedExpr,
 		layout:       layout,
@@ -378,8 +378,8 @@ func (r rangeRuleInt) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewRangeRuleInt is the validation function for validating if the field's value is in given range.
-func NewRangeRuleInt(filedExpr string, ge int, le int) Rule {
+// RangeInt is the validation function for validating if the field's value is in given range.
+func RangeInt(filedExpr string, ge int, le int) Rule {
 	return rangeRuleInt{
 		fieldExpr: filedExpr,
 		ge:        ge,
@@ -408,8 +408,8 @@ func (r rangeRuleUint) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewRangeRuleUint is the validation function for validating if the field's value is in given range.
-func NewRangeRuleUint(filedExpr string, ge uint, le uint) Rule {
+// RangeUint is the validation function for validating if the field's value is in given range.
+func RangeUint(filedExpr string, ge uint, le uint) Rule {
 	return rangeRuleUint{
 		fieldExpr: filedExpr,
 		ge:        ge,
@@ -438,8 +438,8 @@ func (r rangeRuleFloat) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewRangeRuleFloat is the validation function for validating if the field's value is in given range.
-func NewRangeRuleFloat(filedExpr string, ge float64, le float64) Rule {
+// RangeFloat is the validation function for validating if the field's value is in given range.
+func RangeFloat(filedExpr string, ge float64, le float64) Rule {
 	return rangeRuleFloat{
 		fieldExpr: filedExpr,
 		le:        ge,
@@ -468,8 +468,8 @@ func (r rangeRuleTimestamp) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewRangeRuleTimestamp is the validation function for validating if the field's value is in given range.
-func NewRangeRuleTimestamp(filedExpr string, ge time.Time, le time.Time) Rule {
+// RangeTs is the validation function for validating if the field's value is in given range.
+func RangeTs(filedExpr string, ge time.Time, le time.Time) Rule {
 	return rangeRuleTimestamp{
 		fieldExpr: filedExpr,
 		le:        le,
@@ -506,8 +506,8 @@ func (r rangeRuleTimestampStr) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewRangeRuleTimestampStr is the validation function for validating if the field's value is in given range.
-func NewRangeRuleTimestampStr(filedExpr string, layout string, ge time.Time, le time.Time) Rule {
+// RangeTsStr is the validation function for validating if the field's value is in given range.
+func RangeTsStr(filedExpr string, layout string, ge time.Time, le time.Time) Rule {
 	return rangeRuleTimestampStr{
 		fieldExpr: filedExpr,
 		layout:    layout,
@@ -537,9 +537,9 @@ func (r eqRuleComp) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewEqRuleComp checks if the field is Comparable
+// EqComp checks if the field is Comparable
 // and is equal to given Comparable variable
-func NewEqRuleComp(filedExpr string, equivalent Comparable) Rule {
+func EqComp(filedExpr string, equivalent Comparable) Rule {
 	return eqRuleComp{
 		fieldExpr:  filedExpr,
 		equivalent: equivalent,
@@ -567,9 +567,9 @@ func (r neRuleComp) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNeRuleComp checks if the field is Comparable
+// NeComp checks if the field is Comparable
 // and is not equal to given Comparable variable
-func NewNeRuleComp(filedExpr string, inequivalent Comparable) Rule {
+func NeComp(filedExpr string, inequivalent Comparable) Rule {
 	return neRuleComp{
 		fieldExpr:    filedExpr,
 		inequivalent: inequivalent,
@@ -596,9 +596,9 @@ func (r rangeRuleComp) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewRangeRuleComp checks if the value
+// RangeComp checks if the value
 // is between [ge,le]
-func NewRangeRuleComp(filedExpr string, ge Comparable, le Comparable) Rule {
+func RangeComp(filedExpr string, ge Comparable, le Comparable) Rule {
 	return rangeRuleComp{
 		fieldExpr: filedExpr,
 		ge:        ge,
