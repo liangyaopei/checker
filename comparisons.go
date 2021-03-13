@@ -2,7 +2,6 @@ package checker
 
 import (
 	"fmt"
-	"reflect"
 	"time"
 )
 
@@ -13,7 +12,7 @@ type eqRuleString struct {
 }
 
 func (r eqRuleString) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -40,7 +39,7 @@ type eqRuleInt struct {
 }
 
 func (r eqRuleInt) Check(param interface{}) (bool, string) {
-	exprValueInt, isValid, errMsg := getIntField(param, r.fieldExpr, r.name)
+	exprValueInt, isValid, errMsg := fetchFieldInt(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -68,7 +67,7 @@ type eqRuleUint struct {
 }
 
 func (r eqRuleUint) Check(param interface{}) (bool, string) {
-	exprValueUint, isValid, errMsg := getUintField(param, r.fieldExpr, r.name)
+	exprValueUint, isValid, errMsg := fetchFieldUint(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -96,7 +95,7 @@ type eqRuleFloat struct {
 }
 
 func (r eqRuleFloat) Check(param interface{}) (bool, string) {
-	exprValueFloat, isValid, errMsg := getFloatField(param, r.fieldExpr, r.name)
+	exprValueFloat, isValid, errMsg := fetchFieldFloat(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -124,7 +123,7 @@ type eqRuleTimestamp struct {
 }
 
 func (r eqRuleTimestamp) Check(param interface{}) (bool, string) {
-	tsVal, isValid, errMsg := getTimeField(param, r.fieldExpr, r.name)
+	tsVal, isValid, errMsg := fetchFieldTime(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -153,7 +152,7 @@ type eqRuleTimestampStr struct {
 }
 
 func (r eqRuleTimestampStr) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -189,7 +188,7 @@ type neRuleString struct {
 }
 
 func (r neRuleString) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -217,7 +216,7 @@ type neRuleInt struct {
 }
 
 func (r neRuleInt) Check(param interface{}) (bool, string) {
-	exprValueInt, isValid, errMsg := getIntField(param, r.fieldExpr, r.name)
+	exprValueInt, isValid, errMsg := fetchFieldInt(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -245,7 +244,7 @@ type neRuleUint struct {
 }
 
 func (r neRuleUint) Check(param interface{}) (bool, string) {
-	exprValueUint, isValid, errMsg := getUintField(param, r.fieldExpr, r.name)
+	exprValueUint, isValid, errMsg := fetchFieldUint(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -273,7 +272,7 @@ type neRuleFloat struct {
 }
 
 func (r neRuleFloat) Check(param interface{}) (bool, string) {
-	exprValueFloat, isValid, errMsg := getFloatField(param, r.fieldExpr, r.name)
+	exprValueFloat, isValid, errMsg := fetchFieldFloat(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -301,7 +300,7 @@ type neTimestamp struct {
 }
 
 func (r neTimestamp) Check(param interface{}) (bool, string) {
-	tsVal, isValid, errMsg := getTimeField(param, r.fieldExpr, r.name)
+	tsVal, isValid, errMsg := fetchFieldTime(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -330,7 +329,7 @@ type neRuleTimestampStr struct {
 }
 
 func (r neRuleTimestampStr) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -367,7 +366,7 @@ type rangeRuleInt struct {
 }
 
 func (r rangeRuleInt) Check(param interface{}) (bool, string) {
-	exprValueInt, isValid, errMsg := getIntField(param, r.fieldExpr, r.name)
+	exprValueInt, isValid, errMsg := fetchFieldInt(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -397,7 +396,7 @@ type rangeRuleUint struct {
 }
 
 func (r rangeRuleUint) Check(param interface{}) (bool, string) {
-	exprValueUint, isValid, errMsg := getUintField(param, r.fieldExpr, r.name)
+	exprValueUint, isValid, errMsg := fetchFieldUint(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -427,7 +426,7 @@ type rangeRuleFloat struct {
 }
 
 func (r rangeRuleFloat) Check(param interface{}) (bool, string) {
-	exprValueFloat, isValid, errMsg := getFloatField(param, r.fieldExpr, r.name)
+	exprValueFloat, isValid, errMsg := fetchFieldFloat(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -457,7 +456,7 @@ type rangeRuleTimestamp struct {
 }
 
 func (r rangeRuleTimestamp) Check(param interface{}) (bool, string) {
-	tsVal, isValid, errMsg := getTimeField(param, r.fieldExpr, r.name)
+	tsVal, isValid, errMsg := fetchFieldTime(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -488,7 +487,7 @@ type rangeRuleTimestampStr struct {
 }
 
 func (r rangeRuleTimestampStr) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -525,7 +524,7 @@ type eqRuleComp struct {
 }
 
 func (r eqRuleComp) Check(param interface{}) (bool, string) {
-	exprValueComp, isValid, errMsg := getComparableFiled(param, r.fieldExpr, r.name)
+	exprValueComp, isValid, errMsg := fetchFieldComparable(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -555,7 +554,7 @@ type neRuleComp struct {
 }
 
 func (r neRuleComp) Check(param interface{}) (bool, string) {
-	exprValueComp, isValid, errMsg := getComparableFiled(param, r.fieldExpr, r.name)
+	exprValueComp, isValid, errMsg := fetchFieldComparable(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -586,7 +585,7 @@ type rangeRuleComp struct {
 }
 
 func (r rangeRuleComp) Check(param interface{}) (bool, string) {
-	exprValueComp, isValid, errMsg := getComparableFiled(param, r.fieldExpr, r.name)
+	exprValueComp, isValid, errMsg := fetchFieldComparable(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -606,99 +605,4 @@ func NewRangeRuleComp(filedExpr string, ge Comparable, le Comparable) Rule {
 		le:        le,
 		name:      "rangeRuleComp",
 	}
-}
-
-func getIntField(param interface{}, fieldExpr string, name string) (int, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
-	if kind == reflect.Invalid {
-		return 0, false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
-	}
-	if exprValue == nil {
-		return 0, false,
-			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
-	}
-	if kind != reflect.Int8 && kind != reflect.Int16 && kind != reflect.Int32 &&
-		kind != reflect.Int64 && kind != reflect.Int {
-		return 0, false,
-			fmt.Sprintf("[%s]:'%s' should be kind int8/int16/int32/int64/int,actual is %v",
-				name, fieldExpr, kind)
-	}
-	return exprValue.(int), true, ""
-}
-
-func getUintField(param interface{}, fieldExpr string, name string) (uint, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
-	if kind == reflect.Invalid {
-		return 0, false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
-	}
-	if exprValue == nil {
-		return 0, false,
-			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
-	}
-	if kind != reflect.Uint8 && kind != reflect.Uint16 && kind != reflect.Uint32 &&
-		kind != reflect.Uint64 && kind != reflect.Uint {
-		return 0, false,
-			fmt.Sprintf("[%s]:'%s' should be kind uint8/uint16/uint32/uint64/uint,actual is %v",
-				name, fieldExpr, kind)
-	}
-	return exprValue.(uint), true, ""
-}
-
-func getFloatField(param interface{}, fieldExpr string, name string) (float64, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
-	if kind == reflect.Invalid {
-		return 0.0, false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
-	}
-	if exprValue == nil {
-		return 0.0, false,
-			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
-	}
-
-	if kind != reflect.Float32 && kind != reflect.Float64 {
-		return 0.0, false,
-			fmt.Sprintf("[%s]:'%s' should be kind float32/float64,actual is %v",
-				name, fieldExpr, kind)
-	}
-	return exprValue.(float64), true, ""
-}
-
-func getTimeField(param interface{}, fieldExpr string, name string) (time.Time, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
-	if kind == reflect.Invalid {
-		return time.Time{}, false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
-	}
-	if exprValue == nil {
-		return time.Time{}, false,
-			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
-	}
-	tsVal, ok := exprValue.(time.Time)
-	if !ok {
-		return time.Time{}, false,
-			fmt.Sprintf("[%s]:'%s' should be time.Time,actual is %v",
-				name, fieldExpr, reflect.TypeOf(exprValue).String())
-	}
-	return tsVal, true, ""
-}
-
-func getComparableFiled(param interface{}, fieldExpr string, name string) (Comparable, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
-	if kind == reflect.Invalid {
-		return nil, false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
-	}
-	if exprValue == nil {
-		return nil, false,
-			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
-	}
-	comp, ok := exprValue.(Comparable)
-	if !ok {
-		return nil, false,
-			fmt.Sprintf("[%s]:'%s' should be type of checker.Comparable,actual is %v",
-				name, fieldExpr, reflect.TypeOf(exprValue).String())
-	}
-	return comp, true, ""
 }

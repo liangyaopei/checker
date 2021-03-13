@@ -12,7 +12,7 @@ type enumRuleString struct {
 }
 
 func (r enumRuleString) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -47,7 +47,7 @@ type enumRuleInt struct {
 }
 
 func (r enumRuleInt) Check(param interface{}) (bool, string) {
-	exprValueInt, isValid, errMsg := getIntField(param, r.fieldExpr, r.name)
+	exprValueInt, isValid, errMsg := fetchFieldInt(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -82,7 +82,7 @@ type enumRuleUint struct {
 }
 
 func (r enumRuleUint) Check(param interface{}) (bool, string) {
-	exprValueUint, isValid, errMsg := getUintField(param, r.fieldExpr, r.name)
+	exprValueUint, isValid, errMsg := fetchFieldUint(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -117,7 +117,7 @@ type enumRuleFloat struct {
 }
 
 func (r enumRuleFloat) Check(param interface{}) (bool, string) {
-	exprValueFloat, isValid, errMsg := getFloatField(param, r.fieldExpr, r.name)
+	exprValueFloat, isValid, errMsg := fetchFieldFloat(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}

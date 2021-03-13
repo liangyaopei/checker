@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/url"
 	"os"
-	"reflect"
 	"regexp"
 	"strings"
 	"time"
@@ -29,7 +28,7 @@ type urlRule struct {
 }
 
 func (r urlRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -72,7 +71,7 @@ type uriRule struct {
 }
 
 func (r uriRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -115,7 +114,7 @@ type ipv4Rule struct {
 }
 
 func (r ipv4Rule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -145,7 +144,7 @@ type ipv6Rule struct {
 }
 
 func (r ipv6Rule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -175,7 +174,7 @@ type ipRule struct {
 }
 
 func (r ipRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -205,7 +204,7 @@ type startsWithRule struct {
 }
 
 func (r startsWithRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -234,7 +233,7 @@ type endsWithRule struct {
 }
 
 func (r endsWithRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -263,7 +262,7 @@ type isJSONRule struct {
 }
 
 func (r isJSONRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -290,7 +289,7 @@ type isDirRule struct {
 }
 
 func (r isDirRule) Check(param interface{}) (bool, string) {
-	exprValStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -319,7 +318,7 @@ type isDatetimeRule struct {
 }
 
 func (r isDatetimeRule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -347,7 +346,7 @@ type iSBN10Rule struct {
 }
 
 func (r iSBN10Rule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -373,7 +372,7 @@ type iSBN13Rule struct {
 }
 
 func (r iSBN13Rule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -399,7 +398,7 @@ type iSBNRule struct {
 }
 
 func (r iSBNRule) Check(param interface{}) (bool, string) {
-	exprValueStr, isValid, errMsg := getStrField(param, r.fieldExpr, r.name)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
 	}
@@ -417,24 +416,6 @@ func NewIsISBNRule(fieldExpr string) Rule {
 		fieldExpr: fieldExpr,
 		name:      "IsISBNRule",
 	}
-}
-
-func getStrField(param interface{}, fieldExpr string, name string) (string, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
-	if kind == reflect.Invalid {
-		return "", false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
-	}
-	if exprValue == nil {
-		return "", false,
-			fmt.Sprintf("[%s]:'%s' is nil", name, fieldExpr)
-	}
-	if kind != reflect.String {
-		return "", false,
-			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
-				name, fieldExpr, kind)
-	}
-	return exprValue.(string), true, ""
 }
 
 func isISBN10(exprValueStr string) bool {

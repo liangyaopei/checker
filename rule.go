@@ -2,7 +2,6 @@ package checker
 
 import (
 	"fmt"
-	"reflect"
 	"strings"
 )
 
@@ -74,46 +73,9 @@ func (r notRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// NewNotRule returns the opposite if innerRule
-func NewNotRule(innerRule Rule) Rule {
+// Not returns the opposite if innerRule
+func Not(innerRule Rule) Rule {
 	return notRule{
 		innerRule: innerRule,
 	}
-}
-
-func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
-	pValue := reflect.ValueOf(param)
-	if filedExpr == "" {
-		return param, pValue.Kind()
-	}
-
-	exprs := strings.Split(filedExpr, ".")
-	for i := 0; i < len(exprs); i++ {
-		expr := exprs[i]
-		if pValue.Kind() == reflect.Ptr {
-			pValue = pValue.Elem()
-		}
-		if !pValue.IsValid() || pValue.Kind() != reflect.Struct {
-			return nil, reflect.Invalid
-		}
-		pValue = pValue.FieldByName(expr)
-	}
-
-	// last field is pointer
-	if pValue.Kind() == reflect.Ptr {
-		if pValue.IsNil() {
-			return nil, reflect.Ptr
-		}
-		pValue = pValue.Elem()
-	}
-
-	if !pValue.IsValid() {
-		return nil, reflect.Invalid
-	}
-	return pValue.Interface(), pValue.Kind()
-}
-
-// FetchFieldInStruct can be used outside tht package
-func FetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
-	return fetchFieldInStruct(param, filedExpr)
 }
