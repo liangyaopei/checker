@@ -2,6 +2,8 @@ package checker
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type profile struct {
@@ -67,39 +69,29 @@ func getFailedProfile() profile {
 func getProfileChecker() Checker {
 	profileChecker := NewChecker()
 
-	infoNameRule := Length("Info.Name", 1, 20)
-	profileChecker.Add(infoNameRule, "invalid info name")
-
-	infoAgeRule := RangeInt("Info.Age", 18, 80)
-	profileChecker.Add(infoAgeRule, "invalid info age")
-
-	infoEmailRule := And(
-		Length("Info.Email", 1, 64),
-		Email("Info.Email"),
-	)
-	profileChecker.Add(infoEmailRule, "invalid info email")
-
-	companyLenRule := Length("Companies", 1, 3)
-	profileChecker.Add(companyLenRule, "invalid companies len")
-
-	frontendRule := And(
-		EqStr("Position", "frontend"),
-		Array("Skills",
-			InStr("", "html", "css", "javascript"),
-		),
-	)
-	backendRule := And(
-		EqStr("Position", "backend"),
-		Array("Skills",
-			InStr("", "C", "CPP", "Java", "Golang"),
-		),
-	)
-	companiesSliceRule := Array("Companies",
+	rule :=
 		And(
-			Length("Skills", 1, 3),
-			Or(frontendRule, backendRule),
-		))
-	profileChecker.Add(companiesSliceRule, "invalid skill item")
+			Length("Info.Name", 1, 20),
+			RangeInt("Info.Age", 18, 80),
+			Array("Companies",
+				And(
+					Length("Skills", 1, 3),
+					Or(
+						And(
+							EqStr("Position", "frontend"),
+							Array("Skills",
+								InStr("", "html", "css", "javascript"),
+							),
+						),
+						And(
+							EqStr("Position", "backend"),
+							Array("Skills",
+								InStr("", "C", "CPP", "Java", "Golang"),
+							),
+						)),
+				)),
+		)
+	profileChecker.Add(rule, "invalid companies")
 
 	return profileChecker
 }
@@ -119,11 +111,6 @@ func TestProfileCheckerPassed(t *testing.T) {
 func TestProfileCheckerFailed(t *testing.T) {
 	profile := getFailedProfile()
 	profileChecker := getProfileChecker()
-	isValid, prompt, errMsg := profileChecker.Check(profile)
-	if !isValid {
-		t.Logf("prompt:%s", prompt)
-		t.Logf("errMsg:%s", errMsg)
-		return
-	}
-	t.Log("pass check")
+	isValid, _, _ := profileChecker.Check(profile)
+	assert.Equal(t, false, isValid, "error failed checker")
 }
