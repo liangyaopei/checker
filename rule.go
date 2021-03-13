@@ -2,6 +2,7 @@ package checker
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -9,6 +10,35 @@ import (
 // of param should obey
 type Rule interface {
 	Check(param interface{}) (bool, string)
+}
+
+type fieldRule struct {
+	fieldExpr string
+	rule      Rule
+
+	ruleName string
+}
+
+func (r fieldRule) Check(param interface{}) (bool, string) {
+	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.ruleName, r.fieldExpr)
+	}
+	if exprValue == nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' is nil", r.ruleName, r.fieldExpr)
+	}
+	return r.rule.Check(exprValue)
+}
+
+// Field applies rule to fieldExpr
+func Field(fieldExpr string, rule Rule) Rule {
+	return fieldRule{
+		fieldExpr: fieldExpr,
+		rule:      rule,
+		ruleName:  "fieldRule",
+	}
 }
 
 type andRule struct {

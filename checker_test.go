@@ -114,3 +114,54 @@ func TestProfileCheckerFailed(t *testing.T) {
 	isValid, _, _ := profileChecker.Check(profile)
 	assert.Equal(t, false, isValid, "error failed checker")
 }
+
+type Item struct {
+	Info typeInfo
+}
+
+type typeInfo struct {
+	Type        string
+	Range       []string
+	Unit        string
+	Granularity string
+}
+
+func TestField(t *testing.T) {
+	items := []Item{
+		{
+			Info: typeInfo{
+				Type:  "range",
+				Range: []string{"2020-01-01", "2021-01-01"},
+			},
+		},
+		{
+			Info: typeInfo{
+				Type:        "last",
+				Granularity: "day",
+				Unit:        "7",
+			},
+		},
+	}
+
+	rule := Field("Info",
+		Or(
+			And(
+				EqStr("Type", "range"),
+				Length("Range", 2, 2),
+				Array("Range", isDatetime("", "2006-01-02")),
+			),
+			And(
+				EqStr("Type", "last"),
+				InStr("Granularity", "day", "week", "month"),
+				Number("Unit"),
+			),
+		),
+	)
+	itemChecker := NewChecker()
+	itemChecker.Add(rule, "wrong item")
+
+	for _, item := range items {
+		isValid, _, errMsg := itemChecker.Check(item)
+		assert.Equal(t, true, isValid, errMsg)
+	}
+}
