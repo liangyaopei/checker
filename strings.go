@@ -310,14 +310,14 @@ func IsDir(fieldExpr string) Rule {
 	}
 }
 
-type isDatetimeRule struct {
+type timeRule struct {
 	fieldExpr string
 	name      string
 
 	layout string
 }
 
-func (r isDatetimeRule) Check(param interface{}) (bool, string) {
+func (r timeRule) Check(param interface{}) (bool, string) {
 	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
 	if !isValid {
 		return false, errMsg
@@ -331,11 +331,11 @@ func (r isDatetimeRule) Check(param interface{}) (bool, string) {
 	return true, ""
 }
 
-// isDatetime is the validation function for validating if the current field's value is a valid datetime string.
-func isDatetime(fieldExpr string, layout string) Rule {
-	return isDatetimeRule{
+// Time is the validation function for validating if the current field's value is a valid datetime string.
+func Time(fieldExpr string, layout string) Rule {
+	return timeRule{
 		fieldExpr: fieldExpr,
-		name:      "isDatetimeRule",
+		name:      "timeRule",
 		layout:    layout,
 	}
 }

@@ -153,7 +153,7 @@ func TestField(t *testing.T) {
 				And(
 					EqStr("Type", "range"),
 					Length("Range", 2, 2),
-					Array("Range", isDatetime("", "2006-01-02")),
+					Array("Range", Time("", "2006-01-02")),
 				),
 				And(
 					EqStr("Type", "last"),
