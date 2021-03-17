@@ -2,6 +2,9 @@ dist: bionic
 
 language: go
 
+go:
+  - 1.11.x
+
 install:
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
