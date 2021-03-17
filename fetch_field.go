@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
+func fetchField(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
 	pValue := reflect.ValueOf(param)
 	if filedExpr == "" {
 		return param, pValue.Kind()
@@ -40,7 +40,7 @@ func fetchFieldInStruct(param interface{}, filedExpr string) (interface{}, refle
 }
 
 func fetchFieldStr(param interface{}, fieldExpr string, name string) (string, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
+	exprValue, kind := fetchField(param, fieldExpr)
 	if kind == reflect.Invalid {
 		return "", false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
@@ -54,11 +54,15 @@ func fetchFieldStr(param interface{}, fieldExpr string, name string) (string, bo
 			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
 				name, fieldExpr, kind)
 	}
-	return exprValue.(string), true, ""
+	res, ok := exprValue.(string)
+	if !ok {
+		res = reflect.ValueOf(exprValue).String()
+	}
+	return res, true, ""
 }
 
 func fetchFieldInt(param interface{}, fieldExpr string, name string) (int, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
+	exprValue, kind := fetchField(param, fieldExpr)
 	if kind == reflect.Invalid {
 		return 0, false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
@@ -73,11 +77,16 @@ func fetchFieldInt(param interface{}, fieldExpr string, name string) (int, bool,
 			fmt.Sprintf("[%s]:'%s' should be kind int8/int16/int32/int64/int,actual is %v",
 				name, fieldExpr, kind)
 	}
-	return exprValue.(int), true, ""
+
+	res, ok := exprValue.(int)
+	if !ok {
+		res = int(reflect.ValueOf(exprValue).Int())
+	}
+	return res, true, ""
 }
 
 func fetchFieldUint(param interface{}, fieldExpr string, name string) (uint, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
+	exprValue, kind := fetchField(param, fieldExpr)
 	if kind == reflect.Invalid {
 		return 0, false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
@@ -92,11 +101,15 @@ func fetchFieldUint(param interface{}, fieldExpr string, name string) (uint, boo
 			fmt.Sprintf("[%s]:'%s' should be kind uint8/uint16/uint32/uint64/uint,actual is %v",
 				name, fieldExpr, kind)
 	}
-	return exprValue.(uint), true, ""
+	res, ok := exprValue.(uint)
+	if !ok {
+		res = uint(reflect.ValueOf(exprValue).Uint())
+	}
+	return res, true, ""
 }
 
 func fetchFieldFloat(param interface{}, fieldExpr string, name string) (float64, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
+	exprValue, kind := fetchField(param, fieldExpr)
 	if kind == reflect.Invalid {
 		return 0.0, false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
@@ -111,11 +124,15 @@ func fetchFieldFloat(param interface{}, fieldExpr string, name string) (float64,
 			fmt.Sprintf("[%s]:'%s' should be kind float32/float64,actual is %v",
 				name, fieldExpr, kind)
 	}
-	return exprValue.(float64), true, ""
+	res, ok := exprValue.(float64)
+	if !ok {
+		res = reflect.ValueOf(exprValue).Float()
+	}
+	return res, true, ""
 }
 
 func fetchFieldTime(param interface{}, fieldExpr string, name string) (time.Time, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
+	exprValue, kind := fetchField(param, fieldExpr)
 	if kind == reflect.Invalid {
 		return time.Time{}, false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
@@ -134,7 +151,7 @@ func fetchFieldTime(param interface{}, fieldExpr string, name string) (time.Time
 }
 
 func fetchFieldComparable(param interface{}, fieldExpr string, name string) (Comparable, bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, fieldExpr)
+	exprValue, kind := fetchField(param, fieldExpr)
 	if kind == reflect.Invalid {
 		return nil, false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", name, fieldExpr)
@@ -151,8 +168,3 @@ func fetchFieldComparable(param interface{}, fieldExpr string, name string) (Com
 	}
 	return comp, true, ""
 }
-
-//// FetchFieldInStruct can be used outside tht package
-//func FetchFieldInStruct(param interface{}, filedExpr string) (interface{}, reflect.Kind) {
-//	return fetchFieldInStruct(param, filedExpr)
-//}

@@ -116,11 +116,13 @@ func TestProfileCheckerFailed(t *testing.T) {
 }
 
 type Item struct {
-	Info typeInfo
+	Info  typeInfo
+	Email string
 }
 
+type typeStr string
 type typeInfo struct {
-	Type        string
+	Type        typeStr
 	Range       []string
 	Unit        string
 	Granularity string
@@ -129,12 +131,14 @@ type typeInfo struct {
 func TestField(t *testing.T) {
 	items := []Item{
 		{
+			Email: "yaopei.liang@foxmail.com",
 			Info: typeInfo{
 				Type:  "range",
 				Range: []string{"2020-01-01", "2021-01-01"},
 			},
 		},
 		{
+			Email: "yaopei.liang@foxmail.com",
 			Info: typeInfo{
 				Type:        "last",
 				Granularity: "day",
@@ -142,18 +146,20 @@ func TestField(t *testing.T) {
 			},
 		},
 	}
-
-	rule := Field("Info",
-		Or(
-			And(
-				EqStr("Type", "range"),
-				Length("Range", 2, 2),
-				Array("Range", isDatetime("", "2006-01-02")),
-			),
-			And(
-				EqStr("Type", "last"),
-				InStr("Granularity", "day", "week", "month"),
-				Number("Unit"),
+	rule := And(
+		Email("Email"),
+		Field("Info",
+			Or(
+				And(
+					EqStr("Type", "range"),
+					Length("Range", 2, 2),
+					Array("Range", isDatetime("", "2006-01-02")),
+				),
+				And(
+					EqStr("Type", "last"),
+					InStr("Granularity", "day", "week", "month"),
+					Number("Unit"),
+				),
 			),
 		),
 	)
