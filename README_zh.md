@@ -26,34 +26,104 @@ go get -u github.com/liangyaopei/checker
 - `fieldExpr`为空字符串，这时会直接校验值。
 - `fieldExpr`为单个字段，这时会先取字段的值，再校验。
 - `fieldExpr`为点(.)分割的字段，先按照`.`的层级关系取值，再校验。
+按字段取值时，如果字段是指针，就取指针的值校验；如果是空指针，则视为没有通过校验。
 
+来自`checker_test.go`的例子：
 ```go
+// Item.Email需要符合电子邮箱的格式
 type Item struct {
-	Info typeInfo
+	Info  typeInfo
+	Email string
 }
 
-// typeInfo.Type = "range",typeInfo.Type的长度为2，元素都是格式符合"2006-01-02"
-// typeInfo.Type = "last",typeInfo.Type的长度为1，元素是正整数，Granularity只能是day/week/month之一
+type typeStr string
+// Item.Info.Type = "range",typeInfo.Type的长度为2，元素都是格式符合"2006-01-02"
+// Item.Info.Type = "last",typeInfo.Type的长度为1，元素是正整数，Granularity只能是day/week/month之一
 type typeInfo struct {
-	Type        string
+	Type        typeStr
 	Range       []string
 	Unit        string
 	Granularity string
 }
 
+
 // 规则如下
-rule := Field("Info",
-		Or(
-			And(
-				EqStr("Type", "range"),
-				Length("Range", 2, 2),
-				Array("Range", isDatetime("", "2006-01-02")),
-			),
-			And(
-				EqStr("Type", "last"),
-				InStr("Granularity", "day", "week", "month"),
-				Number("Unit"),
+rule := And(
+		Email("Email"),
+		Field("Info",
+			Or(
+				And(
+					EqStr("Type", "range"),
+					Length("Range", 2, 2),
+					Array("Range", isDatetime("", "2006-01-02")),
+				),
+				And(
+					EqStr("Type", "last"),
+					InStr("Granularity", "day", "week", "month"),
+					Number("Unit"),
+				),
 			),
 		),
 	)
+itemChecker := NewChecker()
+// 校验参数
+itemChecker.Add(rule, "wrong item")
 ```
+
+## 规则
+`Rule`是一个接口，它有很多的实现。`Rule`的实现可以分为复合规则和单个规则。
+
+
+
+### 复合规则
+
+复合规则包含其他的规则。
+
+| 名字                                                       | 作用                                           |
+| ---------------------------------------------------------- | ---------------------------------------------- |
+| `Field(fieldExpr string, rule Rule) Rule`                  | 对字段使用`rule`校验                           |
+| `And(rules ...Rule) Rule`                                  | 需要所有的规则都通过                           |
+| `Or(rules ...Rule) Rule`                                   | 需要由一个规则通过                             |
+| `Not(innerRule Rule) Rule`                                 | 对规则取反                                     |
+| `Array(fieldExpr string, innerRule Rule) Rule`             | 对数组的每一个元素使用规则                     |
+| `Map(fieldExpr string, keyRule Rule, valueRule Rule) Rule` | 对map的key/value使用keyRule和valueRule进行校验 |
+
+
+
+### 单个规则
+
+单个规则可分为比较型，枚举型，格式型等。
+
+比较型规则包括
+
+| 名字                                              |
+| ------------------------------------------------- |
+| `EqInt(filedExpr string, equivalent int) Rule`    |
+| `NeInt(filedExpr string, inequivalent int) Rule`  |
+| `RangeInt(filedExpr string, ge int, le int) Rule` |
+
+以及`uint`, `string`，`float`，`time.Time` , `Comparable`的实现。
+
+
+
+枚举型规则包括
+
+| 名字                                              |
+| ------------------------------------------------- |
+| `InStr(filedExpr string, enum ...string) Rule`    |
+| `InInt(filedExpr string, enum ...int) Rule`       |
+| `InUint(filedExpr string, enum ...uint) Rule`     |
+| `InFloat(filedExpr string, enum ...float64) Rule` |
+
+
+
+格式型规则包括
+
+| 名字                            |
+| ------------------------------- |
+| `Email(fieldExpr string) Rule`  |
+| `Number(fieldExpr string) Rule` |
+| `URL(fieldExpr string) Rule`    |
+| `Ip(fieldExpr string) Rule`     |
+
+等等
