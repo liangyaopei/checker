@@ -2,7 +2,6 @@ package checker
 
 import (
 	"fmt"
-	"reflect"
 	"regexp"
 )
 
@@ -139,27 +138,14 @@ type regexRule struct {
 }
 
 func (r regexRule) Check(param interface{}) (bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
 	ruleName := "regexRule"
 	if r.name != "" {
 		ruleName = r.name
 	}
-
-	if kind == reflect.Invalid {
-		return false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	exprValueStr, isValid, errMsg := fetchFieldStr(param, r.fieldExpr, r.name)
+	if !isValid {
+		return false, errMsg
 	}
-	if exprValue == nil {
-		return false,
-			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExpr)
-	}
-
-	if kind != reflect.String {
-		return false,
-			fmt.Sprintf("[%s]:'%s' should be kind string,actual is %v",
-				ruleName, r.fieldExpr, kind)
-	}
-	exprValueStr := exprValue.(string)
 
 	if !r.regexObject.MatchString(exprValueStr) {
 		return false,

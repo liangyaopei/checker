@@ -13,7 +13,7 @@ type customizedRule struct {
 }
 
 func (r customizedRule) Check(param interface{}) (bool, string) {
-	exprValue, kind := fetchFieldInStruct(param, r.fieldExpr)
+	exprValue, kind := fetchField(param, r.fieldExpr)
 	if kind == reflect.Invalid {
 		return false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)

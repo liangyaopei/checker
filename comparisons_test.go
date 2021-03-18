@@ -34,10 +34,10 @@ func TestComparison(t *testing.T) {
 	strRule := EqStr("String", "string")
 	cChecker.Add(strRule, "invalid String")
 
-	timeStrRule := EqTsStr("TimeStr", layout, startDate)
+	timeStrRule := EqTimeStr("TimeStr", layout, startDate)
 	cChecker.Add(timeStrRule, "invalid TimeStr")
 
-	timeRule := EqTs("Time", startDate)
+	timeRule := EqTime("Time", startDate)
 	cChecker.Add(timeRule, "invalid Time")
 
 	// not equal rules
@@ -53,10 +53,10 @@ func TestComparison(t *testing.T) {
 	strNeRule := NeStr("String", "string12")
 	cChecker.Add(strNeRule, "invalid String")
 
-	timeNeStrRule := NeTsStr("TimeStr", layout, endDate)
+	timeNeStrRule := NeTimeStr("TimeStr", layout, endDate)
 	cChecker.Add(timeNeStrRule, "invalid TimeStr")
 
-	timeNeRule := NeTs("Time", endDate)
+	timeNeRule := NeTime("Time", endDate)
 	cChecker.Add(timeNeRule, "invalid Time")
 
 	// range rules
@@ -69,10 +69,10 @@ func TestComparison(t *testing.T) {
 	floatRangeRule := RangeFloat("Float", 3.14, 6.28)
 	cChecker.Add(floatRangeRule, "invalid Float")
 
-	timeRangeStrRule := RangeTsStr("TimeStr", layout, startDate, endDate)
+	timeRangeStrRule := RangeTimeStr("TimeStr", layout, startDate, endDate)
 	cChecker.Add(timeRangeStrRule, "invalid TimeStr")
 
-	timeRangeRule := RangeTs("Time", startDate, endDate)
+	timeRangeRule := RangeTime("Time", startDate, endDate)
 	cChecker.Add(timeRangeRule, "invalid Time")
 
 	comp := comparison{

@@ -7,13 +7,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type sizeInt int
+
 type field struct {
 	Name       string
 	Email      *string
 	LinkedList Node
 	Salary     float64
 	Age        uint
-	Size       int
+	Size       sizeInt
 	BirthDate  time.Time
 	Comp       Comparable
 }
@@ -38,13 +40,13 @@ func TestFetchFieldInStruct(t *testing.T) {
 	}
 	f := field{Name: name, Email: &email, LinkedList: linkedlist}
 
-	fName, _ := fetchFieldInStruct(f, "Name")
-	fEmail, _ := fetchFieldInStruct(f, "Email")
-	node1Val, _ := fetchFieldInStruct(f, "LinkedList.Val")
-	node2Val, _ := fetchFieldInStruct(f, "LinkedList.Next.Val")
-	node3Val, _ := fetchFieldInStruct(f, "LinkedList.Next.Next.Val")
-	nodeNotNil, _ := fetchFieldInStruct(f, "LinkedList.Next.Next")
-	nodeNil, _ := fetchFieldInStruct(f, "LinkedList.Next.Next.Next.Val")
+	fName, _ := fetchField(f, "Name")
+	fEmail, _ := fetchField(f, "Email")
+	node1Val, _ := fetchField(f, "LinkedList.Val")
+	node2Val, _ := fetchField(f, "LinkedList.Next.Val")
+	node3Val, _ := fetchField(f, "LinkedList.Next.Next.Val")
+	nodeNotNil, _ := fetchField(f, "LinkedList.Next.Next")
+	nodeNil, _ := fetchField(f, "LinkedList.Next.Next.Next.Val")
 
 	assert.Equal(t, name, fName, "error name")
 	assert.Equal(t, email, fEmail, "error email")
@@ -70,7 +72,7 @@ func TestFetchFieldStr(t *testing.T) {
 
 func TestFetchFieldInt(t *testing.T) {
 	size := 100
-	f := field{Size: size}
+	f := field{Size: sizeInt(size)}
 	fSize, _, _ := fetchFieldInt(f, "Size", "")
 	assert.Equal(t, size, fSize, "error fSize")
 }

@@ -46,7 +46,7 @@ func TestStringsRule(t *testing.T) {
 	iSBNRule := ISBN("ISBN13")
 	rChecker.Add(iSBNRule, "invalid isbn")
 
-	datetimeRule := isDatetime("Datetime", "2006-01-02")
+	datetimeRule := Time("Datetime", "2006-01-02")
 	rChecker.Add(datetimeRule, "invalid datetime")
 
 	p := param{

@@ -73,7 +73,7 @@ type crossFieldCompareRule struct {
 }
 
 func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
-	exprValueLeft, kind := fetchFieldInStruct(param, r.fieldExprLeft)
+	exprValueLeft, kind := fetchField(param, r.fieldExprLeft)
 	if kind == reflect.Invalid {
 		return false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExprLeft)
@@ -83,7 +83,7 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExprLeft)
 	}
 
-	exprValueRight, kind := fetchFieldInStruct(param, r.fieldExprRight)
+	exprValueRight, kind := fetchField(param, r.fieldExprRight)
 	if kind == reflect.Invalid {
 		return false,
 			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExprRight)
