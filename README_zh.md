@@ -26,6 +26,7 @@ go get -u github.com/liangyaopei/checker
 - `fieldExpr`为空字符串，这时会直接校验值。
 - `fieldExpr`为单个字段，这时会先取字段的值，再校验。
 - `fieldExpr`为点(.)分割的字段，先按照`.`的层级关系取值，再校验。
+
 按字段取值时，如果字段是指针，就取指针的值校验；如果是空指针，则视为没有通过校验。
 
 来自`checker_test.go`的例子：
@@ -94,7 +95,13 @@ itemChecker.Add(rule, "wrong item")
 
 单个规则可分为比较型，枚举型，格式型等。
 
-比较型规则包括
+#### 比较型规则
+
+比较型规则分为单个字段比较规则，多个字段比较规则。
+
+
+
+单个字段比较规则包括：
 
 | 名字                                              |
 | ------------------------------------------------- |
@@ -104,9 +111,21 @@ itemChecker.Add(rule, "wrong item")
 
 以及`uint`, `string`，`float`，`time.Time` , `Comparable`的实现。
 
+多个字段比较规则
+
+| 名字                                                         |
+| ------------------------------------------------------------ |
+| `CrossComparable(fieldExprLeft string, fieldExprRight string, op operand) Rule` |
+
+`fieldExprLeft`，`fieldExprRight`用来定位参加比较的字段，`op`是运算操作符，包括相等/不等/大于等。
+
+``CrossComparable`支持的字段类型包括`int`\`uint`\`float`\`string`\`time.Time`\`Comparable`。
 
 
-枚举型规则包括
+
+#### 枚举型规则
+
+枚举型包括
 
 | 名字                                              |
 | ------------------------------------------------- |
@@ -116,6 +135,8 @@ itemChecker.Add(rule, "wrong item")
 | `InFloat(filedExpr string, enum ...float64) Rule` |
 
 
+
+#### 格式型规则
 
 格式型规则包括
 
