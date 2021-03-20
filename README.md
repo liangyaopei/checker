@@ -153,3 +153,47 @@ Format Rule includes
 | `Ip(fieldExpr string) Rule`     |
 
 etc.
+
+
+
+#### Customized Rule
+
+
+In addition to above rules, user can implement customized rule by implementing `Rule` interface.
+
+
+Here is the example from `customized_rule_test.go`, to validate if `fieldExpr` is nil pointer (This function can be achieved by `Nil` Rule ). 
+
+```go
+type customizedRule struct {
+	fieldExpr string
+
+	name string
+}
+
+func (r customizedRule) Check(param interface{}) (bool, string) {
+	exprValue, kind := fetchField(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue != nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should not be nil", r.name, r.fieldExpr)
+	}
+	return true, ""
+}
+
+ch := NewChecker()
+ch.Add(customRule, "invalid ptr")
+```
+
+
+
+## Checker
+
+
+`Checekr` is an interface
+
+- `Add(rule Rule, prompt string)`. Add rule and error prompt of failing the rule.
+- `Check(param interface{}) (bool, string, string)`. Validate a parameter. It returns if it passes the rule, error prompt and error message to tell which field doesn't pass which rule.

@@ -148,3 +148,44 @@ itemChecker.Add(rule, "wrong item")
 | `Ip(fieldExpr string) Rule`     |
 
 等等
+
+
+
+#### 自定义规则
+
+除了以上已有规则，用户还可以通过实现`Rule`接口，实现特殊的规则。
+
+下面的例子来自`customized_rule_test.go`, 来校验`fieldExpr`是否为空指针(同样的功能可以使用`Nil`规则实现)。
+
+```go
+type customizedRule struct {
+	fieldExpr string
+
+	name string
+}
+
+func (r customizedRule) Check(param interface{}) (bool, string) {
+	exprValue, kind := fetchField(param, r.fieldExpr)
+	if kind == reflect.Invalid {
+		return false,
+			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
+	}
+	if exprValue != nil {
+		return false,
+			fmt.Sprintf("[%s]:'%s' should not be nil", r.name, r.fieldExpr)
+	}
+	return true, ""
+}
+
+ch := NewChecker()
+ch.Add(customRule, "invalid ptr")
+```
+
+
+
+## Checker
+
+`Checker`是一个接口
+
+- `Add(rule Rule, prompt string)`： 添加规则，和没有通过规则是的错误提示。
+- `Check(param interface{}) (bool, string, string)`: 校验参数，依次返回是否通过校验，错误提示，错误日志。错误日志包含哪个字段没有通过哪个规则的信息。
