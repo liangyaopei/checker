@@ -8,9 +8,8 @@ import (
 // <=======================Comparison rule about string ===============>
 
 type eqRuleString struct {
-	fieldExpr  string
+	BaseRule
 	equivalent string
-	name       string
 }
 
 func (r eqRuleString) Check(param interface{}) (bool, string) {
@@ -26,11 +25,13 @@ func (r eqRuleString) Check(param interface{}) (bool, string) {
 }
 
 // EqStr is the validation function for validating if the field's value is equal to given string.
-func EqStr(filedExpr string, equivalent string) Rule {
-	return eqRuleString{
-		fieldExpr:  filedExpr,
-		equivalent: equivalent,
-		name:       "eqRuleString",
+func EqStr(filedExpr string, equivalent string) *eqRuleString {
+	return &eqRuleString{
+		BaseRule{
+			fieldExpr: filedExpr,
+			name:      "EqStr",
+		},
+		equivalent,
 	}
 }
 
