@@ -18,10 +18,17 @@ func (c *ruleChecker) Add(rule Rule, prompt string) {
 }
 
 func (c ruleChecker) Check(param interface{}) (bool, string, string) {
+	cache := make(map[string]valueKindPair)
+
 	for i := 0; i < len(c.rules); i++ {
+		c.rules[i].setCache(cache)
 		isValid, msg := c.rules[i].Check(param)
 		if !isValid {
-			return false, c.prompts[i], msg
+			prompt := c.rules[i].getPrompt()
+			if prompt == "" {
+				prompt = c.prompts[i]
+			}
+			return false, prompt, msg
 		}
 	}
 	return true, "", ""

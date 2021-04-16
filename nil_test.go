@@ -2,6 +2,8 @@ package checker
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type zero struct {
@@ -18,10 +20,7 @@ func TestNonZeroRule(t *testing.T) {
 		Int: nil,
 	}
 
-	isValid, prompt, errMsg := nonZeroChecker.Check(z)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid nil")
+	isValid, _, _ := nonZeroChecker.Check(z)
+	assert.Equal(t, true, isValid, "failed TestNonZeroRule")
+
 }

@@ -2,6 +2,8 @@ package checker
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type param struct {
@@ -14,6 +16,7 @@ type param struct {
 	ISBN10     string
 	ISBN13     string
 	Datetime   string
+	JsonStr    string
 }
 
 func TestStringsRule(t *testing.T) {
@@ -46,6 +49,9 @@ func TestStringsRule(t *testing.T) {
 	iSBNRule := ISBN("ISBN13")
 	rChecker.Add(iSBNRule, "invalid isbn")
 
+	jsonRule := JSON("JsonStr")
+	rChecker.Add(jsonRule, "invalid JsonStr")
+
 	datetimeRule := Time("Datetime", "2006-01-02")
 	rChecker.Add(datetimeRule, "invalid datetime")
 
@@ -59,11 +65,8 @@ func TestStringsRule(t *testing.T) {
 		ISBN10:     "1-61729-085-8",
 		ISBN13:     "978-3-16-148410-0",
 		Datetime:   "2020-12-20",
+		JsonStr:    `{"a":1}`,
 	}
-	isValid, prompt, errMsg := rChecker.Check(p)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid param")
+	isValid, _, _ := rChecker.Check(p)
+	assert.Equal(t, isValid, true, "faield TestStringsRule")
 }

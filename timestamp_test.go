@@ -3,6 +3,8 @@ package checker
 import (
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type timestamp struct {
@@ -46,10 +48,6 @@ func TestRuleTimeStampStr(t *testing.T) {
 		RangeDateStr: "2020-12-15",
 	}
 
-	isValid, prompt, errMsg := tsChecker.Check(ts)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid Date")
+	isValid, _, _ := tsChecker.Check(ts)
+	assert.Equal(t, true, isValid)
 }

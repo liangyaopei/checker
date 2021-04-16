@@ -8,7 +8,7 @@ import (
 
 // Comparable is the interface
 // for sturcts to be compared in
-// CrossComparable
+// CrossComp
 type Comparable interface {
 	EqualTo(other interface{}) bool
 	LessThan(other interface{}) bool
@@ -64,33 +64,83 @@ var (
 	CrossFieldLe = leOperand{}
 )
 
-type crossFieldCompareRule struct {
-	fieldExprLeft  string
-	fieldExprRight string
-	op             operand
+type ruleWrapper struct {
+	BaseRule
+}
 
-	name string
+func (r ruleWrapper) Check(param interface{}) (bool, string) {
+	panic("implement me")
+}
+
+func (r *ruleWrapper) Prompt(prompt string) Rule {
+	panic("implement me")
+}
+
+type crossFieldCompareRule struct {
+	op operand
+
+	ruleLeft  ruleWrapper
+	ruleRight ruleWrapper
+
+	name           string
+	prompt         string
+	upperFieldExpr string
+}
+
+func (r crossFieldCompareRule) getPrompt() string {
+	return r.prompt
+}
+
+func (r *crossFieldCompareRule) Prompt(prompt string) Rule {
+	r.prompt = prompt
+	return r
+}
+
+func (r crossFieldCompareRule) getName() string {
+	return r.name
+}
+
+func (r crossFieldCompareRule) getFieldExpr() string {
+	panic("crossFieldCompareRule.getFieldExpr should not be called")
+}
+
+func (r crossFieldCompareRule) getCompleteFieldExpr() string {
+	panic("crossFieldCompareRule.getCompleteFieldExpr should not be called")
+}
+
+func (r crossFieldCompareRule) setUpperFieldExpr(expr string) {
+	r.ruleLeft.setUpperFieldExpr(expr)
+	r.ruleRight.setUpperFieldExpr(expr)
+}
+
+func (r crossFieldCompareRule) setCache(m map[string]valueKindPair) {
+	r.ruleLeft.setCache(m)
+	r.ruleRight.setCache(m)
+}
+
+func (r crossFieldCompareRule) getCache() map[string]valueKindPair {
+	return r.ruleLeft.getCache()
 }
 
 func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
-	exprValueLeft, kind := fetchField(param, r.fieldExprLeft)
+	exprValueLeft, kind := fetchField(param, &r.ruleLeft)
 	if kind == reflect.Invalid {
 		return false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExprLeft)
+			fmt.Sprintf("[%s]:%s cannot be found", r.name, r.ruleLeft.getCompleteFieldExpr())
 	}
 	if exprValueLeft == nil {
 		return false,
-			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExprLeft)
+			fmt.Sprintf("[%s]:%s is nil", r.name, r.ruleLeft.getCompleteFieldExpr())
 	}
 
-	exprValueRight, kind := fetchField(param, r.fieldExprRight)
+	exprValueRight, kind := fetchField(param, &r.ruleRight)
 	if kind == reflect.Invalid {
 		return false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExprRight)
+			fmt.Sprintf("[%s]:%s cannot be found", r.name, r.ruleRight.getCompleteFieldExpr())
 	}
 	if exprValueRight == nil {
 		return false,
-			fmt.Sprintf("[%s]:'%s' is nil", r.name, r.fieldExprRight)
+			fmt.Sprintf("[%s]:%s is nil", r.name, r.ruleRight.getCompleteFieldExpr())
 	}
 
 	refValLeft := reflect.ValueOf(exprValueLeft)
@@ -98,9 +148,9 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 
 	if refValLeft.Type() != refValRight.Type() {
 		return false,
-			fmt.Sprintf("[%s]:type incompatibility,'%s' is %s,'%s' is %s", r.name,
-				r.fieldExprLeft, refValLeft.Type().String(),
-				r.fieldExprRight, refValRight.Type().String())
+			fmt.Sprintf("[%s]:type incompatibility,%s is %s, %s is %s", r.name,
+				r.ruleLeft.getCompleteFieldExpr(), refValLeft.Type().String(),
+				r.ruleRight.getCompleteFieldExpr(), refValRight.Type().String())
 	}
 	isValid := false
 	switch exprValueLeft.(type) {
@@ -125,20 +175,32 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 	}
 	if !isValid {
 		return false,
-			fmt.Sprintf("[%s]:'%s' does not %s '%s'",
-				r.name, r.fieldExprLeft, r.op.Symbol(), r.fieldExprRight)
+			fmt.Sprintf("[%s]:%s does not %s %s",
+				r.name, r.ruleLeft.getCompleteFieldExpr(), r.op.Symbol(), r.ruleRight.getCompleteFieldExpr())
 	}
 	return true, ""
 }
 
-// CrossComparable checks if left and right fields
+// CrossComp checks if left and right fields
 // are same types and satisfy the comparison operand
-func CrossComparable(fieldExprLeft string, fieldExprRight string, op operand) Rule {
-	return crossFieldCompareRule{
-		fieldExprLeft:  fieldExprLeft,
-		fieldExprRight: fieldExprRight,
-		op:             op,
-		name:           "crossFieldCompareRule",
+func CrossComp(fieldExprLeft string, fieldExprRight string, op operand) *crossFieldCompareRule {
+	ruleLeft := ruleWrapper{
+		BaseRule{
+			fieldExpr: fieldExprLeft,
+			name:      "CrossComp",
+		},
+	}
+	ruleRight := ruleWrapper{
+		BaseRule{
+			fieldExpr: fieldExprRight,
+			name:      "CrossComp",
+		},
+	}
+	return &crossFieldCompareRule{
+		ruleLeft:  ruleLeft,
+		ruleRight: ruleRight,
+		op:        op,
+		name:      "CrossComp",
 	}
 }
 

@@ -2,6 +2,8 @@ package checker
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNonStructStr(t *testing.T) {
@@ -11,12 +13,8 @@ func TestNonStructStr(t *testing.T) {
 	emailRule := Email("")
 	nonStructChecker.Add(emailRule, "invalid email")
 
-	isValid, prompt, errMsg := nonStructChecker.Check(email)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid email")
+	isValid, _, _ := nonStructChecker.Check(email)
+	assert.Equal(t, true, isValid)
 }
 
 func TestNonStructArr(t *testing.T) {
@@ -27,10 +25,7 @@ func TestNonStructArr(t *testing.T) {
 	sliceRule := Array("", rangeRule)
 	nonStructChecker.Add(sliceRule, "invalid array")
 
-	isValid, prompt, errMsg := nonStructChecker.Check(arr)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid array")
+	isValid, _, _ := nonStructChecker.Check(arr)
+	assert.Equal(t, true, isValid)
+
 }

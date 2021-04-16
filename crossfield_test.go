@@ -3,6 +3,8 @@ package checker
 import (
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type crossStruct struct {
@@ -19,24 +21,32 @@ type crossStruct struct {
 	Date2 time.Time
 }
 
+func getCrossChecker() Checker {
+	crossChecker := NewChecker()
+
+	crossRuleInt := CrossComp("Int1", "Int2", CrossFieldNe).
+		Prompt("Int1 should not be equal to Int2")
+	crossChecker.Add(crossRuleInt, "")
+
+	crossRuleUInt := CrossComp("Uint1", "Uint2", CrossFieldGt)
+	crossChecker.Add(crossRuleUInt, "invalid uint1 and uint2")
+
+	crossRuleFloat := CrossComp("Float1", "Float2", CrossFieldLt)
+	crossChecker.Add(crossRuleFloat, "invalid Float1 and Float2")
+
+	crossRuleTime := CrossComp("Date1", "Date2", CrossFieldLe)
+	crossChecker.Add(crossRuleTime, "invalid Date1 and Date2")
+
+	return crossChecker
+}
+
 func TestCrossFieldSimple(t *testing.T) {
+
+	crossChecker := getCrossChecker()
+
 	layout := "2006-01-02"
 	date1, _ := time.Parse(layout, "2020-12-12")
 	date2, _ := time.Parse(layout, "2021-12-12")
-
-	crossChecker := NewChecker()
-
-	crossRuleInt := CrossComparable("Int1", "Int2", CrossFieldNe)
-	crossChecker.Add(crossRuleInt, "invalid int1 and int2")
-
-	crossRuleUInt := CrossComparable("Uint1", "Uint2", CrossFieldGt)
-	crossChecker.Add(crossRuleUInt, "invalid uint1 and uint2")
-
-	crossRuleFloat := CrossComparable("Float1", "Float2", CrossFieldLt)
-	crossChecker.Add(crossRuleFloat, "invalid Float1 and Float2")
-
-	crossRuleTime := CrossComparable("Date1", "Date2", CrossFieldLe)
-	crossChecker.Add(crossRuleTime, "invalid Date1 and Date2")
 
 	cross := crossStruct{
 		Int1:   1,
@@ -49,12 +59,13 @@ func TestCrossFieldSimple(t *testing.T) {
 		Date2:  date2,
 	}
 
-	isValid, prompt, errMsg := crossChecker.Check(cross)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid cross struct")
+	isValid, _, errMsg := crossChecker.Check(cross)
+	assert.Equal(t, isValid, true, errMsg)
+
+	cross.Int1 = 2
+	isValid, prompt, _ := crossChecker.Check(cross)
+	assert.Equal(t, false, isValid, "")
+	assert.Equal(t, "Int1 should not be equal to Int2", prompt, "wrong prompt")
 }
 
 type innerInt struct {
@@ -86,8 +97,9 @@ func TestCrossFieldCustom(t *testing.T) {
 
 	crossChecker := NewChecker()
 
-	crossRuleInt := CrossComparable("Int1", "Int2", CrossFieldGe)
-	crossChecker.Add(crossRuleInt, "invalid int1 and int2")
+	prompt := "Int1 should be ge Int2"
+	crossRuleInt := CrossComp("Int1", "Int2", CrossFieldGe).Prompt(prompt)
+	crossChecker.Add(crossRuleInt, "")
 
 	cross := crossInner{
 		Int1: innerInt{
@@ -98,10 +110,12 @@ func TestCrossFieldCustom(t *testing.T) {
 		},
 	}
 
-	isValid, prompt, errMsg := crossChecker.Check(cross)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid cross struct")
+	isValid, _, _ := crossChecker.Check(cross)
+	assert.Equal(t, true, isValid, "")
+
+	cross.Int1.Val = -1
+	isValid, errPrompt, _ := crossChecker.Check(cross)
+	assert.Equal(t, false, isValid, "")
+	assert.Equal(t, prompt, errPrompt, "wrong errPrompt")
+
 }

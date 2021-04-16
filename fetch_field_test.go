@@ -40,13 +40,13 @@ func TestFetchFieldInStruct(t *testing.T) {
 	}
 	f := field{Name: name, Email: &email, LinkedList: linkedlist}
 
-	fName, _ := fetchField(f, "Name")
-	fEmail, _ := fetchField(f, "Email")
-	node1Val, _ := fetchField(f, "LinkedList.Val")
-	node2Val, _ := fetchField(f, "LinkedList.Next.Val")
-	node3Val, _ := fetchField(f, "LinkedList.Next.Next.Val")
-	nodeNotNil, _ := fetchField(f, "LinkedList.Next.Next")
-	nodeNil, _ := fetchField(f, "LinkedList.Next.Next.Next.Val")
+	fName, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "Name"}})
+	fEmail, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "Email"}})
+	node1Val, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "LinkedList.Val"}})
+	node2Val, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "LinkedList.Next.Val"}})
+	node3Val, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "LinkedList.Next.Next.Val"}})
+	nodeNotNil, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "LinkedList.Next.Next"}})
+	nodeNil, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "LinkedList.Next.Next.Next.Val"}})
 
 	assert.Equal(t, name, fName, "error name")
 	assert.Equal(t, email, fEmail, "error email")
@@ -62,17 +62,47 @@ func TestFetchFieldStr(t *testing.T) {
 	name := "yaopei"
 
 	f := field{Name: name, Email: &email}
+	fName, _, _ := fetchFieldStr(f, &ruleWrapper{BaseRule{fieldExpr: "Name", name: "ruleWrapper"}})
+	fEmail, _ := fetchField(f, &ruleWrapper{BaseRule{fieldExpr: "Email"}})
+	assert.Equal(t, fName, name, "error name")
+	assert.Equal(t, fEmail, email, "error email")
+}
 
-	fName, _, _ := fetchFieldStr(f, "Name", "")
-	fEmail, _, _ := fetchFieldStr(f, "Email", "")
+func TestFetchFieldStrErrPrompt(t *testing.T) {
+	email := "yaopei.liang@foxmail.com"
+	name := "yaopei"
+	f := field{Name: name, Email: &email}
+	_, isValid, errMsg := fetchFieldStr(f, &ruleWrapper{BaseRule{fieldExpr: "Name.Name", name: "ruleWrapper"}})
 
-	assert.Equal(t, name, fName, "error name")
-	assert.Equal(t, email, fEmail, "error email")
+	assert.Equal(t, false, isValid, "wrong fetchField")
+	assert.Equal(t, "[ruleWrapper]:Name.Name cannot be found", errMsg, "wrong errMsg")
+
 }
 
 func TestFetchFieldInt(t *testing.T) {
 	size := 100
 	f := field{Size: sizeInt(size)}
-	fSize, _, _ := fetchFieldInt(f, "Size", "")
-	assert.Equal(t, size, fSize, "error fSize")
+	fSize, _, errMsg := fetchFieldInt(f, &ruleWrapper{BaseRule{fieldExpr: "Size", name: "ruleWrapper"}})
+	assert.Equal(t, fSize, size, errMsg)
+}
+
+func TestFetchFieldUInt(t *testing.T) {
+	var age uint = 35
+	f := field{Age: 35}
+	fAge, _, errMsg := fetchFieldUint(f, &ruleWrapper{BaseRule{fieldExpr: "Age", name: "ruleWrapper"}})
+	assert.Equal(t, fAge, age, errMsg)
+}
+
+func TestFetchFieldFloat(t *testing.T) {
+	salary := 100.0
+	f := field{Salary: salary}
+	fSalary, _, errMsg := fetchFieldFloat(f, &ruleWrapper{BaseRule{fieldExpr: "Salary", name: "ruleWrapper"}})
+	assert.Equal(t, fSalary, salary, errMsg)
+}
+
+func TestFetchFieldTime(t *testing.T) {
+	birthDate, _ := time.Parse("2006-01-02", "2020-03-01")
+	f := field{BirthDate: birthDate}
+	fBirthDate, _, errMsg := fetchFieldTime(f, &ruleWrapper{BaseRule{fieldExpr: "BirthDate", name: "ruleWrapper"}})
+	assert.Equal(t, fBirthDate, birthDate, errMsg)
 }

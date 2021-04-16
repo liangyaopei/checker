@@ -99,13 +99,8 @@ func getProfileChecker() Checker {
 func TestProfileCheckerPassed(t *testing.T) {
 	profile := getPassedProfile()
 	profileChecker := getProfileChecker()
-	isValid, prompt, errMsg := profileChecker.Check(profile)
-	if !isValid {
-		t.Logf("prompt:%s", prompt)
-		t.Logf("errMsg:%s", errMsg)
-		return
-	}
-	t.Log("pass check")
+	isValid, _, _ := profileChecker.Check(profile)
+	assert.Equal(t, true, isValid)
 }
 
 func TestProfileCheckerFailed(t *testing.T) {
