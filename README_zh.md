@@ -75,6 +75,28 @@ itemChecker.Add(rule, "wrong item")
 上面的代码中的`rule`变量，构成一个规则树。
 ![rule tree](rule_tree.png)
 
+需要注意的是，不同的规则树，可以产生相同的校验规则，上面的`rule`可以改写成：
+```go
+rule := And(
+		Email("Email"),
+		Or(
+			And(
+				EqStr("Info.Type", "range"),
+				Length("Info.Range", 2, 2),
+				Array("Info.Range", Time("", "2006-01-02")),
+			),
+			And(
+				EqStr("Info.Type", "last"),
+				InStr("Info.Granularity", "day", "week", "month"),
+				Number("Info.Unit"),
+			),
+		),
+	)
+```
+![rule tree2](rule_tree2.png)
+
+尽管规则树不一样，但是树的叶子节点的`fieldExpr`是一样的（这可以缓存字段），校验逻辑也是一样的。
+
 ## 规则
 `Rule`是一个接口，它有很多的实现。`Rule`的实现可以分为复合规则和单个规则。
 
@@ -169,3 +191,29 @@ itemChecker.Add(rule, "wrong item")
 - `Check(param interface{}) (bool, string, string)`: 校验参数，依次返回是否通过校验，错误提示，错误日志。错误日志包含哪个字段没有通过哪个规则的信息。
 
 ## 错误日志和自定义错误提示
+定义规则时，还可以定义规则没有通过时的错误提示，[例子](_example/prompt/main.go)
+```go
+rule := checker.And(
+		checker.Email("Email").Prompt("Wrong email format") // [1],
+		checker.And(
+			checker.EqStr("Info.Type", "range"),
+			checker.Length("Info.Range", 2, 2).Prompt("Range's length should be 2") // [2],
+			checker.Array("Info.Range", checker.Time("", "2006-01-02")).
+				Prompt("Range's element should be time format") // [3],
+		),
+	)
+
+	validator := checker.NewChecker()
+	validator.Add(rule, "wrong parameter") // [4]
+    isValid, prompt, errMsg := validator.Check(item)
+```
+
+当规则没有通过时，会优先返回规则自己的prompt（代码的[1]/[2]/[3]），如果规则没有自己的prompt，
+就会返回添加规则时的prompt(代码中的[4])。
+
+当规则没有通过时，`errMsg`是错误日志，用来定位出错的字段，参见[例子](_example/composite/main.go)。
+
+
+## 字段缓存
+从上面的规则树图示，可以看到，叶子节点的表达式是一样的，如果同个叶子节点需要被多次校验，
+可以将这个叶子节点的表达式的值缓存下来，减少反射调用的开销。
