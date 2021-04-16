@@ -36,7 +36,7 @@ var (
 // Email is the validation function for validating if the current field's value is a valid email address.
 func Email(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Email",
 		},
@@ -48,7 +48,7 @@ func Email(fieldExpr string) *regexRule {
 // Alpha is the validation function for validating if the current field's value is a valid alpha value.
 func Alpha(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Alpha",
 		},
@@ -60,7 +60,7 @@ func Alpha(fieldExpr string) *regexRule {
 // AlphaNumeric is the validation function for validating if the current field's value is a valid alphanumeric value.
 func AlphaNumeric(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "AlphaNumeric",
 		},
@@ -72,7 +72,7 @@ func AlphaNumeric(fieldExpr string) *regexRule {
 // Number is the validation function for validating if the current field's value is a valid number.
 func Number(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Number",
 		},
@@ -84,7 +84,7 @@ func Number(fieldExpr string) *regexRule {
 // Numeric is the validation function for validating if the current field's value is a valid numeric value.
 func Numeric(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Numeric",
 		},
@@ -96,7 +96,7 @@ func Numeric(fieldExpr string) *regexRule {
 // URLEncoded is the validation function for validating if the current field's value is a valid encoded URL.
 func URLEncoded(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "URLEncoded",
 		},
@@ -108,7 +108,7 @@ func URLEncoded(fieldExpr string) *regexRule {
 // HTMLEncoded is the validation function for validating if the current field's value is a valid encoded HTML.
 func HTMLEncoded(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "HTMLEncoded",
 		},
@@ -120,7 +120,7 @@ func HTMLEncoded(fieldExpr string) *regexRule {
 // HTML is the validation function for validating if the current field's value is a valid HTML.
 func HTML(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "HTML",
 		},
@@ -132,7 +132,7 @@ func HTML(fieldExpr string) *regexRule {
 // HostName is the validation function for validating if the current field's value is a valid RFC953 hostname.
 func HostName(fieldExpr string) *regexRule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "HostName",
 		},
@@ -144,7 +144,7 @@ func HostName(fieldExpr string) *regexRule {
 // HostNameRFC1123 is the validation function for validating if the current field's value is a valid RFC1123 hostname.
 func HostNameRFC1123(fieldExpr string) Rule {
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "HostNameRFC1123",
 		},
@@ -154,7 +154,7 @@ func HostNameRFC1123(fieldExpr string) Rule {
 }
 
 type regexRule struct {
-	BaseRule
+	baseRule
 	regexExpr   string
 	regexObject *regexp.Regexp
 }
@@ -182,7 +182,7 @@ func (r regexRule) Check(param interface{}) (bool, string) {
 func Regex(fieldExpr string, regexExpr string) *regexRule {
 	regexObject := regexp.MustCompile(regexExpr)
 	return &regexRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Regex",
 		},

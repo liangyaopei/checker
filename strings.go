@@ -22,7 +22,7 @@ var (
 )
 
 type urlRule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *urlRule) Prompt(prompt string) Rule {
@@ -62,7 +62,7 @@ func (r urlRule) Check(param interface{}) (bool, string) {
 // URL is the validation function for validating if the current field's value is a valid URL.
 func URL(fieldExpr string) *urlRule {
 	return &urlRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "URL",
 		},
@@ -70,7 +70,7 @@ func URL(fieldExpr string) *urlRule {
 }
 
 type uriRule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *uriRule) Prompt(prompt string) Rule {
@@ -110,7 +110,7 @@ func (r uriRule) Check(param interface{}) (bool, string) {
 // URI is the validation function for validating if the current field's value is a valid URI.
 func URI(fieldExpr string) *urlRule {
 	return &urlRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "URI",
 		},
@@ -118,7 +118,7 @@ func URI(fieldExpr string) *urlRule {
 }
 
 type ipv4Rule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *ipv4Rule) Prompt(prompt string) Rule {
@@ -145,7 +145,7 @@ func (r ipv4Rule) Check(param interface{}) (bool, string) {
 // IPv4 is the validation function for validating if a value is a valid v4 IP address.
 func IPv4(fieldExpr string) *ipv4Rule {
 	return &ipv4Rule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "IPv4",
 		},
@@ -153,7 +153,7 @@ func IPv4(fieldExpr string) *ipv4Rule {
 }
 
 type ipv6Rule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *ipv6Rule) Prompt(prompt string) Rule {
@@ -180,7 +180,7 @@ func (r ipv6Rule) Check(param interface{}) (bool, string) {
 // IPv6 is the validation function for validating if the field's value is a valid v6 IP address.
 func IPv6(fieldExpr string) *ipv6Rule {
 	return &ipv6Rule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "IPv6",
 		},
@@ -188,7 +188,7 @@ func IPv6(fieldExpr string) *ipv6Rule {
 }
 
 type ipRule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *ipRule) Prompt(prompt string) Rule {
@@ -214,7 +214,7 @@ func (r ipRule) Check(param interface{}) (bool, string) {
 // Ip is the validation function for validating if the field's value is a valid v4 or v6 IP address.
 func Ip(fieldExpr string) *ipRule {
 	return &ipRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "fieldExpr",
 		},
@@ -222,7 +222,7 @@ func Ip(fieldExpr string) *ipRule {
 }
 
 type startsWithRule struct {
-	BaseRule
+	baseRule
 	prefix string
 }
 
@@ -247,7 +247,7 @@ func (r startsWithRule) Check(param interface{}) (bool, string) {
 // StartsWith is the validation function for validating that the field's value starts with the text specified within the param.
 func StartsWith(fieldExpr string, prefix string) *startsWithRule {
 	return &startsWithRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "StartsWith",
 		},
@@ -256,7 +256,7 @@ func StartsWith(fieldExpr string, prefix string) *startsWithRule {
 }
 
 type endsWithRule struct {
-	BaseRule
+	baseRule
 	suffix string
 }
 
@@ -282,7 +282,7 @@ func (r endsWithRule) Check(param interface{}) (bool, string) {
 // EndsWith is the validation function for validating that the field's value ends with the text specified within the param.
 func EndsWith(fieldExpr string, suffix string) *endsWithRule {
 	return &endsWithRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "EndsWith",
 		},
@@ -291,7 +291,7 @@ func EndsWith(fieldExpr string, suffix string) *endsWithRule {
 }
 
 type jsonRule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *jsonRule) Prompt(prompt string) Rule {
@@ -315,7 +315,7 @@ func (r jsonRule) Check(param interface{}) (bool, string) {
 // JSON is the validation function for validating if the current field's value is a valid json string.
 func JSON(fieldExpr string) *jsonRule {
 	return &jsonRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "isJSON",
 		},
@@ -323,7 +323,7 @@ func JSON(fieldExpr string) *jsonRule {
 }
 
 type dirRule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *dirRule) Prompt(prompt string) Rule {
@@ -348,7 +348,7 @@ func (r dirRule) Check(param interface{}) (bool, string) {
 // Dir is the validation function for validating if the current field's value is a valid directory.
 func Dir(fieldExpr string) *dirRule {
 	return &dirRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "IsDir",
 		},
@@ -356,7 +356,7 @@ func Dir(fieldExpr string) *dirRule {
 }
 
 type timeRule struct {
-	BaseRule
+	baseRule
 	layout string
 }
 
@@ -382,7 +382,7 @@ func (r timeRule) Check(param interface{}) (bool, string) {
 // Time is the validation function for validating if the current field's value is a valid datetime string.
 func Time(fieldExpr string, layout string) *timeRule {
 	return &timeRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Time",
 		},
@@ -391,7 +391,7 @@ func Time(fieldExpr string, layout string) *timeRule {
 }
 
 type iSBN10Rule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *iSBN10Rule) Prompt(prompt string) Rule {
@@ -415,7 +415,7 @@ func (r iSBN10Rule) Check(param interface{}) (bool, string) {
 // ISBN10 is the validation function for validating if the field's value is a valid v10 ISBN.
 func ISBN10(fieldExpr string) *iSBN10Rule {
 	return &iSBN10Rule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "ISBN10",
 		},
@@ -423,7 +423,7 @@ func ISBN10(fieldExpr string) *iSBN10Rule {
 }
 
 type iSBN13Rule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *iSBN13Rule) Prompt(prompt string) Rule {
@@ -447,7 +447,7 @@ func (r iSBN13Rule) Check(param interface{}) (bool, string) {
 // ISBN13 is the validation function for validating if the field's value is a valid v13 ISBN.
 func ISBN13(fieldExpr string) *iSBN13Rule {
 	return &iSBN13Rule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "ISBN13",
 		},
@@ -455,7 +455,7 @@ func ISBN13(fieldExpr string) *iSBN13Rule {
 }
 
 type iSBNRule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *iSBNRule) Prompt(prompt string) Rule {
@@ -479,7 +479,7 @@ func (r iSBNRule) Check(param interface{}) (bool, string) {
 // ISBN is the validation function for validating if the field's value is a valid v10 or v13 ISBN.
 func ISBN(fieldExpr string) *iSBNRule {
 	return &iSBNRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "ISBN",
 		},

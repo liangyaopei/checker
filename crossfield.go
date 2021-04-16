@@ -65,7 +65,7 @@ var (
 )
 
 type ruleWrapper struct {
-	BaseRule
+	baseRule
 }
 
 func (r ruleWrapper) Check(param interface{}) (bool, string) {
@@ -185,13 +185,13 @@ func (r crossFieldCompareRule) Check(param interface{}) (bool, string) {
 // are same types and satisfy the comparison operand
 func CrossComp(fieldExprLeft string, fieldExprRight string, op operand) *crossFieldCompareRule {
 	ruleLeft := ruleWrapper{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExprLeft,
 			name:      "CrossComp",
 		},
 	}
 	ruleRight := ruleWrapper{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExprRight,
 			name:      "CrossComp",
 		},

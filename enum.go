@@ -5,7 +5,7 @@ import (
 )
 
 type enumRuleString struct {
-	BaseRule
+	baseRule
 	set  map[string]struct{}
 	enum []string
 }
@@ -36,7 +36,7 @@ func InStr(filedExpr string, enum ...string) *enumRuleString {
 		set[enum[i]] = struct{}{}
 	}
 	return &enumRuleString{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "InStr",
 		},
@@ -46,7 +46,7 @@ func InStr(filedExpr string, enum ...string) *enumRuleString {
 }
 
 type enumRuleInt struct {
-	BaseRule
+	baseRule
 	set  map[int]struct{}
 	enum []int
 }
@@ -77,7 +77,7 @@ func InInt(filedExpr string, enum ...int) *enumRuleInt {
 		set[enum[i]] = struct{}{}
 	}
 	return &enumRuleInt{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "InInt",
 		},
@@ -87,7 +87,7 @@ func InInt(filedExpr string, enum ...int) *enumRuleInt {
 }
 
 type enumRuleUint struct {
-	BaseRule
+	baseRule
 	set  map[uint]struct{}
 	enum []uint
 }
@@ -118,7 +118,7 @@ func InUint(filedExpr string, enum ...uint) *enumRuleUint {
 		set[enum[i]] = struct{}{}
 	}
 	return &enumRuleUint{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "InUint",
 		},
@@ -128,7 +128,7 @@ func InUint(filedExpr string, enum ...uint) *enumRuleUint {
 }
 
 type enumRuleFloat struct {
-	BaseRule
+	baseRule
 	set  map[float64]struct{}
 	enum []float64
 }
@@ -159,7 +159,7 @@ func InFloat(filedExpr string, enum ...float64) *enumRuleFloat {
 		set[enum[i]] = struct{}{}
 	}
 	return &enumRuleFloat{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "InFloat",
 		},

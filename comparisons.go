@@ -8,7 +8,7 @@ import (
 // <=======================Comparison rule about string ===============>
 
 type eqRuleString struct {
-	BaseRule
+	baseRule
 	equivalent string
 }
 
@@ -33,7 +33,7 @@ func (r eqRuleString) Check(param interface{}) (bool, string) {
 // EqStr is the validation function for validating if the field's value is equal to given string.
 func EqStr(filedExpr string, equivalent string) *eqRuleString {
 	return &eqRuleString{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "EqStr",
 		},
@@ -42,7 +42,7 @@ func EqStr(filedExpr string, equivalent string) *eqRuleString {
 }
 
 type neRuleString struct {
-	BaseRule
+	baseRule
 	inequivalent string
 }
 
@@ -67,7 +67,7 @@ func (r neRuleString) Check(param interface{}) (bool, string) {
 // NeStr is the validation function for validating if the field's value is not equal to given string.
 func NeStr(filedExpr string, inequivalent string) *neRuleString {
 	return &neRuleString{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "NeStr",
 		},
@@ -78,7 +78,7 @@ func NeStr(filedExpr string, inequivalent string) *neRuleString {
 // <=======================Comparison rule about int ===============>
 
 type eqRuleInt struct {
-	BaseRule
+	baseRule
 	equivalent int
 }
 
@@ -103,7 +103,7 @@ func (r eqRuleInt) Check(param interface{}) (bool, string) {
 // EqInt is the validation function for validating if the field's value is equal to given int.
 func EqInt(filedExpr string, equivalent int) *eqRuleInt {
 	return &eqRuleInt{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "EqInt",
 		},
@@ -112,7 +112,7 @@ func EqInt(filedExpr string, equivalent int) *eqRuleInt {
 }
 
 type neRuleInt struct {
-	BaseRule
+	baseRule
 	inequivalent int
 }
 
@@ -137,7 +137,7 @@ func (r neRuleInt) Check(param interface{}) (bool, string) {
 // NeInt is the validation function for validating if the field's value is not equal to given int.
 func NeInt(filedExpr string, inequivalent int) *neRuleInt {
 	return &neRuleInt{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "NeInt",
 		},
@@ -146,7 +146,7 @@ func NeInt(filedExpr string, inequivalent int) *neRuleInt {
 }
 
 type rangeRuleInt struct {
-	BaseRule
+	baseRule
 	ge int
 	le int
 }
@@ -172,7 +172,7 @@ func (r rangeRuleInt) Check(param interface{}) (bool, string) {
 // RangeInt is the validation function for validating if the field's value is in given range.
 func RangeInt(filedExpr string, ge int, le int) *rangeRuleInt {
 	return &rangeRuleInt{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "RangeInt",
 		},
@@ -184,7 +184,7 @@ func RangeInt(filedExpr string, ge int, le int) *rangeRuleInt {
 // <=======================Comparison rule about uint ===============>
 
 type eqRuleUint struct {
-	BaseRule
+	baseRule
 	equivalent uint
 }
 
@@ -209,7 +209,7 @@ func (r eqRuleUint) Check(param interface{}) (bool, string) {
 // EqUint is the validation function for validating if the field's value is equal to given uint.
 func EqUint(filedExpr string, equivalent uint) *eqRuleUint {
 	return &eqRuleUint{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "EqUint",
 		},
@@ -218,7 +218,7 @@ func EqUint(filedExpr string, equivalent uint) *eqRuleUint {
 }
 
 type neRuleUint struct {
-	BaseRule
+	baseRule
 	inequivalent uint
 }
 
@@ -243,7 +243,7 @@ func (r neRuleUint) Check(param interface{}) (bool, string) {
 // NeUint is the validation function for validating if the field's value is not equal to given uint.
 func NeUint(filedExpr string, inequivalent uint) *neRuleUint {
 	return &neRuleUint{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "NeUint",
 		},
@@ -252,7 +252,7 @@ func NeUint(filedExpr string, inequivalent uint) *neRuleUint {
 }
 
 type rangeRuleUint struct {
-	BaseRule
+	baseRule
 	ge uint
 	le uint
 }
@@ -278,7 +278,7 @@ func (r rangeRuleUint) Check(param interface{}) (bool, string) {
 // RangeUint is the validation function for validating if the field's value is in given range.
 func RangeUint(filedExpr string, ge uint, le uint) *rangeRuleUint {
 	return &rangeRuleUint{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "RangeUint",
 		},
@@ -290,7 +290,7 @@ func RangeUint(filedExpr string, ge uint, le uint) *rangeRuleUint {
 // <=======================Comparison rule about float64 ===============>
 
 type eqRuleFloat struct {
-	BaseRule
+	baseRule
 	equivalent float64
 }
 
@@ -315,7 +315,7 @@ func (r eqRuleFloat) Check(param interface{}) (bool, string) {
 // EqFloat is the validation function for validating if the field's value is equal to given float.
 func EqFloat(filedExpr string, equivalent float64) *eqRuleFloat {
 	return &eqRuleFloat{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "EqFloat",
 		},
@@ -324,7 +324,7 @@ func EqFloat(filedExpr string, equivalent float64) *eqRuleFloat {
 }
 
 type neRuleFloat struct {
-	BaseRule
+	baseRule
 	inequivalent float64
 }
 
@@ -349,7 +349,7 @@ func (r neRuleFloat) Check(param interface{}) (bool, string) {
 // NeFloat is the validation function for validating if the field's value is not equal to given float.
 func NeFloat(filedExpr string, inequivalent float64) *neRuleFloat {
 	return &neRuleFloat{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "NeFloat",
 		},
@@ -358,7 +358,7 @@ func NeFloat(filedExpr string, inequivalent float64) *neRuleFloat {
 }
 
 type rangeRuleFloat struct {
-	BaseRule
+	baseRule
 	le float64
 	ge float64
 }
@@ -384,7 +384,7 @@ func (r rangeRuleFloat) Check(param interface{}) (bool, string) {
 // RangeFloat is the validation function for validating if the field's value is in given range.
 func RangeFloat(filedExpr string, ge float64, le float64) *rangeRuleFloat {
 	return &rangeRuleFloat{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "RangeFloat",
 		},
@@ -396,7 +396,7 @@ func RangeFloat(filedExpr string, ge float64, le float64) *rangeRuleFloat {
 // <=======================Comparison rule about time.Time ===============>
 
 type eqRuleTime struct {
-	BaseRule
+	baseRule
 	equivalent time.Time
 }
 
@@ -421,7 +421,7 @@ func (r eqRuleTime) Check(param interface{}) (bool, string) {
 // EqTime is the validation function for validating if the field's value is equal to given timestamp.
 func EqTime(filedExpr string, equivalent time.Time) *eqRuleTime {
 	return &eqRuleTime{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "EqTime",
 		},
@@ -430,7 +430,7 @@ func EqTime(filedExpr string, equivalent time.Time) *eqRuleTime {
 }
 
 type neRuleTime struct {
-	BaseRule
+	baseRule
 	inequivalent time.Time
 }
 
@@ -455,7 +455,7 @@ func (r neRuleTime) Check(param interface{}) (bool, string) {
 // NeTime is the validation function for validating if the field's value is not equal to given timestamp.
 func NeTime(filedExpr string, inequivalent time.Time) *neRuleTime {
 	return &neRuleTime{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "NeTime",
 		},
@@ -464,7 +464,7 @@ func NeTime(filedExpr string, inequivalent time.Time) *neRuleTime {
 }
 
 type eqRuleTimeStr struct {
-	BaseRule
+	baseRule
 	layout     string
 	equivalent time.Time
 }
@@ -497,7 +497,7 @@ func (r eqRuleTimeStr) Check(param interface{}) (bool, string) {
 // EqTimeStr is the validation function for validating if the field's value string and is equal to given timestamp.
 func EqTimeStr(filedExpr string, layout string, equivalent time.Time) *eqRuleTimeStr {
 	return &eqRuleTimeStr{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "EqTimeStr",
 		},
@@ -507,7 +507,7 @@ func EqTimeStr(filedExpr string, layout string, equivalent time.Time) *eqRuleTim
 }
 
 type neRuleTimeStr struct {
-	BaseRule
+	baseRule
 	layout       string
 	inequivalent time.Time
 }
@@ -540,7 +540,7 @@ func (r neRuleTimeStr) Check(param interface{}) (bool, string) {
 // NeTimeStr is the validation function for validating if the field's value string and is not equal to given timestamp.
 func NeTimeStr(filedExpr string, layout string, inequivalent time.Time) *neRuleTimeStr {
 	return &neRuleTimeStr{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "NeTimeStr",
 		},
@@ -550,7 +550,7 @@ func NeTimeStr(filedExpr string, layout string, inequivalent time.Time) *neRuleT
 }
 
 type rangeRuleTime struct {
-	BaseRule
+	baseRule
 	le time.Time
 	ge time.Time
 }
@@ -576,7 +576,7 @@ func (r rangeRuleTime) Check(param interface{}) (bool, string) {
 // RangeTime is the validation function for validating if the field's value is in given range.
 func RangeTime(filedExpr string, ge time.Time, le time.Time) *rangeRuleTime {
 	return &rangeRuleTime{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "RangeTime",
 		},
@@ -586,7 +586,7 @@ func RangeTime(filedExpr string, ge time.Time, le time.Time) *rangeRuleTime {
 }
 
 type rangeRuleTimeStr struct {
-	BaseRule
+	baseRule
 	layout string
 	le     time.Time
 	ge     time.Time
@@ -620,7 +620,7 @@ func (r rangeRuleTimeStr) Check(param interface{}) (bool, string) {
 // RangeTimeStr is the validation function for validating if the field's value is in given range.
 func RangeTimeStr(filedExpr string, layout string, ge time.Time, le time.Time) *rangeRuleTimeStr {
 	return &rangeRuleTimeStr{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "RangeTimeStr",
 		},
@@ -633,7 +633,7 @@ func RangeTimeStr(filedExpr string, layout string, ge time.Time, le time.Time) *
 // <=======================Comparison rule about Comparable ===============>
 
 type eqRuleComp struct {
-	BaseRule
+	baseRule
 	equivalent Comparable
 }
 
@@ -660,7 +660,7 @@ func (r eqRuleComp) Check(param interface{}) (bool, string) {
 // and is equal to given Comparable variable
 func EqComp(filedExpr string, equivalent Comparable) *eqRuleComp {
 	return &eqRuleComp{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "EqComp",
 		},
@@ -669,7 +669,7 @@ func EqComp(filedExpr string, equivalent Comparable) *eqRuleComp {
 }
 
 type neRuleComp struct {
-	BaseRule
+	baseRule
 	inequivalent Comparable
 }
 
@@ -696,7 +696,7 @@ func (r neRuleComp) Check(param interface{}) (bool, string) {
 // and is not equal to given Comparable variable
 func NeComp(filedExpr string, inequivalent Comparable) *neRuleComp {
 	return &neRuleComp{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "NeComp",
 		},
@@ -705,7 +705,7 @@ func NeComp(filedExpr string, inequivalent Comparable) *neRuleComp {
 }
 
 type rangeRuleComp struct {
-	BaseRule
+	baseRule
 	le Comparable
 	ge Comparable
 }
@@ -731,7 +731,7 @@ func (r rangeRuleComp) Check(param interface{}) (bool, string) {
 // is between [ge,le]
 func RangeComp(filedExpr string, ge Comparable, le Comparable) *rangeRuleComp {
 	return &rangeRuleComp{
-		BaseRule{
+		baseRule{
 			fieldExpr: filedExpr,
 			name:      "RangeComp",
 		},

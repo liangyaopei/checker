@@ -8,7 +8,7 @@ import (
 )
 
 type fieldRule struct {
-	BaseRule
+	baseRule
 	subRule Rule
 }
 
@@ -43,7 +43,7 @@ func (r fieldRule) Check(param interface{}) (bool, string) {
 // Field applies rule to fieldExpr
 func Field(fieldExpr string, subRule Rule) *fieldRule {
 	return &fieldRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Field",
 			lowerRule: subRule,
@@ -53,7 +53,7 @@ func Field(fieldExpr string, subRule Rule) *fieldRule {
 }
 
 type lengthRule struct {
-	BaseRule
+	baseRule
 	le int
 	ge int
 }
@@ -96,7 +96,7 @@ func (r lengthRule) Check(param interface{}) (bool, string) {
 // and its length is between [ge,le]
 func Length(fieldExpr string, ge int, le int) *lengthRule {
 	return &lengthRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Length",
 		},
@@ -106,7 +106,7 @@ func Length(fieldExpr string, ge int, le int) *lengthRule {
 }
 
 type arrayRule struct {
-	BaseRule
+	baseRule
 	innerRule Rule
 }
 
@@ -149,7 +149,7 @@ func (r *arrayRule) Check(param interface{}) (bool, string) {
 // and its elements satisfy the innerRule
 func Array(fieldExpr string, innerRule Rule) *arrayRule {
 	return &arrayRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Array",
 			lowerRule: innerRule,
@@ -161,7 +161,7 @@ func Array(fieldExpr string, innerRule Rule) *arrayRule {
 // mapRule checks map's key and value
 // keyRule or valueRule can be nil
 type mapRule struct {
-	BaseRule
+	baseRule
 	keyRule   Rule
 	valueRule Rule
 }
@@ -252,7 +252,7 @@ func getKeyStr(value reflect.Value) string {
 // if no need to check key/value
 func Map(fieldExpr string, keyRule Rule, valueRule Rule) *mapRule {
 	return &mapRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Map",
 		},
@@ -262,7 +262,7 @@ func Map(fieldExpr string, keyRule Rule, valueRule Rule) *mapRule {
 }
 
 type andRule struct {
-	BaseRule
+	baseRule
 	rules []Rule
 }
 
@@ -293,7 +293,7 @@ func (r *andRule) Check(param interface{}) (bool, string) {
 // It passed when all rules passed
 func And(rules ...Rule) *andRule {
 	return &andRule{
-		BaseRule{
+		baseRule{
 			name: "And",
 		},
 		rules,
@@ -301,7 +301,7 @@ func And(rules ...Rule) *andRule {
 }
 
 type orRule struct {
-	BaseRule
+	baseRule
 	rules []Rule
 }
 
@@ -339,7 +339,7 @@ func (r *orRule) Check(param interface{}) (bool, string) {
 // It failed when all rules failed
 func Or(rules ...Rule) *orRule {
 	return &orRule{
-		BaseRule{
+		baseRule{
 			name: "Or",
 		},
 		rules,
@@ -347,7 +347,7 @@ func Or(rules ...Rule) *orRule {
 }
 
 type notRule struct {
-	BaseRule
+	baseRule
 	innerRule Rule
 }
 
@@ -374,7 +374,7 @@ func (r *notRule) Check(param interface{}) (bool, string) {
 // Not returns the opposite if innerRule
 func Not(innerRule Rule) *notRule {
 	return &notRule{
-		BaseRule{
+		baseRule{
 			name:      "Not",
 			lowerRule: innerRule,
 		},

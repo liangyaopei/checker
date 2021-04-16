@@ -51,10 +51,6 @@ func fetchField(param interface{}, rule Rule) (interface{}, reflect.Kind) {
 			kind:  pValue.Kind(),
 		}
 	}
-	//rule.getCache()[completeExpr] = valueKindPair{
-	//	value: pValue.Interface(),
-	//	kind:  pValue.Kind(),
-	//}
 	return pValue.Interface(), pValue.Kind()
 }
 

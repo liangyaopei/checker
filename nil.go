@@ -6,7 +6,7 @@ import (
 )
 
 type nilRule struct {
-	BaseRule
+	baseRule
 }
 
 func (r *nilRule) Prompt(prompt string) Rule {
@@ -30,7 +30,7 @@ func (r nilRule) Check(param interface{}) (bool, string) {
 // Nil checks if the field is nil
 func Nil(fieldExpr string) *nilRule {
 	return &nilRule{
-		BaseRule{
+		baseRule{
 			fieldExpr: fieldExpr,
 			name:      "Nil",
 		},

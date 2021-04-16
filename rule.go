@@ -24,7 +24,7 @@ type valueKindPair struct {
 	kind  reflect.Kind
 }
 
-type BaseRule struct {
+type baseRule struct {
 	fieldExpr      string
 	upperFieldExpr string
 
@@ -35,15 +35,15 @@ type BaseRule struct {
 	fieldCache map[string]valueKindPair
 }
 
-func (r BaseRule) getName() string {
+func (r baseRule) getName() string {
 	return r.name
 }
 
-func (r *BaseRule) SetPrompt(prompt string) {
+func (r *baseRule) SetPrompt(prompt string) {
 	r.prompt = prompt
 }
 
-func (r BaseRule) getPrompt() string {
+func (r baseRule) getPrompt() string {
 	lowerRulePrompt := ""
 	if r.lowerRule != nil {
 		lowerRulePrompt = r.lowerRule.getPrompt()
@@ -54,11 +54,11 @@ func (r BaseRule) getPrompt() string {
 	return r.prompt
 }
 
-func (r BaseRule) getFieldExpr() string {
+func (r baseRule) getFieldExpr() string {
 	return r.fieldExpr
 }
 
-func (r BaseRule) getCompleteFieldExpr() string {
+func (r baseRule) getCompleteFieldExpr() string {
 	if r.upperFieldExpr == "" {
 		return r.fieldExpr
 	}
@@ -68,14 +68,14 @@ func (r BaseRule) getCompleteFieldExpr() string {
 	return r.upperFieldExpr + "." + r.fieldExpr
 }
 
-func (r *BaseRule) setUpperFieldExpr(expr string) {
+func (r *baseRule) setUpperFieldExpr(expr string) {
 	r.upperFieldExpr = expr
 }
 
-func (r *BaseRule) setCache(m map[string]valueKindPair) {
+func (r *baseRule) setCache(m map[string]valueKindPair) {
 	r.fieldCache = m
 }
 
-func (r BaseRule) getCache() map[string]valueKindPair {
+func (r baseRule) getCache() map[string]valueKindPair {
 	return r.fieldCache
 }
