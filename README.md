@@ -8,7 +8,7 @@
 
 [中文版本](README_zh.md)
 
-`Checker` is a parameter validation package, it can replace [gopkg.in/go-playground/validator.v10](https://godoc.org/gopkg.in/go-playground/validator.v10). `Checker` can be use in struct/non-struct validation, including cross field validation in struct, elements validation in Slice/Array/Map, and provides customized validation rule.
+`Checker` is a parameter validation package, can be use in struct/non-struct validation, including cross field validation in struct, elements validation in Slice/Array/Map, and provides customized validation rule.
 
 ## Requirements
 
@@ -31,6 +31,8 @@ When use `Add` to add rule，`fieldExpr` has three situations：
 
 When fetching value by `fieldExpr`, if the field is pointer, it will fetch the underlying value of pointer
 to validate; if the field is nil pointer, it failed validation rule. 
+
+For special use of validating nil pointer, `Nil` rule can be used.
 
 example from `checker_test.go`
 ```go
@@ -73,6 +75,32 @@ itemChecker := NewChecker()
 // validate parameter
 itemChecker.Add(rule, "wrong item")
 ```
+`rule` variable in above code constructs a rule tree.
+![rule tree](rule_tree.png)
+
+To Note that, different rule tree can produce same validation rule, above `rule` can be rewritten as
+```go
+rule := And(
+		Email("Email"),
+		Or(
+			And(
+				EqStr("Info.Type", "range"),
+				Length("Info.Range", 2, 2),
+				Array("Info.Range", Time("", "2006-01-02")),
+			),
+			And(
+				EqStr("Info.Type", "last"),
+				InStr("Info.Granularity", "day", "week", "month"),
+				Number("Info.Unit"),
+			),
+		),
+	)
+```
+![rule tree2](rule_tree2.png)
+
+Although rule trees are different, `fieldExpr` of leaf nodes in trees are same, which can be used as cache,
+and the validation logic is same.
+
 
 ## Rule
 `Rule` is an interface, it has many implementations. Its implementations can be categorized into
@@ -158,35 +186,10 @@ etc.
 
 #### Customized Rule
 
+In addition to above rules, user can pass validation function to `Custome` to achieve purpose of 
+implementing customized rule, refer to [example](_example/custom/main.go)
 
-In addition to above rules, user can implement customized rule by implementing `Rule` interface.
 
-
-Here is the example from `customized_rule_test.go`, to validate if `fieldExpr` is nil pointer (This function can be achieved by `Nil` Rule ). 
-
-```go
-type customizedRule struct {
-	fieldExpr string
-
-	name string
-}
-
-func (r customizedRule) Check(param interface{}) (bool, string) {
-	exprValue, kind := fetchField(param, r.fieldExpr)
-	if kind == reflect.Invalid {
-		return false,
-			fmt.Sprintf("[%s]:'%s' cannot be found", r.name, r.fieldExpr)
-	}
-	if exprValue != nil {
-		return false,
-			fmt.Sprintf("[%s]:'%s' should not be nil", r.name, r.fieldExpr)
-	}
-	return true, ""
-}
-
-ch := NewChecker()
-ch.Add(customRule, "invalid ptr")
-```
 
 
 
@@ -197,3 +200,33 @@ ch.Add(customRule, "invalid ptr")
 
 - `Add(rule Rule, prompt string)`. Add rule and error prompt of failing the rule.
 - `Check(param interface{}) (bool, string, string)`. Validate a parameter. It returns if it passes the rule, error prompt and error message to tell which field doesn't pass which rule.
+
+## Error log And Customized Error Prompt
+
+When defining rules, it can define the error prompt when rule failed.[example](_example/prompt/main.go)
+```go
+rule := checker.And(
+		checker.Email("Email").Prompt("Wrong email format") // [1],
+		checker.And(
+			checker.EqStr("Info.Type", "range"),
+			checker.Length("Info.Range", 2, 2).Prompt("Range's length should be 2") // [2],
+			checker.Array("Info.Range", checker.Time("", "2006-01-02")).
+				Prompt("Range's element should be time format") // [3],
+		),
+	)
+
+	validator := checker.NewChecker()
+	validator.Add(rule, "wrong parameter") // [4]
+    isValid, prompt, errMsg := validator.Check(item)
+```
+
+When rule fails, checker tries to return the rule's prompt([1]/[2]/[3] in code). If rule doesn't
+have its prompt, checker returns the prompt when adding the rule([4] in code).
+
+
+`errMsg` is error log, is used to locate the filed that fails, refer it to [example](_example/composite/main.go)
+
+
+## Field Cache
+From above graphic representation of rule tree, it can be found that when leaf node
+with same field expression, its value can be cached to reduce the cost of reflection.

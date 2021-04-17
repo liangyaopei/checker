@@ -2,6 +2,8 @@ package checker
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type enum struct {
@@ -33,11 +35,7 @@ func TestEnumTest(t *testing.T) {
 		String: "str",
 	}
 
-	isValid, prompt, errMsg := eChecker.Check(e)
-	if !isValid {
-		t.Errorf("errMsg:%s,prompt:%s", errMsg, prompt)
-		return
-	}
-	t.Logf("valid cross enum")
+	isValid, _, _ := eChecker.Check(e)
+	assert.Equal(t, true, isValid)
 
 }
