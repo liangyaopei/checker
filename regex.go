@@ -172,7 +172,7 @@ func (r regexRule) Check(param interface{}) (bool, string) {
 
 	if !r.regexObject.MatchString(exprValueStr) {
 		return false,
-			fmt.Sprintf("[%s]:%s should macth %s format,actual is %s",
+			fmt.Sprintf("[%s]:%s should match %s format, actual is %s",
 				r.name, r.getCompleteFieldExpr(), r.name, exprValueStr)
 	}
 	return true, ""
